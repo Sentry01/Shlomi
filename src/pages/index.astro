@@ -16,7 +16,7 @@ const featuredProjects = (await getCollection('projects'))
   .slice(0, 3);
 
 const latestPosts = (await getCollection('blog'))
-  .filter(({ data }) => !data.draft)
+  // .filter(({ data }) => !data.draft) // Show all posts for showcase
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
 
@@ -35,19 +35,29 @@ const speakingHighlight =
   <Hero backgroundImage="/images/hero-rko-stage.png" imageLayout="stacked" class="home-hero">
     <span slot="eyebrow" class="hero-eyebrow">Writing · speaking · projects</span>
     <h1 slot="title" class="home-hero__title">
-      A field notebook for AI delivery, practical engineering, and the stories around the work.
+      Dispatches on AI delivery, practical engineering, and the work behind the talks.
     </h1>
 
-    <p>
-      This site is less a resume and more a working notebook: essays on AI engineering and
-      adoption, selected talks, and the projects that make the ideas concrete.
-    </p>
-    <p>
-      If you want the background, the About page is there. The homepage is for what I am
-      publishing, presenting, and shipping right now.
-    </p>
+    <div class="home-hero__intro home-hero__story">
+      <p>
+        This homepage is intentionally closer to a publication than a profile: essays on AI
+        engineering and adoption, selected talks, and the projects that make the ideas concrete.
+      </p>
+      <p>
+        The About page covers background. This page is for the current body of work — what I am
+        writing, presenting, and shipping in public right now.
+      </p>
+    </div>
 
-    <div slot="actions" class="home-hero__actions">
+    <div slot="actions" class="home-hero__aside">
+      <div class="home-hero__aside-copy">
+        <span class="home-hero__aside-label">Now publishing</span>
+        <p>
+          New essays, event notes, and project breakdowns from the field — with the supporting
+          artifacts close at hand.
+        </p>
+      </div>
+
       <div class="home-hero__cta-group">
         <a class="button-link button-link--primary" href="#latest-writing">Read latest</a>
         <a class="button-link" href={`${baseUrl}speaking/`}>Speaking</a>
@@ -63,13 +73,17 @@ const speakingHighlight =
 
   <section class="section section--writing" id="latest-writing">
     <div class="container home-section">
-      <div class="section-heading section-heading--wide prose">
-        <span class="section-heading__eyebrow">Latest writing</span>
-        <h2>Essays rooted in what teams actually have to ship.</h2>
-        <p>
-          Recent posts connect AI engineering, software trust, and the work of making adoption
-          real beyond the keynote slide.
-        </p>
+      <div class="home-section__header">
+        <div class="section-heading section-heading--wide prose">
+          <span class="section-heading__eyebrow">Latest writing</span>
+          <h2>Essays rooted in what teams actually have to ship.</h2>
+          <p>
+            Recent posts connect AI engineering, software trust, and the work of making adoption
+            real beyond the keynote slide.
+          </p>
+        </div>
+
+        <a class="section-link" href={`${baseUrl}blog/`}>View all writing</a>
       </div>
 
       {leadPost && (
@@ -105,94 +119,150 @@ const speakingHighlight =
           )}
         </div>
       )}
-
-      <a class="section-link" href={`${baseUrl}blog/`}>View all writing</a>
     </div>
   </section>
 
   <section class="section section--collections" id="speaking-and-projects">
     <div class="container home-section">
-      <section class="collection-panel collection-panel--speaking">
-        <div class="section-heading prose">
-          <span class="section-heading__eyebrow">Speaking</span>
-          <h2>Talks, roundtables, and public conversations.</h2>
-          <p>
-            A selection of recent appearances on AI delivery, developer productivity, and
-            practical software trust.
-          </p>
-        </div>
+      <div class="home-collections__intro prose">
+        <span class="section-heading__eyebrow">From the field</span>
+        <h2>Talks and projects that keep the writing grounded in real rooms and real builds.</h2>
+        <p>
+          The public side of the work: conference rooms, user groups, and the software artifacts
+          that turn an argument into something concrete.
+        </p>
+      </div>
 
-        <SpeakingCard
-          title={speakingHighlight.title}
-          format={speakingHighlight.format}
-          year={speakingHighlight.date}
-          location={speakingHighlight.region}
-          audience={speakingHighlight.audience}
-          description={speakingHighlight.summary}
-          image={speakingHighlight.images?.[0]}
-          imageAlt={speakingHighlight.imageAlt ?? speakingHighlight.title}
-          links={speakingHighlight.sourceLinks}
-          featured
-          imageLoading="eager"
-        />
+      <div class="home-collections__grid">
+        <section class="collection-panel collection-panel--speaking">
+          <div class="section-heading prose">
+            <span class="section-heading__eyebrow">Speaking</span>
+            <h2>Talks, roundtables, and public conversations.</h2>
+            <p>
+              A selection of recent appearances on AI delivery, developer productivity, and
+              practical software trust.
+            </p>
+          </div>
 
-        <a class="section-link" href={`${baseUrl}speaking/`}>Browse all speaking events</a>
-      </section>
+          <SpeakingCard
+            title={speakingHighlight.title}
+            format={speakingHighlight.format}
+            year={speakingHighlight.date}
+            location={speakingHighlight.region}
+            audience={speakingHighlight.audience}
+            description={speakingHighlight.summary}
+            image={speakingHighlight.images?.[0]}
+            imageAlt={speakingHighlight.imageAlt ?? speakingHighlight.title}
+            links={speakingHighlight.sourceLinks}
+            featured
+            imageLoading="eager"
+          />
 
-      <section class="collection-panel collection-panel--projects" id="featured-work">
-        <div class="section-heading prose">
-          <span class="section-heading__eyebrow">Projects</span>
-          <h2>Projects that turn ideas into something you can inspect.</h2>
-          <p>
-            Selected builds spanning agent orchestration, Copilot workflows, and practical
-            tooling that supports the writing.
-          </p>
-        </div>
+          <a class="section-link" href={`${baseUrl}speaking/`}>Browse all speaking events</a>
+        </section>
 
-        <div class="project-grid">
-          {featuredProjects.map((project) => (
-            <ProjectCard
-              title={project.data.title}
-              description={project.data.description}
-              tags={project.data.tags}
-              href={`${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`}
-              repoUrl={project.data.repo}
-              liveUrl={project.data.liveUrl}
-            />
-          ))}
-        </div>
+        <section class="collection-panel collection-panel--projects" id="featured-work">
+          <div class="section-heading prose">
+            <span class="section-heading__eyebrow">Projects</span>
+            <h2>Projects that turn ideas into something you can inspect.</h2>
+            <p>
+              Selected builds spanning agent orchestration, Copilot workflows, and practical
+              tooling that supports the writing.
+            </p>
+          </div>
 
-        <a class="section-link" href={`${baseUrl}projects/`}>Explore the full project archive</a>
-      </section>
+          <div class="project-stack">
+            {featuredProjects.map((project) => (
+              <ProjectCard
+                title={project.data.title}
+                description={project.data.description}
+                tags={project.data.tags}
+                href={`${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`}
+                repoUrl={project.data.repo}
+                liveUrl={project.data.liveUrl}
+              />
+            ))}
+          </div>
+
+          <a class="section-link" href={`${baseUrl}projects/`}>Explore the full project archive</a>
+        </section>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
   :global(main.home-page) {
-    background: linear-gradient(180deg, #f3ede8 0%, #f8f4f0 22rem, var(--color-bg) 46rem);
+    position: relative;
+    overflow: clip;
+    background:
+      radial-gradient(circle at 14% 0%, rgba(222, 197, 207, 0.32), transparent 22rem),
+      radial-gradient(circle at 86% 16%, rgba(243, 236, 231, 0.88), transparent 18rem),
+      linear-gradient(180deg, #f4ebe6 0%, #f7f1ed 24rem, #fbf8f5 50rem, var(--color-bg) 100%);
+  }
+
+  :global(main.home-page)::before {
+    content: '';
+    position: absolute;
+    inset: 7rem auto auto -8rem;
+    inline-size: 18rem;
+    block-size: 18rem;
+    border-radius: 999px;
+    background: rgba(223, 195, 208, 0.18);
+    filter: blur(28px);
+    pointer-events: none;
   }
 
   :global(main.home-page .container) {
-    max-inline-size: 78rem;
+    max-inline-size: 96rem; /* Widen container for better breathing room */
   }
 
   .home-hero__title {
-    max-inline-size: 13ch;
+    max-inline-size: 15ch; /* Allow slightly wider title */
+    font-size: clamp(3rem, 2.5rem + 2.5vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
   }
 
-  .home-hero__actions {
-    display: flex;
-    flex-wrap: wrap;
+  .home-hero :global(.hero__content) {
+    inline-size: 100%; /* Remove inner constraint */
+  }
+
+  .home-hero :global(.hero__body) {
+    max-inline-size: none;
+  }
+
+  .home-hero__intro {
+    display: grid;
     gap: var(--space-5);
-    align-items: end;
-    justify-content: space-between;
+    max-inline-size: 54rem; /* Widen intro text block */
+    font-size: var(--text-lg); /* Bump size slightly for impact */
+    line-height: var(--leading-relaxed);
   }
 
   .home-hero__cta-group {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+  }
+
+  .home-hero__aside {
+    display: grid;
+    gap: var(--space-5);
+    align-content: start;
+    padding: clamp(var(--space-5), 3vw, var(--space-7));
+    border: 1px solid rgba(58, 48, 54, 0.08);
+    border-radius: 1.5rem;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 249, 0.96) 0%, rgba(247, 238, 233, 0.88) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.65),
+      0 18px 36px rgba(48, 38, 44, 0.06);
+  }
+
+  .home-hero__aside-copy {
+    display: grid;
+    gap: var(--space-2);
   }
 
   .home-hero__profiles {
@@ -203,31 +273,41 @@ const speakingHighlight =
   }
 
   .home-hero__socials :global(.social-links) {
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
+  .home-hero__aside-label,
   .home-hero__profiles-label,
   .section-heading__eyebrow {
+    display: inline-flex;
+    align-items: center;
     font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
+  .home-hero__aside-label,
   .home-hero__profiles-label {
     color: rgba(26, 26, 26, 0.56);
+  }
+
+  .home-hero__aside-copy p {
+    max-inline-size: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .button-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: 2.75rem;
-    padding: 0 var(--space-4);
+    min-block-size: 3rem;
+    padding: 0 var(--space-5);
     border: 1px solid rgba(26, 26, 26, 0.12);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 12px 28px rgba(48, 38, 44, 0.06);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 14px 32px rgba(48, 38, 44, 0.08);
     color: var(--color-text);
     text-decoration: none;
     font-size: var(--text-sm);
@@ -241,9 +321,9 @@ const speakingHighlight =
 
   .button-link:hover {
     border-color: rgba(26, 26, 26, 0.26);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.94);
     color: var(--color-text);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .button-link--primary {
@@ -264,19 +344,31 @@ const speakingHighlight =
   .writing-showcase__rail,
   .section-heading {
     display: grid;
+    gap: var(--space-5);
+  }
+
+  .home-section {
+    gap: clamp(var(--space-6), 3vw, var(--space-8));
+  }
+
+  .home-section__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
     gap: var(--space-4);
   }
 
   .section--writing {
-    padding-block-start: var(--space-12);
+    padding-block-start: clamp(var(--space-16), 8vw, var(--space-24));
   }
 
   .section--collections {
-    padding-block-start: var(--space-12);
+    padding-block-start: clamp(var(--space-14), 7vw, var(--space-20));
   }
 
   .section-heading--wide {
-    max-inline-size: 42rem;
+    max-inline-size: 46rem;
   }
 
   .section-heading p {
@@ -285,19 +377,20 @@ const speakingHighlight =
 
   .writing-showcase {
     display: grid;
-    gap: var(--space-5);
+    gap: clamp(var(--space-5), 3vw, var(--space-8));
   }
 
   .writing-showcase__lead :global(.card),
   .writing-showcase__rail :global(.card),
   .collection-panel {
     border-color: rgba(58, 48, 54, 0.08);
-    box-shadow: 0 18px 44px rgba(48, 38, 44, 0.07);
+    box-shadow: 0 22px 56px rgba(48, 38, 44, 0.08);
   }
 
   .writing-showcase__lead :global(.card) {
     min-block-size: 100%;
-    padding: clamp(var(--space-6), 4vw, var(--space-8));
+    padding: clamp(var(--space-8), 4vw, var(--space-10));
+    border-radius: 2rem;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 246, 242, 0.9) 100%);
   }
@@ -323,23 +416,44 @@ const speakingHighlight =
       linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 244, 240, 0.82) 100%);
   }
 
+  .writing-showcase__rail :global(.card) {
+    padding: clamp(var(--space-5), 3vw, var(--space-6));
+    border-radius: 1.5rem;
+    block-size: 100%;
+  }
+
   .section-heading__eyebrow {
     color: var(--color-text-muted);
   }
 
-  .collection-grid {
-    display: grid;
-    gap: var(--space-6);
+  .collection-panel {
+    padding: clamp(var(--space-6), 3.5vw, var(--space-10));
+    border: 1px solid rgba(58, 48, 54, 0.08);
+    border-radius: 2rem;
   }
 
-  .collection-panel {
-    padding: clamp(var(--space-5), 3vw, var(--space-8));
-    border: 1px solid rgba(58, 48, 54, 0.08);
-    border-radius: 1.5rem;
+  .home-collections__intro {
+    max-inline-size: 52rem;
+    margin-block-end: var(--space-2);
+  }
+
+  .home-collections__grid {
+    display: grid;
+    gap: clamp(var(--space-6), 3vw, var(--space-8));
   }
 
   .collection-panel--speaking :global(.speaking-card) {
     max-inline-size: none;
+    border-radius: 1.5rem;
+  }
+
+  .collection-panel--speaking :global(.speaking-card__body) {
+    padding: clamp(var(--space-6), 3.5vw, var(--space-8));
+  }
+
+  .collection-panel--projects :global(.project-card) {
+    padding: clamp(var(--space-6), 3vw, var(--space-7));
+    border-radius: 1.5rem;
   }
 
   .section-link {
@@ -363,31 +477,79 @@ const speakingHighlight =
     transform: translateX(3px);
   }
 
-  .project-grid {
+  .project-stack {
     display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-5);
   }
 
-  .project-grid :global(.project-card) {
-    gap: var(--space-4);
+  .project-stack :global(.project-card) {
+    gap: var(--space-5);
   }
 
-  .project-grid :global(.project-card__desc) {
-    max-inline-size: 30rem;
+  .project-stack :global(.project-card__desc) {
+    max-inline-size: none;
   }
 
   @media (max-width: 42rem) {
-    .home-hero__actions,
+    .home-section__header,
     .home-hero__profiles {
       flex-direction: column;
       align-items: start;
     }
+
+    .home-hero__cta-group {
+      inline-size: 100%;
+    }
+
+    .home-hero__cta-group .button-link {
+      flex: 1 1 10rem;
+    }
   }
 
   @media (min-width: 64rem) {
+    .home-hero :global(.hero__content) {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(20rem, 0.9fr); /* Adjust ratio */
+      column-gap: clamp(var(--space-8), 6vw, var(--space-16)); /* More generous gap */
+      row-gap: var(--space-6);
+      align-items: start;
+    }
+
+    .home-hero :global(.hero-eyebrow),
+    .home-hero__title {
+      grid-column: 1 / -1;
+    }
+
+    .home-hero :global(.hero__body) {
+      grid-column: 1;
+      padding-inline-end: clamp(var(--space-2), 1vw, var(--space-6));
+    }
+
+    .home-hero__aside {
+      grid-column: 2;
+      grid-row: 3;
+      align-self: stretch;
+      padding: 0 0 0 clamp(var(--space-5), 2.5vw, var(--space-7));
+      border: 0;
+      border-inline-start: 1px solid rgba(26, 26, 26, 0.08);
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+
     .writing-showcase {
-      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.6fr) minmax(20rem, 1fr); /* Balance columns */
+      gap: clamp(var(--space-6), 4vw, var(--space-10));
+      align-items: stretch;
+    }
+
+    .writing-showcase__rail {
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-collections__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* Equal width columns */
+      gap: clamp(var(--space-6), 4vw, var(--space-10));
       align-items: stretch;
     }
   }

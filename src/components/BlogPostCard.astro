@@ -83,14 +83,14 @@ const linkProps = href
   .blog-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-4);
     block-size: 100%;
   }
 
   .blog-card__header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .blog-card__meta {
@@ -109,7 +109,7 @@ const linkProps = href
   }
 
   .blog-card__title {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: 600;
     line-height: var(--leading-snug);
   }
@@ -122,6 +122,10 @@ const linkProps = href
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
+    inline-size: fit-content;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
+    background: rgba(74, 124, 155, 0.08);
     font-style: italic;
   }
 
@@ -131,7 +135,7 @@ const linkProps = href
   }
 
   .blog-card__desc {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
   }

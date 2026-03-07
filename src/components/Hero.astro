@@ -253,10 +253,11 @@ const normalizedBackgroundImage =
 
   .hero--stacked {
     align-items: stretch;
-    padding-block: clamp(var(--space-8), 7vw, var(--space-16));
+    padding-block: clamp(var(--space-10), 8vw, var(--space-20));
     background:
-      radial-gradient(circle at top center, rgba(225, 204, 213, 0.42), transparent 42%),
-      linear-gradient(180deg, #f3ede8 0%, #f7f3f0 52%, #fcfbfa 100%);
+      radial-gradient(circle at 14% 0%, rgba(226, 203, 213, 0.42), transparent 30%),
+      radial-gradient(circle at 86% 16%, rgba(239, 233, 228, 0.78), transparent 22%),
+      linear-gradient(180deg, #f3ebe6 0%, #f7f1ed 56%, #fcfbfa 100%);
     color: var(--color-text);
   }
 
@@ -266,23 +267,24 @@ const normalizedBackgroundImage =
 
   .hero--stacked .hero__frame {
     display: grid;
-    gap: clamp(var(--space-5), 4vw, var(--space-8));
+    gap: clamp(var(--space-6), 4vw, var(--space-10));
   }
 
   .hero--stacked .hero__content {
-    max-inline-size: min(100%, 58rem);
+    inline-size: min(100%, 78rem);
+    max-inline-size: min(100%, 78rem);
     margin-inline: auto;
-    margin-block-start: clamp(-3.75rem, -5vw, -2rem);
-    padding: clamp(var(--space-6), 4vw, var(--space-8));
+    margin-block-start: clamp(-5rem, -6vw, -3rem);
+    padding: clamp(var(--space-7), 4vw, var(--space-10));
     border: 1px solid rgba(58, 48, 54, 0.08);
-    border-radius: clamp(1rem, 1.8vw, 1.5rem);
+    border-radius: clamp(1.25rem, 2vw, 2rem);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 244, 0.82) 100%);
-    box-shadow: 0 24px 60px rgba(52, 39, 46, 0.1);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 244, 0.86) 100%);
+    box-shadow: 0 32px 84px rgba(52, 39, 46, 0.14);
   }
 
   .hero--stacked .hero__heading {
-    font-size: clamp(2.75rem, 2.1rem + 1.8vw, 4.75rem);
+    font-size: clamp(3rem, 2.2rem + 2.2vw, 5rem);
     color: var(--color-text);
     text-shadow: none;
     text-wrap: balance;
@@ -304,15 +306,15 @@ const normalizedBackgroundImage =
   .hero__visual--stacked {
     position: relative;
     inline-size: 100%;
-    max-inline-size: min(100%, 64rem);
-    min-block-size: clamp(18rem, 42vw, 32rem);
+    max-inline-size: min(100%, 84rem);
+    min-block-size: clamp(25rem, 46vw, 42rem);
     margin-inline: auto;
-    border-radius: clamp(1rem, 2vw, 1.75rem);
+    border-radius: clamp(1.25rem, 2vw, 2rem);
     overflow: hidden;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(20, 24, 36, 0.18)),
-      var(--hero-bg) center 26% / cover no-repeat;
-    box-shadow: 0 30px 80px rgba(28, 26, 32, 0.2);
+      var(--hero-bg) center 28% / cover no-repeat;
+    box-shadow: 0 36px 100px rgba(28, 26, 32, 0.24);
   }
 
   .hero__visual--stacked::before {
@@ -336,7 +338,7 @@ const normalizedBackgroundImage =
 
   @media (max-width: 42rem) {
     .hero--stacked .hero__content {
-      margin-block-start: clamp(-2rem, -8vw, -1rem);
+      margin-block-start: clamp(-2.5rem, -8vw, -1rem);
     }
   }
 
