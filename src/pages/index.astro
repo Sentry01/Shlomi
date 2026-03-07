@@ -47,7 +47,7 @@ const proofPoints = [
   title="Shlomi Shaki"
   description="Executive-plus-builder leader across AI GTM, application security, enterprise growth, and practical agentic engineering."
 >
-  <Hero backgroundImage="/images/hero-rko-stage.png" fullHeight class="home-hero">
+  <Hero backgroundImage="/images/hero-rko-stage.png" imageLayout="panel" fullHeight class="home-hero">
     <span slot="eyebrow" class="hero-eyebrow">AI GTM lead · builder · speaker</span>
     <h1 slot="title" class="home-hero__title">
       Executive operator. Hands-on builder. Trusted where AI has to work in the real world.
@@ -73,7 +73,7 @@ const proofPoints = [
 
       <div class="home-hero__profiles">
         <span class="home-hero__profiles-label">GitHub and LinkedIn</span>
-        <SocialLinks tone="inverse" />
+        <SocialLinks />
       </div>
     </div>
   </Hero>
@@ -170,7 +170,7 @@ const proofPoints = [
 
 <style>
   .home-hero__title {
-    max-inline-size: 13ch;
+    max-inline-size: 11ch;
   }
 
   .home-hero__actions {
@@ -202,7 +202,7 @@ const proofPoints = [
   }
 
   .home-hero__profiles-label {
-    color: rgba(250, 250, 250, 0.72);
+    color: rgba(26, 26, 26, 0.56);
   }
 
   .button-link {
@@ -211,9 +211,10 @@ const proofPoints = [
     justify-content: center;
     min-block-size: 2.75rem;
     padding: 0 var(--space-5);
-    border: 1px solid rgba(250, 250, 250, 0.35);
+    border: 1px solid rgba(26, 26, 26, 0.14);
     border-radius: var(--radius-md);
-    color: var(--color-bg);
+    background: rgba(255, 255, 255, 0.42);
+    color: var(--color-text);
     text-decoration: none;
     font-size: var(--text-sm);
     font-weight: 600;
@@ -224,20 +225,21 @@ const proofPoints = [
   }
 
   .button-link:hover {
-    border-color: rgba(250, 250, 250, 0.65);
-    color: var(--color-bg);
+    border-color: rgba(26, 26, 26, 0.26);
+    background: rgba(255, 255, 255, 0.64);
+    color: var(--color-text);
   }
 
   .button-link--primary {
-    background: var(--color-bg);
-    border-color: var(--color-bg);
-    color: var(--color-text);
+    background: var(--color-text);
+    border-color: var(--color-text);
+    color: var(--color-bg);
   }
 
   .button-link--primary:hover {
-    background: rgba(250, 250, 250, 0.92);
-    border-color: rgba(250, 250, 250, 0.92);
-    color: var(--color-text);
+    background: #2a2a2a;
+    border-color: #2a2a2a;
+    color: var(--color-bg);
   }
 
   .section--proof {

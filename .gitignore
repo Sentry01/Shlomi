@@ -21,3 +21,9 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+
+# local reference inputs and preview artifacts
+Shlomi_Shaki_AI_GTM_Leader_Resume.docx
+events.md
+live-homepage-full.png
+docs/plans/

@@ -17,6 +17,7 @@
 interface Props {
   heading?: string;
   backgroundImage?: string;
+  imageLayout?: 'background' | 'panel';
   overlay?: boolean;
   fullHeight?: boolean;
   class?: string;
@@ -25,12 +26,14 @@ interface Props {
 const {
   heading,
   backgroundImage,
+  imageLayout = 'background',
   overlay = true,
   fullHeight = false,
   class: className,
 } = Astro.props;
 
 const hasImage = !!backgroundImage;
+const useImagePanel = hasImage && imageLayout === 'panel';
 const normalizedBackgroundImage =
   backgroundImage?.startsWith('/')
     ? `${import.meta.env.BASE_URL}${backgroundImage.replace(/^\/+/, '')}`
@@ -40,30 +43,35 @@ const normalizedBackgroundImage =
 <section
   class:list={[
     'hero',
-    { 'hero--with-image': hasImage },
+    { 'hero--with-image': hasImage && !useImagePanel },
+    { 'hero--panel': useImagePanel },
     { 'hero--full': fullHeight },
     className,
   ]}
   style={hasImage ? `--hero-bg: url('${normalizedBackgroundImage}')` : undefined}
 >
-  {hasImage && overlay && <div class="hero__overlay" aria-hidden="true" />}
+  {hasImage && overlay && !useImagePanel && <div class="hero__overlay" aria-hidden="true" />}
 
-  <div class="hero__content container">
-    <slot name="eyebrow">
-      {/* Empty if no eyebrow provided — renders nothing */}
-    </slot>
+  <div class="hero__frame container">
+    <div class="hero__content">
+      <slot name="eyebrow">
+        {/* Empty if no eyebrow provided — renders nothing */}
+      </slot>
 
-    <slot name="title">
-      {heading && <h1 class="hero__heading">{heading}</h1>}
-    </slot>
+      <slot name="title">
+        {heading && <h1 class="hero__heading">{heading}</h1>}
+      </slot>
 
-    <div class="hero__body">
-      <slot />
+      <div class="hero__body">
+        <slot />
+      </div>
+
+      <slot name="actions">
+        {/* Empty if no actions provided — renders nothing */}
+      </slot>
     </div>
 
-    <slot name="actions">
-      {/* Empty if no actions provided — renders nothing */}
-    </slot>
+    {useImagePanel && <div class="hero__visual" aria-hidden="true" />}
   </div>
 </section>
 
@@ -79,6 +87,12 @@ const normalizedBackgroundImage =
 
   .hero--full {
     min-block-size: 85dvh;
+  }
+
+  .hero__frame {
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
   }
 
   /* ----- Background Image ----- */
@@ -107,7 +121,6 @@ const normalizedBackgroundImage =
   /* ----- Content ----- */
   .hero__content {
     position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
@@ -161,5 +174,79 @@ const normalizedBackgroundImage =
     flex-wrap: wrap;
     gap: var(--space-4);
     margin-block-start: var(--space-4);
+  }
+
+  .hero--panel {
+    align-items: center;
+    padding-block: clamp(var(--space-10), 8vw, var(--space-16));
+    background:
+      radial-gradient(circle at top left, rgba(235, 214, 225, 0.58), transparent 38%),
+      linear-gradient(140deg, #faf8f6 0%, #f0eeec 48%, #e8e1e5 100%);
+    color: var(--color-text);
+  }
+
+  .hero--panel.hero--full {
+    min-block-size: clamp(34rem, 78dvh, 48rem);
+  }
+
+  .hero--panel .hero__frame {
+    display: grid;
+    gap: clamp(var(--space-6), 4vw, var(--space-10));
+    align-items: center;
+  }
+
+  .hero--panel .hero__content {
+    max-inline-size: none;
+    padding: clamp(var(--space-6), 4vw, var(--space-10));
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: clamp(1.25rem, 2vw, 1.75rem);
+    background:
+      linear-gradient(155deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 100%);
+    box-shadow: 0 24px 64px rgba(85, 72, 78, 0.14);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .hero--panel .hero__heading {
+    color: var(--color-text);
+    text-shadow: none;
+  }
+
+  .hero--panel .hero__body {
+    max-inline-size: 34rem;
+    color: rgba(26, 26, 26, 0.78);
+  }
+
+  .hero--panel .hero__content :global([slot='eyebrow']),
+  .hero--panel .hero__content :global(.hero-eyebrow) {
+    color: rgba(53, 47, 50, 0.64);
+  }
+
+  .hero__visual {
+    position: relative;
+    min-block-size: clamp(18rem, 44vw, 32rem);
+    block-size: 100%;
+    border-radius: clamp(1.25rem, 2vw, 1.75rem);
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(15, 19, 27, 0.12)),
+      var(--hero-bg) center 28% / cover no-repeat;
+    box-shadow: 0 28px 72px rgba(33, 35, 48, 0.22);
+  }
+
+  .hero__visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(248, 241, 245, 0.12), transparent 38%),
+      linear-gradient(0deg, rgba(22, 24, 36, 0.16), rgba(22, 24, 36, 0.04));
+    pointer-events: none;
+  }
+
+  @media (min-width: 64rem) {
+    .hero--panel .hero__frame {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
   }
 </style>
