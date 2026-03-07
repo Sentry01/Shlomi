@@ -8,6 +8,7 @@ export interface SpeakingEvent {
   images?: string[];
   imageAlt?: string;
   summary: string;
+  insights?: string[];
 }
 
 export const speakingEvents: SpeakingEvent[] = [
@@ -31,6 +32,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Executive roundtable in Hong Kong focused on enterprise AI adoption, Copilot deployment, and security governance.',
     summary:
       'Led a CIO roundtable in Hong Kong discussing enterprise AI adoption, Copilot deployment strategies, and the intersection of developer productivity with security governance.',
+    insights: [
+      'Velocity metrics (lines of code, PR throughput) are a trap; sophisticated leaders measure defect density and security posture instead.',
+      'Governance is shifting from "blocking AI" to "tagging AI provenance" in commit history.',
+      'The pilot-to-scale gap is usually caused by lack of internal platform engineering, not model capability.',
+    ],
   },
   {
     title: 'Sydney CIO Roundtable',
@@ -47,6 +53,11 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Facilitated an executive roundtable in Sydney focused on AI-assisted software development and enterprise readiness for agentic coding workflows.',
+    insights: [
+      'Data sovereignty concerns are driving local model adoption faster in APJ than in US/EU markets.',
+      'Security teams are asking for "vulnerability forecasting" based on AI-generated code patterns.',
+      'Senior developers use AI as a force multiplier; juniors risk using it as a crutch without mentorship.',
+    ],
   },
   {
     title: 'Singapore CIO Roundtable',
