@@ -1,0 +1,180 @@
+---
+/**
+ * ProjectPage layout — shared wrapper for individual project pages.
+ *
+ * Wraps BaseLayout with project-specific metadata.
+ * Renders content from the default slot even with minimal props.
+ */
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+  tags?: string[];
+  repo?: string;
+  liveUrl?: string;
+}
+
+const {
+  title,
+  description,
+  heroImage,
+  heroImageAlt,
+  tags,
+  repo,
+  liveUrl,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={heroImage}
+>
+  <article class="project-page section">
+    <div class="container">
+      <a href={`${import.meta.env.BASE_URL}projects/`} class="project-page__back-link">
+        ← All projects
+      </a>
+
+      <header class="project-page__header">
+        <p class="project-page__eyebrow text-muted text-xs">Project</p>
+        <h1 class="project-page__title">{title}</h1>
+
+        {description && (
+          <p class="project-page__desc">{description}</p>
+        )}
+
+        {tags && tags.length > 0 && (
+          <ul class="project-page__tags" role="list">
+            {tags.map((tag) => (
+              <li><span class="tag">{tag}</span></li>
+            ))}
+          </ul>
+        )}
+
+        {(repo || liveUrl) && (
+          <div class="project-page__links">
+            {repo && (
+              <a href={repo} target="_blank" rel="noopener noreferrer" class="project-page__ext-link">
+                View source ↗
+              </a>
+            )}
+            {liveUrl && (
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="project-page__ext-link">
+                Live demo ↗
+              </a>
+            )}
+          </div>
+        )}
+      </header>
+
+      {heroImage && (
+        <figure class="project-page__hero">
+          <img
+            src={heroImage}
+            alt={heroImageAlt || ''}
+            class="project-page__hero-img"
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
+      )}
+
+      <div class="project-page__content prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-block-end: var(--space-8);
+    max-inline-size: var(--prose-max);
+  }
+
+  .project-page__back-link,
+  .project-page__eyebrow {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .project-page__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-6);
+    font-size: var(--text-xs);
+    text-decoration: none;
+  }
+
+  .project-page__title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+  }
+
+  .project-page__desc {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+  }
+
+  .project-page__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+
+  .project-page__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .project-page__ext-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2.75rem;
+    padding: 0 var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .project-page__ext-link:hover {
+    color: var(--color-accent-hover);
+    border-color: var(--color-border-hover);
+  }
+
+  .project-page__hero {
+    margin-block-end: var(--space-8);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .project-page__hero-img {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .project-page__content {
+    margin-block-end: var(--space-12);
+  }
+</style>

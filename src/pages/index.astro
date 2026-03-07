@@ -1,0 +1,296 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import Hero from '@/components/Hero.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import SocialLinks from '@/components/SocialLinks.astro';
+import SpeakingCard from '@/components/SpeakingCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { speakingEvents } from '@/data/speaking';
+import { isExternalCanonical, blogSlug } from '@/lib/blog';
+
+const baseUrl = import.meta.env.BASE_URL;
+
+const featuredProjects = (await getCollection('projects'))
+  .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+  .slice(0, 3);
+
+const latestPosts = (await getCollection('blog'))
+  .filter(({ data }) => !data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+const speakingHighlight =
+  speakingEvents.find(({ title }) => title === 'OctoNihon Tokyo User Group') ?? speakingEvents[0];
+
+const proofPoints = [
+  {
+    value: 'US$900K → US$18M',
+    label: 'Scaled GitHub AppSec ARR across APJ',
+  },
+  {
+    value: '25+ years',
+    label: 'Enterprise technology across engineering, security, and GTM',
+  },
+  {
+    value: '350+ test harness',
+    label: 'Autonomous harness run proving long-session agent workflows',
+  },
+  {
+    value: '4× Presidents Club',
+    label: 'Consistent performance across multiple growth stages',
+  },
+];
+---
+
+<BaseLayout
+  title="Shlomi Shaki"
+  description="Executive-plus-builder leader across AI GTM, application security, enterprise growth, and practical agentic engineering."
+>
+  <Hero backgroundImage="/images/hero-rko-stage.png" fullHeight class="home-hero">
+    <span slot="eyebrow" class="hero-eyebrow">AI GTM lead · builder · speaker</span>
+    <h1 slot="title" class="home-hero__title">
+      Executive operator. Hands-on builder. Trusted where AI has to work in the real world.
+    </h1>
+
+    <p>
+      Enterprise software does not need more AI theater. It needs clear strategy, technical
+      truth, and systems people can actually adopt. That is the work I do across revenue,
+      product narrative, and field execution.
+    </p>
+    <p>
+      I lead go-to-market motions, run executive conversations, and still build the demos,
+      harnesses, and agent workflows that make the story credible. The result is positioning
+      that resonates in the boardroom and holds up in front of engineers.
+    </p>
+
+    <div slot="actions" class="home-hero__actions">
+      <div class="home-hero__cta-group">
+        <a class="button-link button-link--primary" href={`${baseUrl}about/`}>About</a>
+        <a class="button-link" href="#featured-work">Featured work</a>
+        <a class="button-link" href="#latest-writing">Latest writing</a>
+      </div>
+
+      <div class="home-hero__profiles">
+        <span class="home-hero__profiles-label">GitHub and LinkedIn</span>
+        <SocialLinks tone="inverse" />
+      </div>
+    </div>
+  </Hero>
+
+  <section class="section section--proof">
+    <div class="container">
+      <ul class="proof-strip" role="list">
+        {proofPoints.map((point) => (
+          <li class="card proof-strip__item">
+            <span class="proof-strip__value">{point.value}</span>
+            <span class="proof-strip__label">{point.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="featured-work">
+    <div class="container">
+      <div class="section-heading prose">
+        <span class="section-heading__eyebrow">Featured projects</span>
+        <h2>Built to make modern software work a little more real.</h2>
+        <p>
+          Recent projects focus on agent orchestration, practical AI engineering, and the
+          scaffolding needed to make autonomous workflows trustworthy.
+        </p>
+      </div>
+
+      <div class="grid grid--cards content-grid">
+        {featuredProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            href={project.data.liveUrl ?? project.data.repo}
+            repo={project.data.liveUrl ? 'Live demo' : 'GitHub repo'}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="latest-writing">
+    <div class="container">
+      <div class="section-heading prose">
+        <span class="section-heading__eyebrow">Latest writing</span>
+        <h2>Writing that stays close to delivery, trust, and adoption.</h2>
+        <p>
+          I write about AI engineering, software trust, and the operational realities behind
+          enterprise technology decisions.
+        </p>
+      </div>
+
+      <div class="grid grid--cards content-grid">
+        {latestPosts.map((post) => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            href={isExternalCanonical(post.data.canonical)
+              ? post.data.canonical
+              : `${baseUrl}blog/${blogSlug(post.id)}/`}
+            isExternal={isExternalCanonical(post.data.canonical)}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container speaking-highlight">
+      <div class="section-heading prose">
+        <span class="section-heading__eyebrow">Speaking highlight</span>
+        <h2>From executive rooms to technical communities.</h2>
+        <p>
+          The through-line is the same: explain what is changing, cut through noise, and give
+          teams a more useful way to think about the work ahead.
+        </p>
+      </div>
+
+      <SpeakingCard
+        title={speakingHighlight.title}
+        location={[speakingHighlight.format, speakingHighlight.region, speakingHighlight.date]
+          .filter(Boolean)
+          .join(' · ')}
+        description={speakingHighlight.summary}
+        image={speakingHighlight.images?.[0]}
+        imageAlt={speakingHighlight.imageAlt ?? speakingHighlight.title}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero__title {
+    max-inline-size: 13ch;
+  }
+
+  .home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    align-items: center;
+  }
+
+  .home-hero__cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .home-hero__profiles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .home-hero__profiles-label,
+  .section-heading__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .home-hero__profiles-label {
+    color: rgba(250, 250, 250, 0.72);
+  }
+
+  .button-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2.75rem;
+    padding: 0 var(--space-5);
+    border: 1px solid rgba(250, 250, 250, 0.35);
+    border-radius: var(--radius-md);
+    color: var(--color-bg);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .button-link:hover {
+    border-color: rgba(250, 250, 250, 0.65);
+    color: var(--color-bg);
+  }
+
+  .button-link--primary {
+    background: var(--color-bg);
+    border-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .button-link--primary:hover {
+    background: rgba(250, 250, 250, 0.92);
+    border-color: rgba(250, 250, 250, 0.92);
+    color: var(--color-text);
+  }
+
+  .section--proof {
+    padding-block-start: 0;
+  }
+
+  .proof-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .proof-strip__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-block-size: 100%;
+  }
+
+  .proof-strip__value {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+  }
+
+  .proof-strip__label,
+  .section-heading p {
+    color: var(--color-text-muted);
+  }
+
+  .section-heading {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .section-heading__eyebrow {
+    color: var(--color-text-muted);
+  }
+
+  .content-grid {
+    margin-block-start: var(--space-8);
+  }
+
+  .speaking-highlight {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .speaking-highlight {
+      grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+</style>

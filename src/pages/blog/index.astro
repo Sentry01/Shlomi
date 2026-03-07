@@ -1,0 +1,113 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isExternalCanonical } from '@/lib/blog';
+
+const wordsPerMinute = 200;
+
+const hasHiddenSegment = (value: string) =>
+  value.split('/').some((segment) => segment.startsWith('_') || segment.startsWith('.'));
+
+const isVisiblePost = (post: CollectionEntry<'blog'>) =>
+  !hasHiddenSegment(post.id) && (!import.meta.env.PROD || !post.data.draft);
+
+const estimateReadingTime = (body: string) => {
+  const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  return `${minutes} min read`;
+};
+
+const getPostPath = (id: string) => id.replace(/\.md$/, '');
+
+const posts = (await getCollection('blog'))
+  .filter(isVisiblePost)
+  .sort((left, right) => right.data.pubDate.valueOf() - left.data.pubDate.valueOf())
+  .map((post) => ({
+    ...post,
+    path: getPostPath(post.id),
+    readingTime: estimateReadingTime(post.body ?? ''),
+  }));
+---
+
+<BaseLayout
+  title="Blog"
+  description="Articles on AI, platform engineering, security, and modern software delivery."
+>
+  <section class="blog-index__hero section">
+    <div class="container blog-index__hero-inner">
+      <div class="blog-index__intro">
+        <p class="blog-index__eyebrow text-muted text-xs">Writing</p>
+        <h1>Blog</h1>
+        <p class="blog-index__lede body-serif">
+          Notes on AI, trust, security, agentic workflows, and the systems needed to scale them.
+        </p>
+      </div>
+      <p class="blog-index__count text-muted text-sm">
+        {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {posts.length > 0 ? (
+        <div class="grid grid--cards">
+          {posts.map((post) => (
+            <BlogPostCard
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              tags={post.data.tags}
+              readingTime={post.readingTime}
+              href={isExternalCanonical(post.data.canonical)
+                ? post.data.canonical
+                : `${import.meta.env.BASE_URL}blog/${post.path}/`}
+              isExternal={isExternalCanonical(post.data.canonical)}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="blog-index__empty body-serif">
+          New writing is on the way. Check back soon for the first published post.
+        </p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-index__hero-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    justify-content: space-between;
+    align-items: end;
+  }
+
+  .blog-index__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-inline-size: var(--prose-max);
+  }
+
+  .blog-index__eyebrow {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .blog-index__lede {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .blog-index__count {
+    white-space: nowrap;
+  }
+
+  .blog-index__empty {
+    color: var(--color-text-muted);
+  }
+</style>

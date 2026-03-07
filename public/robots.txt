@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sentry01.github.io/Shlomi/sitemap-index.xml

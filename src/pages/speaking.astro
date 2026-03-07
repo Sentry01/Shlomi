@@ -1,0 +1,233 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SpeakingCard from '@/components/SpeakingCard.astro';
+import { speakingEvents } from '@/data/speaking';
+
+function extractYear(value?: string): string | undefined {
+  if (!value) return undefined;
+
+  const match = value.match(/\b(20\d{2})\b/);
+  return match?.[1];
+}
+
+const events = speakingEvents
+  .map((event, index) => ({
+    ...event,
+    year: extractYear(event.date),
+    image: event.images?.[0],
+    originalIndex: index,
+  }))
+  .sort((a, b) => {
+    const left = Number(a.year ?? 0);
+    const right = Number(b.year ?? 0);
+
+    if (right !== left) return right - left;
+    return a.originalIndex - b.originalIndex;
+  });
+
+const featuredEvents = events.filter((event) => event.image);
+const additionalEvents = events.filter((event) => !event.image);
+const years = new Set(events.map((event) => event.year).filter(Boolean));
+const totalExternalLinks = events.reduce((count, event) => count + event.sourceLinks.length, 0);
+---
+
+<BaseLayout
+  title="Speaking"
+  description="Selected talks, panels, roundtables, podcasts, and webinars by Shlomi Shaki."
+>
+  <section class="speaking-hero section">
+    <div class="container speaking-hero__inner">
+      <div class="speaking-hero__copy">
+        <p class="speaking-hero__eyebrow text-muted text-xs">Speaking & events</p>
+        <h1>Selected stages, roundtables, panels, and media appearances.</h1>
+        <p class="speaking-hero__intro body-serif">
+          A cross-section of executive roundtables, conference appearances, podcasts, and webinars
+          across APJ and global audiences—focused on AI engineering, developer productivity, and
+          application security.
+        </p>
+      </div>
+
+      <dl class="speaking-hero__stats" aria-label="Speaking overview">
+        <div class="speaking-hero__stat card">
+          <dt class="text-muted text-xs">Appearances</dt>
+          <dd>{events.length}</dd>
+        </div>
+        <div class="speaking-hero__stat card">
+          <dt class="text-muted text-xs">Years represented</dt>
+          <dd>{years.size}</dd>
+        </div>
+        <div class="speaking-hero__stat card">
+          <dt class="text-muted text-xs">External links</dt>
+          <dd>{totalExternalLinks}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container speaking-section__header">
+      <div>
+        <p class="text-muted text-xs">Portfolio</p>
+        <h2>Featured appearances</h2>
+      </div>
+      <p class="speaking-section__lede">
+        Image-led highlights from recent events, with direct links to event pages and media where
+        available.
+      </p>
+    </div>
+
+    {featuredEvents.length > 0 ? (
+      <div class="container speaking-grid speaking-grid--featured">
+        {featuredEvents.map((event, index) => (
+          <SpeakingCard
+            title={event.title}
+            format={event.format}
+            location={event.region}
+            year={event.year}
+            audience={event.audience}
+            description={event.summary}
+            image={event.image}
+            imageAlt={event.imageAlt}
+            links={event.sourceLinks}
+            featured={true}
+            imageLoading={index === 0 ? 'eager' : 'lazy'}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="container">
+        <p class="speaking-empty card">Featured event imagery will appear here as assets are added.</p>
+      </div>
+    )}
+  </section>
+
+  <section class="section speaking-section speaking-section--bordered">
+    <div class="container speaking-section__header">
+      <div>
+        <p class="text-muted text-xs">Archive</p>
+        <h2>Additional talks and media</h2>
+      </div>
+      <p class="speaking-section__lede">
+        A broader set of webinars, podcasts, and event appearances from the same data source.
+      </p>
+    </div>
+
+    {additionalEvents.length > 0 ? (
+      <div class="container speaking-grid speaking-grid--archive">
+        {additionalEvents.map((event) => (
+          <SpeakingCard
+            title={event.title}
+            format={event.format}
+            location={event.region}
+            year={event.year}
+            audience={event.audience}
+            description={event.summary}
+            links={event.sourceLinks}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="container">
+        <p class="speaking-empty card">Additional speaking appearances will appear here.</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .speaking-hero {
+    padding-block-end: var(--space-10);
+  }
+
+  .speaking-hero__inner {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .speaking-hero__copy {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .speaking-hero__eyebrow {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .speaking-hero__intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-inline-size: 42rem;
+  }
+
+  .speaking-hero__stats {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .speaking-hero__stat {
+    padding: var(--space-5);
+  }
+
+  .speaking-hero__stat dt {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-block-end: var(--space-2);
+    text-transform: uppercase;
+  }
+
+  .speaking-hero__stat dd {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+  }
+
+  .speaking-section--bordered {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .speaking-section__header {
+    display: grid;
+    gap: var(--space-4);
+    margin-block-end: var(--space-6);
+  }
+
+  .speaking-section__lede {
+    max-inline-size: 36rem;
+    color: var(--color-text-muted);
+  }
+
+  .speaking-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .speaking-grid--featured {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .speaking-grid--archive {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .speaking-empty {
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 60rem) {
+    .speaking-hero__inner,
+    .speaking-section__header {
+      grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 0.9fr);
+      align-items: start;
+    }
+
+    .speaking-hero__stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .speaking-grid--featured > :first-child {
+      grid-column: span 2;
+    }
+  }
+</style>

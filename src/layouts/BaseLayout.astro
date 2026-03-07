@@ -1,0 +1,102 @@
+---
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  /** Optional robots meta directive, e.g. 'noindex,follow' */
+  robots?: string;
+  /** Additional class(es) on <main> */
+  mainClass?: string;
+}
+
+const {
+  title,
+  description = 'Shlomi Shaki — AI GTM leader, builder, speaker, and writer.',
+  ogImage,
+  canonicalUrl,
+  ogType = 'website',
+  structuredData,
+  robots,
+  mainClass,
+} = Astro.props;
+
+const siteTitle = title === 'Shlomi Shaki' ? title : `${title} | Shlomi Shaki`;
+const currentPath = Astro.url.pathname;
+const baseUrl = import.meta.env.BASE_URL;
+
+const resolveAbsoluteUrl = (value?: string) => {
+  if (!value) return undefined;
+  if (/^https?:\/\//i.test(value)) return value;
+
+  const normalizedValue = value.startsWith(baseUrl)
+    ? value
+    : `${baseUrl}${value.replace(/^\/+/, '')}`;
+
+  return new URL(normalizedValue, Astro.site).href;
+};
+
+const canonicalHref = resolveAbsoluteUrl(canonicalUrl) ?? Astro.url.href;
+const ogImageHref = resolveAbsoluteUrl(ogImage) ?? resolveAbsoluteUrl('images/hero-rko-stage.png');
+const serializedStructuredData = structuredData ? JSON.stringify(structuredData) : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    {robots && <meta name="robots" content={robots} />}
+
+    <title>{siteTitle}</title>
+
+    <link rel="canonical" href={canonicalHref} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalHref} />
+    {ogImageHref && <meta property="og:image" content={ogImageHref} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content={ogImageHref ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImageHref && <meta name="twitter:image" content={ogImageHref} />}
+
+    {serializedStructuredData && (
+      <script is:inline type="application/ld+json" set:html={serializedStructuredData} />
+    )}
+
+    <!-- Fonts: Inter (sans) + Source Serif 4 (serif body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <Header currentPath={currentPath} />
+
+    <main id="main-content" class:list={[mainClass]}>
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,220 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '' } = Astro.props;
+
+const navLinks = [
+  { label: 'About', href: `${import.meta.env.BASE_URL}about/` },
+  { label: 'Projects', href: `${import.meta.env.BASE_URL}projects/` },
+  { label: 'Blog', href: `${import.meta.env.BASE_URL}blog/` },
+  { label: 'Speaking', href: `${import.meta.env.BASE_URL}speaking/` },
+];
+
+function isActive(href: string): boolean {
+  if (!currentPath) return false;
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="site-header__inner container">
+    <a href={import.meta.env.BASE_URL} class="site-header__wordmark">
+      Shlomi Shaki
+    </a>
+
+    {/* Desktop nav — visible at wider viewports */}
+    <nav class="site-header__nav" aria-label="Main navigation">
+      <ul class="site-header__list" role="list">
+        {navLinks.map(({ label, href }) => (
+          <li>
+            <a
+              href={href}
+              class:list={['site-header__link', { 'is-active': isActive(href) }]}
+              aria-current={isActive(href) ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/* Mobile nav — native disclosure for keyboard a11y */}
+    <details class="site-header__mobile-nav">
+      <summary class="site-header__menu-btn" aria-label="Toggle navigation menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line class="menu-line menu-line--top" x1="3" y1="6" x2="21" y2="6" />
+          <line class="menu-line menu-line--mid" x1="3" y1="12" x2="21" y2="12" />
+          <line class="menu-line menu-line--bot" x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </summary>
+
+      <nav class="site-header__dropdown" aria-label="Mobile navigation">
+        <ul role="list">
+          {navLinks.map(({ label, href }) => (
+            <li>
+              <a
+                href={href}
+                class:list={['site-header__dropdown-link', { 'is-active': isActive(href) }]}
+                aria-current={isActive(href) ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  /* ----- Header Shell ----- */
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    block-size: 3.5rem;
+  }
+
+  /* ----- Wordmark ----- */
+  .site-header__wordmark {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .site-header__wordmark:hover {
+    color: var(--color-accent);
+  }
+
+  /* ----- Desktop Nav ----- */
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__list {
+    display: flex;
+    gap: var(--space-8);
+    list-style: none;
+  }
+
+  .site-header__link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    padding-block: var(--space-2);
+    position: relative;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-header__link::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    block-size: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .site-header__link:hover,
+  .site-header__link.is-active {
+    color: var(--color-text);
+  }
+
+  .site-header__link.is-active::after,
+  .site-header__link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ----- Mobile Nav (details/summary) ----- */
+  .site-header__mobile-nav {
+    display: block;
+  }
+
+  .site-header__menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: var(--space-2);
+    color: var(--color-text);
+    list-style: none;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Remove default marker in Safari/Chrome */
+  .site-header__menu-btn::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-header__menu-btn::marker {
+    display: none;
+    content: '';
+  }
+
+  .site-header__dropdown {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 3.5rem;
+    background: var(--color-bg);
+    border-block-end: 1px solid var(--color-border);
+    padding: var(--space-4) var(--container-pad);
+  }
+
+  .site-header__dropdown ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .site-header__dropdown-link {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-header__dropdown-link:hover,
+  .site-header__dropdown-link.is-active {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+  }
+
+  /* ----- Responsive Breakpoint ----- */
+  @media (min-width: 48rem) {
+    .site-header__nav {
+      display: block;
+    }
+
+    .site-header__mobile-nav {
+      display: none;
+    }
+  }
+</style>

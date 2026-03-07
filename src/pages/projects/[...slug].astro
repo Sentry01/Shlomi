@@ -1,0 +1,43 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+import ProjectPage from '@/layouts/ProjectPage.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const hasHiddenSegment = (value: string) =>
+    value.split('/').some((segment) => segment.startsWith('_') || segment.startsWith('.'));
+
+  const projects = (await getCollection('projects'))
+    .filter((project) => !hasHiddenSegment(project.id))
+    .sort(
+      (left, right) =>
+        left.data.sortOrder - right.data.sortOrder ||
+        left.data.title.localeCompare(right.data.title),
+    );
+
+  return projects.map((project) => ({
+    params: { slug: project.id.replace(/\.md$/, '') },
+    props: { project },
+  }));
+};
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<ProjectPage
+  title={project.data.title}
+  description={project.data.description}
+  heroImage={project.data.heroImage}
+  heroImageAlt={project.data.title}
+  tags={project.data.tags}
+  repo={project.data.repo}
+  liveUrl={project.data.liveUrl}
+>
+  <Content />
+</ProjectPage>

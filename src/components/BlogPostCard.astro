@@ -1,0 +1,137 @@
+---
+/**
+ * BlogPostCard — Presentational card for a blog post entry.
+ *
+ * All props are optional to handle missing metadata gracefully.
+ * When `href` is provided, the card becomes a clickable link.
+ * Set `isExternal` to show a badge and open in a new tab.
+ */
+interface Props {
+  title?: string;
+  description?: string;
+  pubDate?: Date | string;
+  tags?: string[];
+  readingTime?: string;
+  href?: string;
+  /** When true, marks the card as linking to an external original. */
+  isExternal?: boolean;
+}
+
+const { title, description, pubDate, tags, readingTime, href, isExternal } = Astro.props;
+
+const dateValue = pubDate ? new Date(pubDate) : null;
+const isValidDate = !!dateValue && !Number.isNaN(dateValue.getTime());
+const formattedDate = isValidDate
+  ? dateValue.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  : null;
+
+const Tag = href ? 'a' : 'div';
+const linkProps = href
+  ? {
+      href,
+      class: 'card card--linked blog-card',
+      ...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : { class: 'card blog-card' };
+---
+
+<Tag {...linkProps}>
+  <div class="blog-card__header">
+    {(formattedDate || readingTime) && (
+      <div class="blog-card__meta text-muted text-xs">
+        {formattedDate && (
+          <time class="blog-card__date" datetime={dateValue?.toISOString()}>
+            {formattedDate}
+          </time>
+        )}
+        {formattedDate && readingTime && (
+          <span aria-hidden="true" class="blog-card__separator">·</span>
+        )}
+        {readingTime && <span>{readingTime}</span>}
+      </div>
+    )}
+
+    {title && <h3 class="blog-card__title">{title}</h3>}
+
+    {isExternal && (
+      <span class="blog-card__external text-muted text-xs">
+        ↗ Originally published externally
+      </span>
+    )}
+  </div>
+
+  {description && (
+    <p class="blog-card__desc">{description}</p>
+  )}
+
+  {tags && tags.length > 0 && (
+    <ul class="blog-card__tags" role="list">
+      {tags.map((tag) => (
+        <li><span class="tag">{tag}</span></li>
+      ))}
+    </ul>
+  )}
+</Tag>
+
+<style>
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    block-size: 100%;
+  }
+
+  .blog-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .blog-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .blog-card__date {
+    font-weight: 500;
+  }
+
+  .blog-card__separator {
+    color: var(--color-border-hover);
+  }
+
+  .blog-card__title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+  }
+
+  .card--linked .blog-card__title {
+    color: var(--color-text);
+  }
+
+  .blog-card__external {
+    font-style: italic;
+  }
+
+  .blog-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .blog-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin-block-start: auto;
+  }
+</style>

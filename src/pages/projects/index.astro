@@ -1,0 +1,105 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import ProjectCard from '@/components/ProjectCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const hasHiddenSegment = (value: string) =>
+  value.split('/').some((segment) => segment.startsWith('_') || segment.startsWith('.'));
+
+const isVisibleProject = (project: CollectionEntry<'projects'>) => !hasHiddenSegment(project.id);
+
+const projects = (await getCollection('projects'))
+  .filter(isVisibleProject)
+  .sort(
+    (left, right) =>
+      left.data.sortOrder - right.data.sortOrder ||
+      left.data.title.localeCompare(right.data.title),
+  );
+---
+
+<BaseLayout
+  title="Projects"
+  description="Selected projects across agent orchestration, AI engineering, and GTM tooling."
+>
+  <section class="projects-index__hero section">
+    <div class="container projects-index__hero-inner">
+      <div class="projects-index__intro">
+        <p class="projects-index__eyebrow text-muted text-xs">Project archive</p>
+        <h1>Projects</h1>
+        <p class="projects-index__lede body-serif">
+          A working portfolio of agent systems, Copilot extensions, and practical AI tooling—each
+          with the context, links, and delivery details behind the build.
+        </p>
+      </div>
+
+      <p class="projects-index__count text-muted text-sm">
+        {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {projects.length > 0 ? (
+        <div class="projects-index__grid">
+          {projects.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              tags={project.data.tags}
+              href={`${import.meta.env.BASE_URL}projects/${project.id.replace(/\.md$/, '')}/`}
+              repoUrl={project.data.repo}
+              liveUrl={project.data.liveUrl}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="projects-index__empty body-serif">
+          Project entries will appear here as soon as they are added to the content collection.
+        </p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-index__hero-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    justify-content: space-between;
+    align-items: end;
+  }
+
+  .projects-index__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-inline-size: var(--prose-max);
+  }
+
+  .projects-index__eyebrow {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .projects-index__lede {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .projects-index__count {
+    white-space: nowrap;
+  }
+
+  .projects-index__grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .projects-index__empty {
+    color: var(--color-text-muted);
+  }
+</style>
