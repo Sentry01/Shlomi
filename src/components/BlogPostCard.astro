@@ -15,9 +15,11 @@ interface Props {
   href?: string;
   /** When true, marks the card as linking to an external original. */
   isExternal?: boolean;
+  /** Visual variant of the card */
+  variant?: 'default' | 'lead' | 'compact';
 }
 
-const { title, description, pubDate, tags, readingTime, href, isExternal } = Astro.props;
+const { title, description, pubDate, tags, readingTime, href, isExternal, variant = 'default' } = Astro.props;
 
 const dateValue = pubDate ? new Date(pubDate) : null;
 const isValidDate = !!dateValue && !Number.isNaN(dateValue.getTime());
@@ -34,10 +36,10 @@ const Tag = href ? 'a' : 'div';
 const linkProps = href
   ? {
       href,
-      class: 'card card--linked blog-card',
+      class: `card card--linked blog-card blog-card--${variant}`,
       ...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
     }
-  : { class: 'card blog-card' };
+  : { class: `card blog-card blog-card--${variant}` };
 ---
 
 <Tag {...linkProps}>
@@ -110,8 +112,18 @@ const linkProps = href
 
   .blog-card__title {
     font-size: var(--text-xl);
-    font-weight: 600;
-    line-height: var(--leading-snug);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+  }
+
+  .blog-card--lead .blog-card__title {
+    font-size: var(--text-3xl);
+    margin-block-end: var(--space-2);
+  }
+
+  .blog-card--compact .blog-card__title {
+    font-size: var(--text-lg);
   }
 
   .card--linked .blog-card__title {
@@ -138,6 +150,16 @@ const linkProps = href
     font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
+  }
+
+  .blog-card--lead .blog-card__desc {
+    font-size: var(--text-lg);
+    max-inline-size: 38rem;
+  }
+
+  .blog-card--compact .blog-card__desc {
+    font-size: var(--text-sm);
+    line-height: 1.5;
   }
 
   .blog-card__tags {

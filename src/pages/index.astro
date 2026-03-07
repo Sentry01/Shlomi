@@ -34,34 +34,16 @@ const featuredSpeaking = speakingEvents
   description="Executive-plus-builder leader across AI GTM, application security, enterprise growth, and practical agentic engineering."
   mainClass="home-page"
 >
-  <header class="masthead container">
-    <div class="masthead__content prose">
-      <span class="masthead__eyebrow">Shlomi Shaki · AI GTM & Engineering</span>
-      <h1 class="masthead__title">
-        Building the bridge between enterprise strategy and agentic code.
-      </h1>
-      <p class="masthead__intro">
-        Executive leader and hands-on builder. Currently focused on the practical reality of AI adoption: how organizations move from "chat" to "shipping software."
-      </p>
-    </div>
-  </header>
+  <section class="section section--cover" id="latest-writing">
+    <div class="container">
+      <header class="section-header">
+        <h2 class="section-title">Latest Writing</h2>
+        <a class="section-link" href={`${baseUrl}blog/`}>View all articles</a>
+      </header>
 
-  <section class="section section--writing" id="latest-writing">
-    <div class="container home-section">
-      <div class="home-section__header">
-        <div class="section-heading section-heading--wide prose">
-          <span class="section-heading__eyebrow">Latest writing</span>
-          <h2>Essays from the field.</h2>
-          <p>
-            Dispatches on AI engineering, software trust, and making adoption real.
-          </p>
-        </div>
-        <a class="section-link" href={`${baseUrl}blog/`}>View all writing</a>
-      </div>
-
-      {leadPost && (
-        <div class="writing-showcase">
-          <div class="writing-showcase__lead">
+      <div class="cover-grid">
+        {leadPost && (
+          <div class="cover-main">
             <BlogPostCard
               title={leadPost.data.title}
               description={leadPost.data.description}
@@ -71,27 +53,29 @@ const featuredSpeaking = speakingEvents
                 ? leadPost.data.canonical
                 : `${baseUrl}blog/${blogSlug(leadPost.id)}/`}
               isExternal={isExternalCanonical(leadPost.data.canonical)}
+              variant="lead"
             />
           </div>
+        )}
 
-          {supportingPosts.length > 0 && (
-            <div class="writing-showcase__rail">
-              {supportingPosts.map((post) => (
-                <BlogPostCard
-                  title={post.data.title}
-                  description={post.data.description}
-                  pubDate={post.data.pubDate}
-                  tags={post.data.tags}
-                  href={isExternalCanonical(post.data.canonical)
-                    ? post.data.canonical
-                    : `${baseUrl}blog/${blogSlug(post.id)}/`}
-                  isExternal={isExternalCanonical(post.data.canonical)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+        {supportingPosts.length > 0 && (
+          <div class="cover-rail">
+            {supportingPosts.map((post) => (
+              <BlogPostCard
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                tags={post.data.tags}
+                href={isExternalCanonical(post.data.canonical)
+                  ? post.data.canonical
+                  : `${baseUrl}blog/${blogSlug(post.id)}/`}
+                isExternal={isExternalCanonical(post.data.canonical)}
+                variant="compact"
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   </section>
 
@@ -101,9 +85,6 @@ const featuredSpeaking = speakingEvents
         <div class="section-heading section-heading--wide prose">
           <span class="section-heading__eyebrow">Speaking</span>
           <h2>Insights from the room.</h2>
-          <p>
-            Key takeaways from recent roundtables and executive sessions.
-          </p>
         </div>
         <a class="section-link" href={`${baseUrl}speaking/`}>View all speaking</a>
       </div>
@@ -161,39 +142,71 @@ const featuredSpeaking = speakingEvents
     background: var(--color-bg);
   }
 
-  .masthead {
-    padding-block-start: clamp(6rem, 15vh, 10rem);
-    padding-block-end: clamp(3rem, 5vh, 5rem);
+  /* Cover Section */
+  .section--cover {
+    padding-block-start: clamp(6rem, 12vh, 10rem);
+    padding-block-end: var(--space-12);
+    min-height: 85vh;
   }
 
-  .masthead__content {
-    max-inline-size: 52rem;
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-block-end: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+    padding-block-end: var(--space-4);
   }
 
-  .masthead__eyebrow {
-    display: block;
-    margin-block-end: var(--space-4);
+  .section-title {
     font-size: var(--text-sm);
     font-weight: 600;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-muted);
   }
 
-  .masthead__title {
-    font-size: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);
+  .cover-grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .cover-main :global(.blog-card) {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  .cover-main :global(.blog-card__title) {
+    font-size: clamp(2rem, 1.5rem + 2.5vw, 4rem);
     line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-block-end: var(--space-6);
+    margin-block-end: var(--space-4);
   }
 
-  .masthead__intro {
-    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.35rem);
-    line-height: 1.6;
+  .cover-main :global(.blog-card__desc) {
+    font-size: clamp(1.125rem, 1.05rem + 0.5vw, 1.35rem);
+    max-inline-size: 45rem;
     color: var(--color-text-muted);
-    max-inline-size: 42rem;
   }
 
+  .cover-rail {
+    display: grid;
+    gap: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    padding-block-start: var(--space-8);
+  }
+
+  .cover-rail :global(.blog-card) {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .cover-rail :global(.blog-card__title) {
+    font-size: var(--text-lg);
+  }
+
+  /* Shared Section Utilities */
   .home-section {
     display: grid;
     gap: clamp(var(--space-8), 4vw, var(--space-12));
@@ -240,34 +253,20 @@ const featuredSpeaking = speakingEvents
     transform: translateX(4px);
   }
 
-  /* Writing Section */
-  .writing-showcase {
-    display: grid;
-    gap: clamp(var(--space-6), 3vw, var(--space-8));
-  }
+  @media (min-width: 64rem) {
+    .cover-grid {
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-12);
+      align-items: start;
+    }
 
-  .writing-showcase__lead :global(.card) {
-    background: var(--color-bg-subtle);
-    border: 1px solid rgba(0,0,0,0.04);
-    padding: clamp(var(--space-6), 4vw, var(--space-10));
-    border-radius: 1.5rem;
-  }
-
-  .writing-showcase__lead :global(.blog-card__title) {
-    font-size: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
-  }
-
-  .writing-showcase__rail {
-    display: grid;
-    gap: var(--space-6);
-  }
-
-  .writing-showcase__rail :global(.card) {
-    height: 100%;
-    background: var(--color-bg-subtle);
-    border: 1px solid rgba(0,0,0,0.04);
-    border-radius: 1.5rem;
-    padding: var(--space-6);
+    .cover-rail {
+      border-top: none;
+      padding-block-start: 0;
+      border-left: 1px solid var(--color-border);
+      padding-inline-start: var(--space-8);
+      height: 100%;
+    }
   }
 
   /* Speaking Section */
@@ -277,10 +276,9 @@ const featuredSpeaking = speakingEvents
   }
 
   .speaking-grid :global(.speaking-card) {
-    background: var(--color-bg-subtle);
-    border: 1px solid rgba(0,0,0,0.04);
-    border-radius: 1.5rem;
-    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0;
   }
 
   /* Projects Section */
@@ -290,17 +288,12 @@ const featuredSpeaking = speakingEvents
   }
 
   .project-grid :global(.project-card) {
-    background: var(--color-bg-subtle);
-    border: 1px solid rgba(0,0,0,0.04);
-    border-radius: 1.5rem;
-    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0;
   }
 
   @media (min-width: 64rem) {
-    .writing-showcase {
-      grid-template-columns: 1.4fr 1fr;
-    }
-    
     .speaking-grid {
       grid-template-columns: 1fr 1fr;
     }
