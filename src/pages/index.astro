@@ -20,164 +20,173 @@ const latestPosts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
 
+const leadPost = latestPosts[0];
+const supportingPosts = latestPosts.slice(1);
+
 const speakingHighlight =
   speakingEvents.find(({ title }) => title === 'OctoNihon Tokyo User Group') ?? speakingEvents[0];
-
-const proofPoints = [
-  {
-    value: 'US$900K → US$18M',
-    label: 'Scaled GitHub AppSec ARR across APJ',
-  },
-  {
-    value: '25+ years',
-    label: 'Enterprise technology across engineering, security, and GTM',
-  },
-  {
-    value: '350+ test harness',
-    label: 'Autonomous harness run proving long-session agent workflows',
-  },
-  {
-    value: '4× Presidents Club',
-    label: 'Consistent performance across multiple growth stages',
-  },
-];
 ---
 
 <BaseLayout
   title="Shlomi Shaki"
   description="Executive-plus-builder leader across AI GTM, application security, enterprise growth, and practical agentic engineering."
+  mainClass="home-page"
 >
-  <Hero backgroundImage="/images/hero-rko-stage.png" imageLayout="panel" fullHeight class="home-hero">
-    <span slot="eyebrow" class="hero-eyebrow">AI GTM lead · builder · speaker</span>
+  <Hero backgroundImage="/images/hero-rko-stage.png" imageLayout="stacked" class="home-hero">
+    <span slot="eyebrow" class="hero-eyebrow">Writing · speaking · projects</span>
     <h1 slot="title" class="home-hero__title">
-      Executive operator. Hands-on builder. Trusted where AI has to work in the real world.
+      A field notebook for AI delivery, practical engineering, and the stories around the work.
     </h1>
 
     <p>
-      Enterprise software does not need more AI theater. It needs clear strategy, technical
-      truth, and systems people can actually adopt. That is the work I do across revenue,
-      product narrative, and field execution.
+      This site is less a resume and more a working notebook: essays on AI engineering and
+      adoption, selected talks, and the projects that make the ideas concrete.
     </p>
     <p>
-      I lead go-to-market motions, run executive conversations, and still build the demos,
-      harnesses, and agent workflows that make the story credible. The result is positioning
-      that resonates in the boardroom and holds up in front of engineers.
+      If you want the background, the About page is there. The homepage is for what I am
+      publishing, presenting, and shipping right now.
     </p>
 
     <div slot="actions" class="home-hero__actions">
       <div class="home-hero__cta-group">
-        <a class="button-link button-link--primary" href={`${baseUrl}about/`}>About</a>
-        <a class="button-link" href="#featured-work">Featured work</a>
-        <a class="button-link" href="#latest-writing">Latest writing</a>
+        <a class="button-link button-link--primary" href="#latest-writing">Read latest</a>
+        <a class="button-link" href={`${baseUrl}speaking/`}>Speaking</a>
+        <a class="button-link" href={`${baseUrl}projects/`}>Projects</a>
       </div>
 
       <div class="home-hero__profiles">
-        <span class="home-hero__profiles-label">GitHub and LinkedIn</span>
-        <SocialLinks />
+        <span class="home-hero__profiles-label">Elsewhere</span>
+        <SocialLinks class="home-hero__socials" />
       </div>
     </div>
   </Hero>
 
-  <section class="section section--proof">
-    <div class="container">
-      <ul class="proof-strip" role="list">
-        {proofPoints.map((point) => (
-          <li class="card proof-strip__item">
-            <span class="proof-strip__value">{point.value}</span>
-            <span class="proof-strip__label">{point.label}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" id="featured-work">
-    <div class="container">
-      <div class="section-heading prose">
-        <span class="section-heading__eyebrow">Featured projects</span>
-        <h2>Built to make modern software work a little more real.</h2>
-        <p>
-          Recent projects focus on agent orchestration, practical AI engineering, and the
-          scaffolding needed to make autonomous workflows trustworthy.
-        </p>
-      </div>
-
-      <div class="grid grid--cards content-grid">
-        {featuredProjects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            href={project.data.liveUrl ?? project.data.repo}
-            repo={project.data.liveUrl ? 'Live demo' : 'GitHub repo'}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="latest-writing">
-    <div class="container">
-      <div class="section-heading prose">
+  <section class="section section--writing" id="latest-writing">
+    <div class="container home-section">
+      <div class="section-heading section-heading--wide prose">
         <span class="section-heading__eyebrow">Latest writing</span>
-        <h2>Writing that stays close to delivery, trust, and adoption.</h2>
+        <h2>Essays rooted in what teams actually have to ship.</h2>
         <p>
-          I write about AI engineering, software trust, and the operational realities behind
-          enterprise technology decisions.
+          Recent posts connect AI engineering, software trust, and the work of making adoption
+          real beyond the keynote slide.
         </p>
       </div>
 
-      <div class="grid grid--cards content-grid">
-        {latestPosts.map((post) => (
-          <BlogPostCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            tags={post.data.tags}
-            href={isExternalCanonical(post.data.canonical)
-              ? post.data.canonical
-              : `${baseUrl}blog/${blogSlug(post.id)}/`}
-            isExternal={isExternalCanonical(post.data.canonical)}
-          />
-        ))}
-      </div>
+      {leadPost && (
+        <div class="writing-showcase">
+          <div class="writing-showcase__lead">
+            <BlogPostCard
+              title={leadPost.data.title}
+              description={leadPost.data.description}
+              pubDate={leadPost.data.pubDate}
+              tags={leadPost.data.tags}
+              href={isExternalCanonical(leadPost.data.canonical)
+                ? leadPost.data.canonical
+                : `${baseUrl}blog/${blogSlug(leadPost.id)}/`}
+              isExternal={isExternalCanonical(leadPost.data.canonical)}
+            />
+          </div>
+
+          {supportingPosts.length > 0 && (
+            <div class="writing-showcase__rail">
+              {supportingPosts.map((post) => (
+                <BlogPostCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  pubDate={post.data.pubDate}
+                  tags={post.data.tags}
+                  href={isExternalCanonical(post.data.canonical)
+                    ? post.data.canonical
+                    : `${baseUrl}blog/${blogSlug(post.id)}/`}
+                  isExternal={isExternalCanonical(post.data.canonical)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <a class="section-link" href={`${baseUrl}blog/`}>View all writing</a>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container speaking-highlight">
-      <div class="section-heading prose">
-        <span class="section-heading__eyebrow">Speaking highlight</span>
-        <h2>From executive rooms to technical communities.</h2>
-        <p>
-          The through-line is the same: explain what is changing, cut through noise, and give
-          teams a more useful way to think about the work ahead.
-        </p>
-      </div>
+  <section class="section section--collections" id="speaking-and-projects">
+    <div class="container home-section">
+      <section class="collection-panel collection-panel--speaking">
+        <div class="section-heading prose">
+          <span class="section-heading__eyebrow">Speaking</span>
+          <h2>Talks, roundtables, and public conversations.</h2>
+          <p>
+            A selection of recent appearances on AI delivery, developer productivity, and
+            practical software trust.
+          </p>
+        </div>
 
-      <SpeakingCard
-        title={speakingHighlight.title}
-        location={[speakingHighlight.format, speakingHighlight.region, speakingHighlight.date]
-          .filter(Boolean)
-          .join(' · ')}
-        description={speakingHighlight.summary}
-        image={speakingHighlight.images?.[0]}
-        imageAlt={speakingHighlight.imageAlt ?? speakingHighlight.title}
-      />
+        <SpeakingCard
+          title={speakingHighlight.title}
+          format={speakingHighlight.format}
+          year={speakingHighlight.date}
+          location={speakingHighlight.region}
+          audience={speakingHighlight.audience}
+          description={speakingHighlight.summary}
+          image={speakingHighlight.images?.[0]}
+          imageAlt={speakingHighlight.imageAlt ?? speakingHighlight.title}
+          links={speakingHighlight.sourceLinks}
+          featured
+          imageLoading="eager"
+        />
+
+        <a class="section-link" href={`${baseUrl}speaking/`}>Browse all speaking events</a>
+      </section>
+
+      <section class="collection-panel collection-panel--projects" id="featured-work">
+        <div class="section-heading prose">
+          <span class="section-heading__eyebrow">Projects</span>
+          <h2>Projects that turn ideas into something you can inspect.</h2>
+          <p>
+            Selected builds spanning agent orchestration, Copilot workflows, and practical
+            tooling that supports the writing.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          {featuredProjects.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              tags={project.data.tags}
+              href={`${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`}
+              repoUrl={project.data.repo}
+              liveUrl={project.data.liveUrl}
+            />
+          ))}
+        </div>
+
+        <a class="section-link" href={`${baseUrl}projects/`}>Explore the full project archive</a>
+      </section>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  :global(main.home-page) {
+    background: linear-gradient(180deg, #f3ede8 0%, #f8f4f0 22rem, var(--color-bg) 46rem);
+  }
+
+  :global(main.home-page .container) {
+    max-inline-size: 78rem;
+  }
+
   .home-hero__title {
-    max-inline-size: 11ch;
+    max-inline-size: 13ch;
   }
 
   .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-5);
-    align-items: center;
+    align-items: end;
+    justify-content: space-between;
   }
 
   .home-hero__cta-group {
@@ -191,6 +200,10 @@ const proofPoints = [
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-3);
+  }
+
+  .home-hero__socials :global(.social-links) {
+    gap: var(--space-2);
   }
 
   .home-hero__profiles-label,
@@ -210,10 +223,11 @@ const proofPoints = [
     align-items: center;
     justify-content: center;
     min-block-size: 2.75rem;
-    padding: 0 var(--space-5);
-    border: 1px solid rgba(26, 26, 26, 0.14);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.42);
+    padding: 0 var(--space-4);
+    border: 1px solid rgba(26, 26, 26, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 12px 28px rgba(48, 38, 44, 0.06);
     color: var(--color-text);
     text-decoration: none;
     font-size: var(--text-sm);
@@ -221,13 +235,15 @@ const proofPoints = [
     transition:
       border-color var(--duration-fast) var(--ease-out),
       background-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out);
+      color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
   }
 
   .button-link:hover {
     border-color: rgba(26, 26, 26, 0.26);
-    background: rgba(255, 255, 255, 0.64);
+    background: rgba(255, 255, 255, 0.9);
     color: var(--color-text);
+    transform: translateY(-1px);
   }
 
   .button-link--primary {
@@ -242,57 +258,137 @@ const proofPoints = [
     color: var(--color-bg);
   }
 
-  .section--proof {
-    padding-block-start: 0;
-  }
-
-  .proof-strip {
+  .home-section,
+  .collection-panel,
+  .writing-showcase__lead,
+  .writing-showcase__rail,
+  .section-heading {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
     gap: var(--space-4);
-    list-style: none;
   }
 
-  .proof-strip__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    min-block-size: 100%;
+  .section--writing {
+    padding-block-start: var(--space-12);
   }
 
-  .proof-strip__value {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    line-height: var(--leading-tight);
+  .section--collections {
+    padding-block-start: var(--space-12);
   }
 
-  .proof-strip__label,
+  .section-heading--wide {
+    max-inline-size: 42rem;
+  }
+
   .section-heading p {
     color: var(--color-text-muted);
   }
 
-  .section-heading {
+  .writing-showcase {
     display: grid;
+    gap: var(--space-5);
+  }
+
+  .writing-showcase__lead :global(.card),
+  .writing-showcase__rail :global(.card),
+  .collection-panel {
+    border-color: rgba(58, 48, 54, 0.08);
+    box-shadow: 0 18px 44px rgba(48, 38, 44, 0.07);
+  }
+
+  .writing-showcase__lead :global(.card) {
+    min-block-size: 100%;
+    padding: clamp(var(--space-6), 4vw, var(--space-8));
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 246, 242, 0.9) 100%);
+  }
+
+  .writing-showcase__lead :global(.blog-card__header) {
     gap: var(--space-3);
+  }
+
+  .writing-showcase__lead :global(.blog-card__title) {
+    font-size: clamp(1.75rem, 1.35rem + 1vw, 2.35rem);
+    max-inline-size: 15ch;
+  }
+
+  .writing-showcase__lead :global(.blog-card__desc) {
+    font-size: var(--text-base);
+    max-inline-size: 38rem;
+  }
+
+  .writing-showcase__rail :global(.card),
+  .project-stack :global(.card),
+  .collection-panel {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 244, 240, 0.82) 100%);
   }
 
   .section-heading__eyebrow {
     color: var(--color-text-muted);
   }
 
-  .content-grid {
-    margin-block-start: var(--space-8);
+  .collection-grid {
+    display: grid;
+    gap: var(--space-6);
   }
 
-  .speaking-highlight {
+  .collection-panel {
+    padding: clamp(var(--space-5), 3vw, var(--space-8));
+    border: 1px solid rgba(58, 48, 54, 0.08);
+    border-radius: 1.5rem;
+  }
+
+  .collection-panel--speaking :global(.speaking-card) {
+    max-inline-size: none;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    inline-size: fit-content;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .section-link::after {
+    content: '→';
+    color: rgba(26, 26, 26, 0.52);
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .section-link:hover::after {
+    transform: translateX(3px);
+  }
+
+  .project-grid {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .project-grid :global(.project-card) {
+    gap: var(--space-4);
+  }
+
+  .project-grid :global(.project-card__desc) {
+    max-inline-size: 30rem;
+  }
+
+  @media (max-width: 42rem) {
+    .home-hero__actions,
+    .home-hero__profiles {
+      flex-direction: column;
+      align-items: start;
+    }
   }
 
   @media (min-width: 64rem) {
-    .speaking-highlight {
-      grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
-      align-items: start;
+    .writing-showcase {
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      align-items: stretch;
     }
   }
 </style>

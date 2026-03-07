@@ -11,13 +11,14 @@
  * Optional props:
  *   - heading: fallback heading text if no `title` slot is provided
  *   - backgroundImage: URL for a cinematic background image
+ *   - imageLayout: background, split panel, or stacked image-over-content treatment
  *   - overlay: whether to add a dark gradient overlay for text readability (default true)
  *   - fullHeight: whether the hero spans the full viewport height (default false)
  */
 interface Props {
   heading?: string;
   backgroundImage?: string;
-  imageLayout?: 'background' | 'panel';
+  imageLayout?: 'background' | 'panel' | 'stacked';
   overlay?: boolean;
   fullHeight?: boolean;
   class?: string;
@@ -34,6 +35,7 @@ const {
 
 const hasImage = !!backgroundImage;
 const useImagePanel = hasImage && imageLayout === 'panel';
+const useImageStack = hasImage && imageLayout === 'stacked';
 const normalizedBackgroundImage =
   backgroundImage?.startsWith('/')
     ? `${import.meta.env.BASE_URL}${backgroundImage.replace(/^\/+/, '')}`
@@ -43,16 +45,21 @@ const normalizedBackgroundImage =
 <section
   class:list={[
     'hero',
-    { 'hero--with-image': hasImage && !useImagePanel },
+    { 'hero--with-image': hasImage && !useImagePanel && !useImageStack },
     { 'hero--panel': useImagePanel },
+    { 'hero--stacked': useImageStack },
     { 'hero--full': fullHeight },
     className,
   ]}
   style={hasImage ? `--hero-bg: url('${normalizedBackgroundImage}')` : undefined}
 >
-  {hasImage && overlay && !useImagePanel && <div class="hero__overlay" aria-hidden="true" />}
+  {hasImage && overlay && !useImagePanel && !useImageStack && (
+    <div class="hero__overlay" aria-hidden="true" />
+  )}
 
   <div class="hero__frame container">
+    {useImageStack && <div class="hero__visual hero__visual--stacked" aria-hidden="true" />}
+
     <div class="hero__content">
       <slot name="eyebrow">
         {/* Empty if no eyebrow provided — renders nothing */}
@@ -71,7 +78,7 @@ const normalizedBackgroundImage =
       </slot>
     </div>
 
-    {useImagePanel && <div class="hero__visual" aria-hidden="true" />}
+    {useImagePanel && <div class="hero__visual hero__visual--panel" aria-hidden="true" />}
   </div>
 </section>
 
@@ -222,7 +229,7 @@ const normalizedBackgroundImage =
     color: rgba(53, 47, 50, 0.64);
   }
 
-  .hero__visual {
+  .hero__visual--panel {
     position: relative;
     min-block-size: clamp(18rem, 44vw, 32rem);
     block-size: 100%;
@@ -234,7 +241,7 @@ const normalizedBackgroundImage =
     box-shadow: 0 28px 72px rgba(33, 35, 48, 0.22);
   }
 
-  .hero__visual::after {
+  .hero__visual--panel::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -242,6 +249,95 @@ const normalizedBackgroundImage =
       linear-gradient(135deg, rgba(248, 241, 245, 0.12), transparent 38%),
       linear-gradient(0deg, rgba(22, 24, 36, 0.16), rgba(22, 24, 36, 0.04));
     pointer-events: none;
+  }
+
+  .hero--stacked {
+    align-items: stretch;
+    padding-block: clamp(var(--space-8), 7vw, var(--space-16));
+    background:
+      radial-gradient(circle at top center, rgba(225, 204, 213, 0.42), transparent 42%),
+      linear-gradient(180deg, #f3ede8 0%, #f7f3f0 52%, #fcfbfa 100%);
+    color: var(--color-text);
+  }
+
+  .hero--stacked.hero--full {
+    min-block-size: clamp(40rem, 92dvh, 58rem);
+  }
+
+  .hero--stacked .hero__frame {
+    display: grid;
+    gap: clamp(var(--space-5), 4vw, var(--space-8));
+  }
+
+  .hero--stacked .hero__content {
+    max-inline-size: min(100%, 58rem);
+    margin-inline: auto;
+    margin-block-start: clamp(-3.75rem, -5vw, -2rem);
+    padding: clamp(var(--space-6), 4vw, var(--space-8));
+    border: 1px solid rgba(58, 48, 54, 0.08);
+    border-radius: clamp(1rem, 1.8vw, 1.5rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 244, 0.82) 100%);
+    box-shadow: 0 24px 60px rgba(52, 39, 46, 0.1);
+  }
+
+  .hero--stacked .hero__heading {
+    font-size: clamp(2.75rem, 2.1rem + 1.8vw, 4.75rem);
+    color: var(--color-text);
+    text-shadow: none;
+    text-wrap: balance;
+  }
+
+  .hero--stacked .hero__body {
+    max-inline-size: 42rem;
+    color: rgba(26, 26, 26, 0.76);
+    font-family: var(--font-serif);
+    font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+    line-height: 1.72;
+  }
+
+  .hero--stacked .hero__content :global([slot='eyebrow']),
+  .hero--stacked .hero__content :global(.hero-eyebrow) {
+    color: rgba(59, 64, 72, 0.72);
+  }
+
+  .hero__visual--stacked {
+    position: relative;
+    inline-size: 100%;
+    max-inline-size: min(100%, 64rem);
+    min-block-size: clamp(18rem, 42vw, 32rem);
+    margin-inline: auto;
+    border-radius: clamp(1rem, 2vw, 1.75rem);
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(20, 24, 36, 0.18)),
+      var(--hero-bg) center 26% / cover no-repeat;
+    box-shadow: 0 30px 80px rgba(28, 26, 32, 0.2);
+  }
+
+  .hero__visual--stacked::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .hero__visual--stacked::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(250, 246, 243, 0.1), transparent 28%),
+      linear-gradient(0deg, rgba(20, 22, 30, 0.18), rgba(20, 22, 30, 0.04));
+    pointer-events: none;
+  }
+
+  @media (max-width: 42rem) {
+    .hero--stacked .hero__content {
+      margin-block-start: clamp(-2rem, -8vw, -1rem);
+    }
   }
 
   @media (min-width: 64rem) {

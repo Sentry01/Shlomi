@@ -60,7 +60,8 @@ const linkProps = href
 
     {isExternal && (
       <span class="blog-card__external text-muted text-xs">
-        ↗ Originally published externally
+        <span class="blog-card__external-icon" aria-hidden="true">↗</span>
+        <span>Originally published externally</span>
       </span>
     )}
   </div>
@@ -118,7 +119,15 @@ const linkProps = href
   }
 
   .blog-card__external {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
     font-style: italic;
+  }
+
+  .blog-card__external-icon {
+    line-height: 1;
+    transform: translateY(-1px);
   }
 
   .blog-card__desc {

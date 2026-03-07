@@ -54,12 +54,14 @@ const rootProps = href && !hasResourceLinks
       <div class="project-card__links">
         {repoUrl && (
           <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="project-card__link">
-            Source ↗
+            <span>Source</span>
+            <span class="project-card__link-icon" aria-hidden="true">↗</span>
           </a>
         )}
         {liveUrl && (
           <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="project-card__link">
-            Live ↗
+            <span>Live</span>
+            <span class="project-card__link-icon" aria-hidden="true">↗</span>
           </a>
         )}
       </div>
@@ -132,9 +134,17 @@ const rootProps = href && !hasResourceLinks
   }
 
   .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
     font-size: var(--text-xs);
     font-weight: 600;
     text-decoration: none;
+  }
+
+  .project-card__link-icon {
+    line-height: 1;
+    transform: translateY(-1px);
   }
 
   .project-card__link:hover {
