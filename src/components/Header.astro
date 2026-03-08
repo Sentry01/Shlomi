@@ -221,13 +221,12 @@ function isActive(href: string): boolean {
       color var(--duration-fast) var(--ease-out);
   }
 
-  .site-header__link:hover,
   .site-header__link.is-active {
     color: var(--color-text);
     background: var(--color-accent-light);
   }
 
-  .site-header__link.is-active:hover {
+  .site-header__link:hover {
     background: var(--color-accent);
   }
 
@@ -313,18 +312,17 @@ function isActive(href: string): boolean {
       color var(--duration-fast) var(--ease-out);
   }
 
-  .site-header__dropdown-link:hover,
   .site-header__dropdown-link.is-active {
     background: var(--color-accent-light);
     color: var(--color-text);
   }
 
-  .site-header__dropdown-link.is-active:hover {
+  .site-header__dropdown-link:hover {
     background: var(--color-accent);
   }
 
-  :global(:root[data-theme='dark']) .site-header__link.is-active:hover,
-  :global(:root[data-theme='dark']) .site-header__dropdown-link.is-active:hover {
+  :global(:root[data-theme='dark']) .site-header__link:hover,
+  :global(:root[data-theme='dark']) .site-header__dropdown-link:hover {
     color: var(--color-bg);
   }
 
