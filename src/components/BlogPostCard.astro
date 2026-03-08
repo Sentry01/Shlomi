@@ -15,9 +15,11 @@ interface Props {
   href?: string;
   /** When true, marks the card as linking to an external original. */
   isExternal?: boolean;
+  /** Visual variant of the card */
+  variant?: 'default' | 'lead' | 'compact';
 }
 
-const { title, description, pubDate, tags, readingTime, href, isExternal } = Astro.props;
+const { title, description, pubDate, tags, readingTime, href, isExternal, variant = 'default' } = Astro.props;
 
 const dateValue = pubDate ? new Date(pubDate) : null;
 const isValidDate = !!dateValue && !Number.isNaN(dateValue.getTime());
@@ -34,10 +36,10 @@ const Tag = href ? 'a' : 'div';
 const linkProps = href
   ? {
       href,
-      class: 'card card--linked blog-card',
+      class: `card card--linked blog-card blog-card--${variant}`,
       ...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
     }
-  : { class: 'card blog-card' };
+  : { class: `card blog-card blog-card--${variant}` };
 ---
 
 <Tag {...linkProps}>
@@ -60,7 +62,8 @@ const linkProps = href
 
     {isExternal && (
       <span class="blog-card__external text-muted text-xs">
-        ↗ Originally published externally
+        <span class="blog-card__external-icon" aria-hidden="true">↗</span>
+        <span>Originally published externally</span>
       </span>
     )}
   </div>
@@ -82,14 +85,14 @@ const linkProps = href
   .blog-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-4);
     block-size: 100%;
   }
 
   .blog-card__header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .blog-card__meta {
@@ -108,9 +111,19 @@ const linkProps = href
   }
 
   .blog-card__title {
+    font-size: clamp(1.5rem, 1.2rem + 0.6vw, 1.95rem);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+  }
+
+  .blog-card--lead .blog-card__title {
+    font-size: var(--text-3xl);
+    margin-block-end: var(--space-2);
+  }
+
+  .blog-card--compact .blog-card__title {
     font-size: var(--text-lg);
-    font-weight: 600;
-    line-height: var(--leading-snug);
   }
 
   .card--linked .blog-card__title {
@@ -118,13 +131,41 @@ const linkProps = href
   }
 
   .blog-card__external {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    inline-size: fit-content;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
+    background: rgba(74, 124, 155, 0.08);
     font-style: italic;
   }
 
+  .blog-card__external-icon {
+    line-height: 1;
+    transform: translateY(-1px);
+  }
+
   .blog-card__desc {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .blog-card--lead .blog-card__desc {
+    display: block;
+    font-size: var(--text-lg);
+    max-inline-size: 38rem;
+    overflow: visible;
+  }
+
+  .blog-card--compact .blog-card__desc {
+    font-size: var(--text-sm);
+    line-height: 1.5;
   }
 
   .blog-card__tags {

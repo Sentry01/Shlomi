@@ -56,6 +56,54 @@ const serializedStructuredData = structuredData ? JSON.stringify(structuredData)
     <meta name="generator" content={Astro.generator} />
     {robots && <meta name="robots" content={robots} />}
 
+    <script is:inline>
+      (() => {
+        const storageKey = 'site-theme';
+        const root = document.documentElement;
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const applyTheme = (theme) => {
+          root.dataset.theme = theme;
+          document.dispatchEvent(new CustomEvent('site-theme-change', { detail: theme }));
+        };
+
+        const storedTheme = localStorage.getItem(storageKey);
+        const initialTheme = storedTheme === 'light' || storedTheme === 'dark'
+          ? storedTheme
+          : mediaQuery.matches
+            ? 'dark'
+            : 'light';
+
+        applyTheme(initialTheme);
+
+        const handleSystemThemeChange = (event) => {
+          if (!localStorage.getItem(storageKey)) {
+            applyTheme(event.matches ? 'dark' : 'light');
+          }
+        };
+
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
+
+        window.__siteTheme = {
+          get() {
+            return root.dataset.theme === 'dark' ? 'dark' : 'light';
+          },
+          set(theme) {
+            if (theme !== 'light' && theme !== 'dark') return;
+            localStorage.setItem(storageKey, theme);
+            applyTheme(theme);
+          },
+          clear() {
+            localStorage.removeItem(storageKey);
+            applyTheme(mediaQuery.matches ? 'dark' : 'light');
+          },
+          toggle() {
+            this.set(this.get() === 'dark' ? 'light' : 'dark');
+          },
+        };
+      })();
+    </script>
+
     <title>{siteTitle}</title>
 
     <link rel="canonical" href={canonicalHref} />

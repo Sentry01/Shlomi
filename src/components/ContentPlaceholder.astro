@@ -1,0 +1,66 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  className?: string;
+}
+
+const { label, title, className } = Astro.props;
+---
+
+<figure class:list={['content-placeholder', className]}>
+  <div class="content-placeholder__surface">
+    <span class="content-placeholder__eyebrow">{label}</span>
+    <p class="content-placeholder__title">{title}</p>
+  </div>
+</figure>
+
+<style>
+  .content-placeholder {
+    margin: 0 0 var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top left, var(--color-accent-light), transparent 44%),
+      linear-gradient(160deg, rgba(255, 255, 255, 0.18), transparent 58%),
+      var(--color-bg-subtle);
+    box-shadow: var(--shadow-card);
+  }
+
+  .content-placeholder__surface {
+    aspect-ratio: 16 / 9;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: clamp(var(--space-6), 4vw, var(--space-10));
+    text-align: center;
+  }
+
+  .content-placeholder__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2rem;
+    padding-inline: 0.75rem;
+    border-radius: 999px;
+    background: rgba(18, 20, 28, 0.72);
+    color: #f7fbff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .content-placeholder__title {
+    max-inline-size: 24rem;
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem);
+    line-height: var(--leading-snug);
+    font-family: var(--font-serif);
+  }
+
+  :global(:root[data-theme='dark']) .content-placeholder__eyebrow {
+    background: rgba(6, 10, 14, 0.78);
+  }
+ </style>

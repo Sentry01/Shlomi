@@ -3,7 +3,7 @@ title: 'Nine Hours, 350 Tests, Zero Babysitting: Autonomous TDD with Copilot CLI
 description: 'AI coding assistants forget context, declare victory early, and lose progress between sessions. CopilotHarness fixes this with persistent TDD loops that ran autonomously for 9+ hours across 350+ tests.'
 pubDate: 2026-03-07
 tags: ['ai', 'copilot', 'tdd', 'autonomous', 'testing', 'agent']
-draft: true
+draft: false
 ---
 
 ## The babysitting problem

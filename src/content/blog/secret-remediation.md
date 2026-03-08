@@ -49,8 +49,6 @@ Dealing with secrets that were found in your code and repositories is often misu
 
 The diagram below shows an **example** process flow to handle secrets that are found. Note the time and effort each step takes. Shifting left to eliminate those mistakes will save considerable time, costs, and effort in remediation.
 
-<img src="../../images/secret-remediation-1.png" alt="Secret remediation example process flow" />
-
 **Note: Many of the steps below should happen in parallel. Some of those steps are almost always cyclical (such as re-validating, testing, and remediating multiple apps in case of shared secrets).**
 
 ## Considerations before removing an existing secret from the code
@@ -99,8 +97,6 @@ Estimated between 0.5–5 FTE of remediation effort days per secret found × $64
 
 Below is a simple secret remediation cost calculator example:
 
-<img src="../../images/secret-remediation-2.png" alt="Secret remediation cost calculator example" />
-
 Notes:
 
 - Organizations that have not automated the process well and do not have an automated system to deal with rotation and all the complexities involved in it, may find that performing a true risk assessment may take days, and identifying service impact may take even longer.
@@ -110,8 +106,6 @@ Notes:
 - Cost avoidance potential can be calculated by measuring how many secrets were prevented from being leaked by providing "in flow" security awareness to developers as they are about to make a mistake.
 
 The below screenshot from GitHub's security overview demonstrates the amount of secrets that have been successfully blocked before they ever manage to leak into the Git history and repository, allowing organizations to avoid the associated potential secret remediation costs.
-
-<img src="../../images/secret-remediation-3.png" alt="Secret scanning push protection dashboard" />
 
 ## How do I stay clean?
 

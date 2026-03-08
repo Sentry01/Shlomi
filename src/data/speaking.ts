@@ -5,9 +5,57 @@ export interface SpeakingEvent {
   format: string;
   audience?: string;
   sourceLinks: { label: string; url: string }[];
-  images?: string[];
+  images: string[];
   imageAlt?: string;
   summary: string;
+  insights: string[];
+}
+
+const yearPattern = /\b(20\d{2})\b/;
+const temporaryInsightPlaceholders = [
+  'Temporary placeholder — add the strongest takeaway from this session.',
+  'Temporary placeholder — add the most useful audience or delivery insight here.',
+];
+
+export function speakingEventSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function speakingEventSortValue(date?: string): number {
+  if (!date) return 0;
+
+  const parsed = Date.parse(date);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  const year = date.match(yearPattern)?.[1];
+  return year ? Date.UTC(Number(year), 0, 1) : 0;
+}
+
+export function speakingEventYear(date?: string): string | undefined {
+  if (!date) return undefined;
+  return date.match(yearPattern)?.[1];
+}
+
+export function speakingEventDateLabel(date?: string): string | undefined {
+  if (!date) return undefined;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const parsed = Date.parse(date);
+    if (!Number.isNaN(parsed)) {
+      return new Date(parsed).toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      });
+    }
+  }
+
+  return date;
 }
 
 export const speakingEvents: SpeakingEvent[] = [
@@ -31,6 +79,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Executive roundtable in Hong Kong focused on enterprise AI adoption, Copilot deployment, and security governance.',
     summary:
       'Led a CIO roundtable in Hong Kong discussing enterprise AI adoption, Copilot deployment strategies, and the intersection of developer productivity with security governance.',
+    insights: [
+      'Velocity metrics (lines of code, PR throughput) are a trap; sophisticated leaders measure defect density and security posture instead.',
+      'Governance is shifting from "blocking AI" to "tagging AI provenance" in commit history.',
+      'The pilot-to-scale gap is usually caused by lack of internal platform engineering, not model capability.',
+    ],
   },
   {
     title: 'Sydney CIO Roundtable',
@@ -47,6 +100,11 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Facilitated an executive roundtable in Sydney focused on AI-assisted software development and enterprise readiness for agentic coding workflows.',
+    insights: [
+      'Data sovereignty concerns are driving local model adoption faster in APJ than in US/EU markets.',
+      'Security teams are asking for "vulnerability forecasting" based on AI-generated code patterns.',
+      'Senior developers use AI as a force multiplier; juniors risk using it as a crutch without mentorship.',
+    ],
   },
   {
     title: 'Singapore CIO Roundtable',
@@ -63,6 +121,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Participated in a CIO roundtable in Singapore covering AI coding adoption patterns and the governance frameworks enterprises need before scaling.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Bangkok CIO Roundtable',
@@ -79,6 +138,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Co-led a CIO roundtable in Bangkok exploring how enterprise technology leaders in Southeast Asia are approaching AI-augmented development.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Auckland AI Coding Panel',
@@ -96,6 +156,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Panel discussion in Auckland on AI coding, pair programming, and agentic development workflows.',
     summary:
       'Panelist at an AI coding event in Auckland discussing practical applications of AI pair programming and agentic development workflows.',
+    insights: [
+      'The most credible AI coding stories are still workflow stories — review quality, test discipline, and developer judgement matter more than raw generation speed.',
+      'Audiences respond fastest when AI is framed as a better pair programmer rather than a replacement for engineering craft.',
+      'Teams want concrete patterns for adopting agentic workflows safely, not just another benchmark-heavy demo.',
+    ],
   },
   {
     title: 'GitHub SKO Main Stage Keynote',
@@ -109,6 +174,7 @@ export const speakingEvents: SpeakingEvent[] = [
       'Main stage keynote at GitHub Sales Kickoff delivered to a large internal audience.',
     summary:
       'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 3,000 attendees.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'OctoNihon Tokyo User Group',
@@ -127,6 +193,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Presentation at the OctoNihon Tokyo user group on AI-driven development practices.',
     summary:
       'Presented at OctoNihon, the GitHub user group in Tokyo, to approximately 400 attendees on AI-driven development practices.',
+    insights: [
+      'Developer communities want practical demonstrations of AI inside real delivery loops, not abstract future-of-work talk.',
+      'The strongest live examples combined AI speed with clearer testing, review, and quality guardrails.',
+      'Trust rises when AI is shown as part of disciplined engineering practice instead of a shortcut around it.',
+    ],
   },
   {
     title: 'Absolute AppSec Podcast E217',
@@ -142,6 +213,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on the Absolute AppSec podcast (Episode 217) discussing application security topics with the GitHub Advanced Security team.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Absolute AppSec Podcast E203',
@@ -157,6 +229,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on Absolute AppSec (Episode 203) covering application security strategy and developer-first security tooling.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Supercharge the Power of your Security Team',
@@ -172,6 +245,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a webinar on how security teams can amplify their impact by integrating developer-first security tooling into existing workflows.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Building a Frictionless Application Security Program',
@@ -187,6 +261,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Spoke at GitHub InFocus on building application security programs that developers actually adopt, emphasizing frictionless integration and shift-left practices.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Identifying and Mitigating Insider Risk',
@@ -202,6 +277,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Delivered a webinar on insider risk identification and mitigation strategies, covering detection frameworks and response playbooks.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: '5 Steps to Building A People-Centric Insider Threat Program',
@@ -217,6 +293,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a framework for building people-centric insider threat programs across the APAC region, emphasizing behavioral indicators and organizational culture.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Application Security in the World of AI Engineering',
@@ -238,5 +315,6 @@ export const speakingEvents: SpeakingEvent[] = [
       'Security panel in Sydney on application security in the world of AI engineering.',
     summary:
       'Panelist at a Sydney security event discussing application security challenges in the context of AI-assisted engineering and the evolving threat landscape.',
+    insights: [...temporaryInsightPlaceholders],
   },
 ];
