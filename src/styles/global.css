@@ -55,7 +55,7 @@
   --space-24: 6rem;     /* 96px */
 
   /* Layout */
-  --container-max:   76rem;   /* Wider for magazine layout */
+  --container-max:   84rem;   /* Wider for showcase layouts */
   --prose-max:       42rem;   /* Tighter for better readability */
   --container-pad:   clamp(1.25rem, 5vw, 3rem);
 

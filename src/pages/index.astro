@@ -93,7 +93,7 @@ const featuredSpeaking = speakingEvents
                 location={event.region}
                 audience={event.audience}
                 description={event.summary}
-                insights={event.insights}
+                insights={event.insights?.slice(0, 2)}
                 image={event.image}
                 imageAlt={event.imageAlt ?? event.title}
                 links={event.sourceLinks}
@@ -191,40 +191,30 @@ const featuredSpeaking = speakingEvents
   }
 
   .home-hero {
+    position: relative;
     padding-block-start: clamp(6.5rem, 12vh, 9rem);
-    padding-block-end: var(--space-10);
+    padding-block-end: var(--space-12);
+  }
+
+  .home-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(49, 201, 192, 0.14), transparent 38%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 72%);
+    pointer-events: none;
   }
 
   .home-hero__panel {
     position: relative;
-    overflow: hidden;
     display: grid;
     gap: var(--space-6);
-    padding: clamp(2rem, 6vw, 4.5rem);
-    border: 1px solid rgba(17, 17, 17, 0.08);
-    border-radius: 2rem;
-    background:
-      linear-gradient(135deg, rgba(49, 201, 192, 0.16), rgba(255, 255, 255, 0.9) 34%, rgba(255, 255, 255, 0.78)),
-      var(--color-surface);
-    box-shadow: 0 28px 70px rgba(17, 17, 17, 0.08);
-  }
-
-  .home-hero__panel::after {
-    content: '';
-    position: absolute;
-    inset-block-start: -6rem;
-    inset-inline-end: -4rem;
-    inline-size: 18rem;
-    block-size: 18rem;
-    border-radius: 999px;
-    background: rgba(49, 201, 192, 0.16);
-    filter: blur(20px);
-    pointer-events: none;
+    max-inline-size: 72rem;
+    padding-block: clamp(var(--space-8), 5vw, var(--space-12));
   }
 
   .home-hero__eyebrow {
-    position: relative;
-    z-index: 1;
     font-size: var(--text-sm);
     font-weight: 600;
     text-transform: uppercase;
@@ -233,11 +223,9 @@ const featuredSpeaking = speakingEvents
   }
 
   .home-hero__title {
-    position: relative;
-    z-index: 1;
-    max-inline-size: 11ch;
-    font-size: clamp(3.4rem, 8vw, 7.4rem);
-    line-height: 0.95;
+    max-inline-size: 10ch;
+    font-size: clamp(4rem, 9vw, 8.5rem);
+    line-height: 0.9;
     letter-spacing: -0.06em;
   }
 
@@ -246,17 +234,13 @@ const featuredSpeaking = speakingEvents
   }
 
   .home-hero__intro {
-    position: relative;
-    z-index: 1;
-    max-inline-size: 44rem;
+    max-inline-size: 48rem;
     font-size: clamp(1.125rem, 1rem + 0.55vw, 1.45rem);
     line-height: 1.65;
     color: var(--color-text-muted);
   }
 
   .home-hero__actions {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
@@ -266,8 +250,8 @@ const featuredSpeaking = speakingEvents
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: 3.5rem;
-    padding-inline: clamp(1.25rem, 3vw, 1.75rem);
+    min-block-size: 3.75rem;
+    padding-inline: clamp(1.35rem, 3vw, 1.9rem);
     border-radius: 999px;
     border: 1px solid rgba(17, 17, 17, 0.1);
     font-size: var(--text-base);
@@ -337,6 +321,10 @@ const featuredSpeaking = speakingEvents
     max-inline-size: 42rem;
   }
 
+  .showcase-section__intro :global(h2) {
+    font-size: clamp(2rem, 1.6rem + 1vw, 2.8rem);
+  }
+
   .showcase-section__eyebrow {
     display: block;
     font-size: var(--text-xs);
@@ -381,7 +369,7 @@ const featuredSpeaking = speakingEvents
   }
 
   .showcase-grid--articles :global(.blog-card__title) {
-    font-size: clamp(1.45rem, 1.2rem + 0.55vw, 1.85rem);
+    font-size: clamp(1.55rem, 1.26rem + 0.7vw, 2rem);
   }
 
   .showcase-grid--projects :global(.project-card),
