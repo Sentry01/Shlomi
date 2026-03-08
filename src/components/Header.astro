@@ -228,7 +228,7 @@ function isActive(href: string): boolean {
   }
 
   .site-header__link.is-active:hover {
-    background: var(--color-accent-light-hover);
+    background: var(--color-accent);
   }
 
   .site-header__theme-toggle,
@@ -320,7 +320,12 @@ function isActive(href: string): boolean {
   }
 
   .site-header__dropdown-link.is-active:hover {
-    background: var(--color-accent-light-hover);
+    background: var(--color-accent);
+  }
+
+  :global(:root[data-theme='dark']) .site-header__link.is-active:hover,
+  :global(:root[data-theme='dark']) .site-header__dropdown-link.is-active:hover {
+    color: var(--color-bg);
   }
 
   @media (min-width: 48rem) {
