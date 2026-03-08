@@ -87,6 +87,7 @@ const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
   label: 'Project',
   title: project.data.title,
   href: `${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`,
+  meta: project.data.tags?.slice(0, 2).join(' · '),
   description: project.data.description,
 }));
 

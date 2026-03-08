@@ -68,7 +68,7 @@ const Tag = href ? 'a' : 'article';
     <div class="showcase-preview__copy">
       {meta && <p class="showcase-preview__meta">{meta}</p>}
       <h3 class="showcase-preview__title">{title}</h3>
-      {description && variant === 'default' && (
+      {description && (
         <p class="showcase-preview__description">{description}</p>
       )}
     </div>
@@ -230,20 +230,7 @@ const Tag = href ? 'a' : 'article';
   }
 
   .showcase-preview--compact {
-    inline-size: clamp(17rem, 20vw, 21rem);
-  }
-
-  .showcase-preview--compact .showcase-preview__body {
-    padding: 1rem 1rem 1.1rem;
-  }
-
-  .showcase-preview--compact .showcase-preview__title {
-    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.2rem);
-    -webkit-line-clamp: 2;
-  }
-
-  .showcase-preview--compact .showcase-preview__media {
-    aspect-ratio: 16 / 8.8;
+    inline-size: clamp(22rem, 29vw, 28rem);
   }
 
   @media (prefers-reduced-motion: reduce) {
