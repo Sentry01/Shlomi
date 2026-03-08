@@ -227,6 +227,10 @@ function isActive(href: string): boolean {
     background: var(--color-accent-light);
   }
 
+  .site-header__link.is-active:hover {
+    background: var(--color-accent-light-hover);
+  }
+
   .site-header__theme-toggle,
   .site-header__menu-btn {
     display: inline-flex;
@@ -313,6 +317,10 @@ function isActive(href: string): boolean {
   .site-header__dropdown-link.is-active {
     background: var(--color-accent-light);
     color: var(--color-text);
+  }
+
+  .site-header__dropdown-link.is-active:hover {
+    background: var(--color-accent-light-hover);
   }
 
   @media (min-width: 48rem) {
