@@ -80,7 +80,7 @@ function isActive(href: string): boolean {
     inset-block-start: 0;
     z-index: 100;
     padding-block: var(--space-3);
-    background: linear-gradient(180deg, rgba(246, 241, 237, 0.92), rgba(246, 241, 237, 0.72));
+    background: linear-gradient(180deg, rgba(244, 240, 235, 0.94), rgba(244, 240, 235, 0.72));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -97,12 +97,12 @@ function isActive(href: string): boolean {
     justify-content: space-between;
     gap: var(--space-4);
     inline-size: 100%;
-    min-block-size: 4.5rem;
+    min-block-size: 4.25rem;
     padding-inline: clamp(var(--space-4), 2vw, var(--space-6));
-    border: 1px solid rgba(52, 40, 47, 0.08);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.74);
-    box-shadow: 0 16px 40px rgba(48, 38, 44, 0.08);
+    border: 1px solid rgba(17, 17, 17, 0.06);
+    border-radius: 1.25rem;
+    background: rgba(255, 253, 248, 0.78);
+    box-shadow: 0 16px 40px rgba(17, 17, 17, 0.06);
   }
 
   /* ----- Wordmark ----- */
@@ -160,7 +160,7 @@ function isActive(href: string): boolean {
   .site-header__link:hover,
   .site-header__link.is-active {
     color: var(--color-text);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(31, 199, 191, 0.1);
   }
 
   .site-header__link.is-active::after,
@@ -184,8 +184,8 @@ function isActive(href: string): boolean {
     color: var(--color-text);
     list-style: none;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(52, 40, 47, 0.08);
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(17, 17, 17, 0.06);
   }
 
   /* Remove default marker in Safari/Chrome */
@@ -203,10 +203,10 @@ function isActive(href: string): boolean {
     inset-inline-end: 0;
     inset-block-start: calc(100% + var(--space-2));
     min-inline-size: min(18rem, calc(100vw - (2 * var(--container-pad))));
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(52, 40, 47, 0.08);
+    background: rgba(255, 253, 248, 0.98);
+    border: 1px solid rgba(17, 17, 17, 0.06);
     border-radius: 1.25rem;
-    box-shadow: 0 20px 50px rgba(48, 38, 44, 0.12);
+    box-shadow: 0 20px 50px rgba(17, 17, 17, 0.08);
     padding: var(--space-3);
   }
 
@@ -231,7 +231,7 @@ function isActive(href: string): boolean {
 
   .site-header__dropdown-link:hover,
   .site-header__dropdown-link.is-active {
-    background: var(--color-bg-subtle);
+    background: rgba(31, 199, 191, 0.12);
     color: var(--color-text);
   }
 

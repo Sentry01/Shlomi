@@ -52,6 +52,12 @@ const rootProps = href && !hasResourceLinks
 
     {(repoUrl || liveUrl) ? (
       <div class="project-card__links">
+        {href && (
+          <a href={href} class="project-card__link project-card__link--primary">
+            <span>Overview</span>
+            <span class="project-card__link-icon" aria-hidden="true">→</span>
+          </a>
+        )}
         {repoUrl && (
           <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="project-card__link">
             <span>Source</span>
@@ -151,7 +157,14 @@ const rootProps = href && !hasResourceLinks
     transition:
       border-color var(--duration-fast) var(--ease-out),
       background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
       transform var(--duration-fast) var(--ease-out);
+  }
+
+  .project-card__link--primary {
+    background: var(--color-accent);
+    border-color: transparent;
+    color: var(--color-text);
   }
 
   .project-card__link-icon {
@@ -164,5 +177,12 @@ const rootProps = href && !hasResourceLinks
     border-color: rgba(26, 26, 26, 0.2);
     background: rgba(255, 255, 255, 0.92);
     transform: translateY(-1px);
+  }
+
+  .project-card__link--primary:hover {
+    border-color: transparent;
+    background: var(--color-accent-hover);
+    color: var(--color-text);
+    box-shadow: 0 12px 22px rgba(31, 199, 191, 0.22);
   }
 </style>

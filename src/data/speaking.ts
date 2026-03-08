@@ -11,6 +11,49 @@ export interface SpeakingEvent {
   insights?: string[];
 }
 
+const yearPattern = /\b(20\d{2})\b/;
+
+export function speakingEventSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function speakingEventSortValue(date?: string): number {
+  if (!date) return 0;
+
+  const parsed = Date.parse(date);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  const year = date.match(yearPattern)?.[1];
+  return year ? Date.UTC(Number(year), 0, 1) : 0;
+}
+
+export function speakingEventYear(date?: string): string | undefined {
+  if (!date) return undefined;
+  return date.match(yearPattern)?.[1];
+}
+
+export function speakingEventDateLabel(date?: string): string | undefined {
+  if (!date) return undefined;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const parsed = Date.parse(date);
+    if (!Number.isNaN(parsed)) {
+      return new Date(parsed).toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      });
+    }
+  }
+
+  return date;
+}
+
 export const speakingEvents: SpeakingEvent[] = [
   {
     title: 'Hong Kong CIO Roundtable',
@@ -107,6 +150,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Panel discussion in Auckland on AI coding, pair programming, and agentic development workflows.',
     summary:
       'Panelist at an AI coding event in Auckland discussing practical applications of AI pair programming and agentic development workflows.',
+    insights: [
+      'The most credible AI coding stories are still workflow stories — review quality, test discipline, and developer judgement matter more than raw generation speed.',
+      'Audiences respond fastest when AI is framed as a better pair programmer rather than a replacement for engineering craft.',
+      'Teams want concrete patterns for adopting agentic workflows safely, not just another benchmark-heavy demo.',
+    ],
   },
   {
     title: 'GitHub SKO Main Stage Keynote',
@@ -138,6 +186,11 @@ export const speakingEvents: SpeakingEvent[] = [
       'Presentation at the OctoNihon Tokyo user group on AI-driven development practices.',
     summary:
       'Presented at OctoNihon, the GitHub user group in Tokyo, to approximately 400 attendees on AI-driven development practices.',
+    insights: [
+      'Developer communities want practical demonstrations of AI inside real delivery loops, not abstract future-of-work talk.',
+      'The strongest live examples combined AI speed with clearer testing, review, and quality guardrails.',
+      'Trust rises when AI is shown as part of disciplined engineering practice instead of a shortcut around it.',
+    ],
   },
   {
     title: 'Absolute AppSec Podcast E217',

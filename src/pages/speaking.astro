@@ -1,33 +1,31 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SpeakingCard from '@/components/SpeakingCard.astro';
-import { speakingEvents } from '@/data/speaking';
-
-function extractYear(value?: string): string | undefined {
-  if (!value) return undefined;
-
-  const match = value.match(/\b(20\d{2})\b/);
-  return match?.[1];
-}
+import {
+  speakingEvents,
+  speakingEventDateLabel,
+  speakingEventSlug,
+  speakingEventSortValue,
+  speakingEventYear,
+} from '@/data/speaking';
 
 const events = speakingEvents
   .map((event, index) => ({
     ...event,
-    year: extractYear(event.date),
+    year: speakingEventDateLabel(event.date),
+    yearKey: speakingEventYear(event.date),
     image: event.images?.[0],
+    sortValue: speakingEventSortValue(event.date),
     originalIndex: index,
   }))
   .sort((a, b) => {
-    const left = Number(a.year ?? 0);
-    const right = Number(b.year ?? 0);
-
-    if (right !== left) return right - left;
+    if (b.sortValue !== a.sortValue) return b.sortValue - a.sortValue;
     return a.originalIndex - b.originalIndex;
   });
 
 const featuredEvents = events.filter((event) => event.image);
 const additionalEvents = events.filter((event) => !event.image);
-const years = new Set(events.map((event) => event.year).filter(Boolean));
+const years = new Set(events.map((event) => event.yearKey).filter(Boolean));
 const totalExternalLinks = events.reduce((count, event) => count + event.sourceLinks.length, 0);
 ---
 
@@ -80,6 +78,7 @@ const totalExternalLinks = events.reduce((count, event) => count + event.sourceL
       <div class="container speaking-grid speaking-grid--featured">
         {featuredEvents.map((event, index) => (
           <SpeakingCard
+            id={speakingEventSlug(event.title)}
             title={event.title}
             format={event.format}
             location={event.region}
@@ -116,6 +115,7 @@ const totalExternalLinks = events.reduce((count, event) => count + event.sourceL
       <div class="container speaking-grid speaking-grid--archive">
         {additionalEvents.map((event) => (
           <SpeakingCard
+            id={speakingEventSlug(event.title)}
             title={event.title}
             format={event.format}
             location={event.region}
