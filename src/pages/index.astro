@@ -100,10 +100,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
       <div class="container home-hero__inner">
         <div class="home-hero__content">
           <div class="home-hero__headline-block">
-            <div class="home-hero__eyebrows">
-              <p class="home-hero__pretitle">GTM Strategy</p>
-              <p class="home-hero__eyebrow">AI engineering · cyber security</p>
-            </div>
+            <p class="home-hero__eyebrow">GTM Strategy · AI engineering · cyber security</p>
             <h1 class="home-hero__title">
               <span class="home-hero__title-line">Deep Enterprise Architecture</span>
               <span class="home-hero__title-accent">GTM Execution</span>
@@ -287,11 +284,6 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     max-inline-size: 100%;
   }
 
-  .home-hero__eyebrows {
-    display: grid;
-    gap: 0.4rem;
-  }
-
   .home-hero__support {
     grid-area: support;
     display: grid;
@@ -299,16 +291,6 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     max-inline-size: 37rem;
     justify-self: start;
     padding-block-end: 0;
-  }
-
-  .home-hero__pretitle {
-    max-inline-size: none;
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: clamp(0.7rem, 0.67rem + 0.12vw, 0.78rem);
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
   }
 
   .home-hero__eyebrow {
