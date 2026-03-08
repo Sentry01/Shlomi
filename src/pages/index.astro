@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ShowcaseMarquee from '@/components/ShowcaseMarquee.astro';
 import ShowcasePreviewCard from '@/components/ShowcasePreviewCard.astro';
 import {
   speakingEvents,
@@ -12,6 +11,8 @@ import {
 import { blogSlug, isExternalCanonical } from '@/lib/blog';
 
 const baseUrl = import.meta.env.BASE_URL;
+const heroPhoto = `${baseUrl}images/hero-rko-stage.png`;
+const heroPhotoAlt = 'Shlomi Shaki speaking on stage at a GitHub event.';
 
 interface ShowcaseItem {
   label: string;
@@ -22,19 +23,6 @@ interface ShowcaseItem {
   meta?: string;
   description?: string;
   external?: boolean;
-}
-
-function interleave(items: ShowcaseItem[][]): ShowcaseItem[] {
-  const result: ShowcaseItem[] = [];
-  const maxLength = Math.max(...items.map((group) => group.length));
-
-  for (let index = 0; index < maxLength; index += 1) {
-    items.forEach((group) => {
-      if (group[index]) result.push(group[index]);
-    });
-  }
-
-  return result;
 }
 
 const featuredProjects = (await getCollection('projects'))
@@ -100,8 +88,6 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   meta: event.dateLabel ?? event.format,
   description: event.summary,
 }));
-
-const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 ---
 
 <BaseLayout
@@ -120,6 +106,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
               <span class="home-hero__title-accent">with AI.</span>
             </h1>
           </div>
+
           <div class="home-hero__support">
             <p class="home-hero__intro">
               Software leader, builder, and speaker focused on practical AI engineering, developer
@@ -131,15 +118,21 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
               <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
             </div>
           </div>
+
+          <figure class="home-hero__media">
+            <img
+              src={heroPhoto}
+              alt={heroPhotoAlt}
+              width="794"
+              height="377"
+              class="home-hero__image"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </figure>
         </div>
       </div>
-    </div>
-
-    <div class="home-hero__marquee">
-      <ShowcaseMarquee
-        items={ribbonItems}
-        ariaLabel="Scrolling showcase of projects, articles, and speaking highlights"
-      />
     </div>
   </section>
 
@@ -241,50 +234,61 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero {
     position: relative;
-    padding-block-end: clamp(4.75rem, 8.5vw, 7.5rem);
+    padding-block-end: 0;
   }
 
   .home-hero__shell {
     display: grid;
     min-block-size: auto;
     border-block-end: 1px solid var(--color-border);
-    background: var(--color-hero-panel);
+    background:
+      radial-gradient(circle at top right, rgba(52, 184, 173, 0.16), transparent 32%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 44%),
+      var(--color-hero-panel);
   }
 
   .home-hero__inner {
     display: grid;
-    align-items: start;
-    min-block-size: 100%;
-    max-inline-size: min(100%, 80rem);
+    align-items: center;
+    min-block-size: clamp(38rem, 78vh, 50rem);
+    max-inline-size: min(100%, var(--container-max));
     margin-inline: auto;
-    padding-block: clamp(2.9rem, 4.8vh, 4.15rem) clamp(2.5rem, 4.2vw, 3.6rem);
+    padding-block: clamp(4rem, 7.5vh, 6rem);
   }
 
   .home-hero__content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 27rem);
+    grid-template-areas:
+      'headline headline'
+      'support media';
     align-items: start;
     justify-items: start;
-    justify-self: center;
-    gap: clamp(1.25rem, 1.8vw, 1.75rem);
-    max-inline-size: min(100%, 57rem);
+    justify-self: stretch;
+    column-gap: clamp(2rem, 4vw, 4rem);
+    row-gap: clamp(1.75rem, 3vw, 2.8rem);
+    inline-size: 100%;
+    max-inline-size: none;
   }
 
   .home-hero__headline-block,
-  .home-hero__support {
+  .home-hero__support,
+  .home-hero__media {
     min-inline-size: 0;
   }
 
   .home-hero__headline-block {
+    grid-area: headline;
     display: grid;
-    gap: 0.9rem;
+    gap: clamp(1rem, 1.6vw, 1.3rem);
     max-inline-size: 100%;
   }
 
   .home-hero__support {
+    grid-area: support;
     display: grid;
-    gap: var(--space-4);
-    max-inline-size: 33rem;
+    gap: var(--space-5);
+    max-inline-size: 37rem;
     justify-self: start;
     padding-block-end: 0;
   }
@@ -301,11 +305,11 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero__title {
     display: grid;
-    gap: clamp(0.16rem, 0.65vw, 0.42rem);
+    gap: clamp(0.28rem, 0.75vw, 0.5rem);
     max-inline-size: 100%;
     margin: 0;
-    font-size: clamp(2.75rem, 5.9vw, 4.8rem);
-    line-height: 0.92;
+    font-size: clamp(3.8rem, 6.9vw, 6.8rem);
+    line-height: 0.88;
     letter-spacing: -0.07em;
   }
 
@@ -337,11 +341,11 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__intro {
-    max-inline-size: 31rem;
+    max-inline-size: 35rem;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: clamp(1rem, 0.96rem + 0.28vw, 1.18rem);
-    line-height: 1.5;
+    font-size: clamp(1.08rem, 1rem + 0.4vw, 1.34rem);
+    line-height: 1.56;
   }
 
   .home-hero__actions {
@@ -349,7 +353,31 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 0.75rem;
-    margin-block-start: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  .home-hero__media {
+    grid-area: media;
+    position: relative;
+    inline-size: min(100%, 27rem);
+    margin: 0;
+    justify-self: end;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: clamp(1.35rem, 2vw, 1.85rem);
+    background:
+      linear-gradient(180deg, rgba(17, 19, 26, 0.06), rgba(17, 19, 26, 0.12)),
+      var(--color-surface-strong);
+    box-shadow: var(--shadow-card);
+  }
+
+  .home-hero__image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 
   .hero-button {
@@ -386,11 +414,6 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .hero-button--primary:hover {
     background: var(--color-accent-hover);
-  }
-
-  .home-hero__marquee {
-    margin-block-start: clamp(3.3rem, 6.3vw, 5.1rem);
-    padding-inline: var(--container-pad);
   }
 
   .showcase-section {
@@ -479,19 +502,19 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__inner {
-      padding-block-start: 4.5rem;
-      padding-block-end: 3.5rem;
+      min-block-size: auto;
+      padding-block-start: 4.75rem;
+      padding-block-end: 4rem;
     }
 
     .home-hero__content {
       grid-template-columns: 1fr;
-      gap: var(--space-5);
-      text-align: center;
-    }
-
-    .home-hero__headline-block,
-    .home-hero__support {
-      justify-items: center;
+      grid-template-areas:
+        'headline'
+        'support'
+        'media';
+      gap: var(--space-6);
+      text-align: left;
     }
 
     .home-hero__support {
@@ -502,7 +525,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
     .home-hero__title {
       font-size: clamp(3rem, 12vw, 4.15rem);
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .home-hero__title-line,
@@ -511,18 +534,19 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__intro {
-      max-inline-size: 24rem;
+      max-inline-size: 28rem;
       font-size: clamp(1.05rem, 0.96rem + 0.7vw, 1.24rem);
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .home-hero__actions {
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
-    .home-hero__marquee {
-      margin-block-start: clamp(1.5rem, 6vw, 2.1rem);
+    .home-hero__media {
+      inline-size: min(100%, 31rem);
+      justify-self: start;
     }
 
     .showcase-section__header h2 {
