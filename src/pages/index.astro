@@ -110,21 +110,25 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 >
   <section class="home-hero">
     <div class="home-hero__shell">
-      <div class="home-hero__panel home-hero__panel--copy">
-        <div class="container home-hero__inner">
-          <p class="home-hero__eyebrow">AI engineering · cyber security</p>
-          <h1 class="home-hero__title">
-            Building the future
-            <span>with AI.</span>
-          </h1>
-          <p class="home-hero__intro">
-            Software leader, builder, and speaker focused on practical AI engineering, developer
-            trust, and the systems teams need to ship real work with confidence.
-          </p>
-          <div class="home-hero__actions">
-            <a class="hero-button hero-button--primary" href="#projects">View Projects</a>
-            <a class="hero-button hero-button--secondary" href="#articles">Read Articles</a>
-            <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
+      <div class="container home-hero__inner">
+        <div class="home-hero__content">
+          <div class="home-hero__headline-block">
+            <p class="home-hero__eyebrow">AI engineering · cyber security</p>
+            <h1 class="home-hero__title">
+              Building the future
+              <span>with AI.</span>
+            </h1>
+          </div>
+          <div class="home-hero__support">
+            <p class="home-hero__intro">
+              Software leader, builder, and speaker focused on practical AI engineering, developer
+              trust, and the systems teams need to ship real work with confidence.
+            </p>
+            <div class="home-hero__actions">
+              <a class="hero-button hero-button--primary" href="#projects">View Projects</a>
+              <a class="hero-button hero-button--secondary" href="#articles">Read Articles</a>
+              <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
+            </div>
           </div>
         </div>
       </div>
@@ -241,34 +245,48 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero__shell {
     display: grid;
-    min-block-size: clamp(38rem, 88vh, 54rem);
+    min-block-size: clamp(24rem, 58vh, 34rem);
     border-block-end: 1px solid var(--color-border);
     background: var(--color-hero-panel);
   }
 
-  .home-hero__panel {
+  .home-hero__inner {
+    display: grid;
+    align-items: center;
+    min-block-size: 100%;
+    max-inline-size: min(100%, 78rem);
+    margin-inline: auto;
+    padding-block: clamp(4rem, 7vh, 5.5rem) clamp(2.75rem, 4vh, 4rem);
+  }
+
+  .home-hero__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
+    align-items: center;
+    gap: clamp(1.5rem, 3.2vw, 3.75rem);
+  }
+
+  .home-hero__headline-block,
+  .home-hero__support {
     min-inline-size: 0;
   }
 
-  .home-hero__panel--copy {
-    background: transparent;
+  .home-hero__headline-block {
+    display: grid;
+    gap: var(--space-6);
   }
 
-  .home-hero__inner {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-block-size: 100%;
-    max-inline-size: min(100%, 64rem);
-    margin-inline: auto;
-    padding-block: clamp(8rem, 18vh, 14rem) clamp(7rem, 12vh, 10rem);
-    text-align: center;
+  .home-hero__support {
+    display: grid;
+    gap: var(--space-5);
+    max-inline-size: 31rem;
+    justify-self: end;
+    padding-block-end: 0;
   }
 
   .home-hero__eyebrow {
     max-inline-size: none;
-    margin-block-end: var(--space-6);
+    margin-block-end: 0;
     color: var(--color-accent);
     font-size: clamp(0.82rem, 0.78rem + 0.14vw, 0.92rem);
     font-weight: 600;
@@ -277,10 +295,10 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__title {
-    max-inline-size: 7ch;
-    margin-inline: auto;
-    font-size: clamp(4rem, 10vw, 7.4rem);
-    line-height: 0.94;
+    max-inline-size: 6.6ch;
+    margin: 0;
+    font-size: clamp(3.7rem, 7.2vw, 6.2rem);
+    line-height: 0.92;
     letter-spacing: -0.06em;
   }
 
@@ -290,33 +308,32 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__intro {
-    max-inline-size: 42rem;
-    margin-block-start: var(--space-6);
-    margin-inline: auto;
+    max-inline-size: 22ch;
+    margin: 0;
     color: var(--color-text-muted);
-    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.9rem);
-    line-height: 1.42;
+    font-size: clamp(1.1rem, 0.98rem + 0.48vw, 1.45rem);
+    line-height: 1.38;
   }
 
   .home-hero__actions {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-3);
-    margin-block-start: var(--space-8);
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    margin-block-start: 0;
   }
 
   .hero-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: 3.6rem;
-    padding-inline: 1.75rem;
+    min-block-size: 3.3rem;
+    padding-inline: 1.4rem;
     border: 1px solid var(--color-border);
     border-radius: 0.8rem;
     background: var(--color-surface);
     color: var(--color-text);
-    font-size: var(--text-base);
+    font-size: 0.98rem;
     font-weight: 600;
     text-decoration: none;
     transition:
@@ -343,7 +360,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__marquee {
-    margin-block-start: clamp(-7rem, -9vw, -4.25rem);
+    margin-block-start: clamp(-6rem, -7vw, -3.5rem);
     padding-inline: var(--container-pad);
   }
 
@@ -433,17 +450,42 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__inner {
-      padding-block-start: 7rem;
-      padding-block-end: 8.5rem;
+      padding-block-start: 6.5rem;
+      padding-block-end: 7.25rem;
+    }
+
+    .home-hero__content {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+      text-align: center;
+    }
+
+    .home-hero__headline-block,
+    .home-hero__support {
+      justify-items: center;
+    }
+
+    .home-hero__support {
+      max-inline-size: none;
+      justify-self: stretch;
+      padding-block-end: 0;
     }
 
     .home-hero__title {
       max-inline-size: 8ch;
       font-size: clamp(3.3rem, 13vw, 4.8rem);
+      margin-inline: auto;
     }
 
     .home-hero__intro {
+      max-inline-size: 24rem;
       font-size: clamp(1.15rem, 1rem + 0.8vw, 1.4rem);
+      margin-inline: auto;
+    }
+
+    .home-hero__actions {
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .showcase-section__header h2 {
