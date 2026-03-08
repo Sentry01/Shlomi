@@ -1,44 +1,122 @@
 ---
 import { getCollection } from 'astro:content';
-import BlogPostCard from '@/components/BlogPostCard.astro';
-import ProjectCard from '@/components/ProjectCard.astro';
-import SpeakingCard from '@/components/SpeakingCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ShowcaseMarquee from '@/components/ShowcaseMarquee.astro';
+import ShowcasePreviewCard from '@/components/ShowcasePreviewCard.astro';
 import {
   speakingEvents,
   speakingEventDateLabel,
   speakingEventSlug,
   speakingEventSortValue,
 } from '@/data/speaking';
-import { isExternalCanonical, blogSlug } from '@/lib/blog';
+import { blogSlug, isExternalCanonical } from '@/lib/blog';
 
 const baseUrl = import.meta.env.BASE_URL;
 
-// Get featured projects (top 3)
+interface ShowcaseItem {
+  label: string;
+  title: string;
+  href: string;
+  image?: string;
+  imageAlt?: string;
+  meta?: string;
+  description?: string;
+  external?: boolean;
+}
+
+const articleImageMap: Record<string, string> = {
+  'ai-roundtable-insights-apj': '/images/hong-kong-roundtable-1.png',
+  'building-agent-council': '/images/secret-remediation-2.png',
+  'copilot-harness-autonomous-tdd': '/images/secret-remediation-3.png',
+};
+
+const projectImageMap: Record<string, string> = {
+  'agent-council': '/images/secret-remediation-1.png',
+  'copilot-cli-harness': '/images/secret-remediation-2.png',
+  'fleet-agent-swarm': '/images/secret-remediation-3.png',
+};
+
+function interleave(items: ShowcaseItem[][]): ShowcaseItem[] {
+  const result: ShowcaseItem[] = [];
+  const maxLength = Math.max(...items.map((group) => group.length));
+
+  for (let index = 0; index < maxLength; index += 1) {
+    items.forEach((group) => {
+      if (group[index]) result.push(group[index]);
+    });
+  }
+
+  return result;
+}
+
 const featuredProjects = (await getCollection('projects'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
   .slice(0, 3);
 
-// Get latest posts (excluding drafts in production)
 const latestPosts = (await getCollection('blog'))
   .filter(({ data }) => !data.draft)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
 
-// Select the latest three speaking events that have both imagery and insights
 const featuredSpeaking = speakingEvents
   .map((event, index) => ({
     ...event,
     image: event.images?.[0],
+    dateLabel: speakingEventDateLabel(event.date),
     sortValue: speakingEventSortValue(event.date),
     originalIndex: index,
   }))
-  .filter((event) => event.image && event.insights && event.insights.length > 0)
+  .filter((event) => event.image)
   .sort((a, b) => {
     if (b.sortValue !== a.sortValue) return b.sortValue - a.sortValue;
     return a.originalIndex - b.originalIndex;
   })
   .slice(0, 3);
+
+const articleItems: ShowcaseItem[] = latestPosts.map((post) => {
+  const slug = blogSlug(post.id);
+  const canonicalHref = post.data.canonical;
+  const href = isExternalCanonical(canonicalHref) && canonicalHref
+    ? canonicalHref
+    : `${baseUrl}blog/${slug}/`;
+
+  return {
+    label: 'Article',
+    title: post.data.title,
+    href,
+    image: articleImageMap[slug],
+    imageAlt: post.data.title,
+    meta: post.data.pubDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }),
+    description: post.data.description,
+    external: isExternalCanonical(post.data.canonical),
+  };
+});
+
+const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
+  label: 'Project',
+  title: project.data.title,
+  href: `${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`,
+  image: projectImageMap[project.id.replace(/\.md$/, '')],
+  imageAlt: project.data.title,
+  description: project.data.description,
+}));
+
+const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
+  label: 'Speaking',
+  title: event.title,
+  href: `${baseUrl}speaking/#${speakingEventSlug(event.title)}`,
+  image: event.image,
+  imageAlt: event.imageAlt ?? event.title,
+  meta: event.dateLabel ?? event.format,
+  description: event.summary,
+}));
+
+const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 ---
 
 <BaseLayout
@@ -47,473 +125,350 @@ const featuredSpeaking = speakingEvents
   mainClass="home-page"
 >
   <section class="home-hero">
-    <div class="container">
-      <div class="home-hero__grid">
-        <div class="home-hero__headline">
-          <span class="home-hero__eyebrow">Writing · speaking · building</span>
+    <div class="home-hero__shell">
+      <div class="home-hero__panel home-hero__panel--copy">
+        <div class="container home-hero__inner">
+          <p class="home-hero__eyebrow">AI engineering · cyber security</p>
           <h1 class="home-hero__title">
-            Turning AI ambition
-            <span>into software that ships.</span>
+            Building the future
+            <span>with AI.</span>
           </h1>
-        </div>
-
-        <div class="home-hero__support">
           <p class="home-hero__intro">
-            I lead GitHub Copilot across APJ and use this site to publish what I am seeing in the
-            field — enterprise AI adoption, agentic engineering, software trust, and the projects
-            behind the ideas.
+            Software leader, builder, and speaker focused on practical AI engineering, developer
+            trust, and the systems teams need to ship real work with confidence.
           </p>
           <div class="home-hero__actions">
-            <a class="hero-button hero-button--primary" href="#articles">Latest articles</a>
-            <a class="hero-button hero-button--secondary" href="#projects">Projects</a>
+            <a class="hero-button hero-button--primary" href="#projects">View Projects</a>
+            <a class="hero-button hero-button--secondary" href="#articles">Read Articles</a>
             <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
           </div>
-          <p class="home-hero__note">
-            Start with the newest field notes, then move into recent talks and the projects that
-            make the arguments concrete.
-          </p>
         </div>
       </div>
+      <div class="home-hero__panel home-hero__panel--blank" aria-hidden="true"></div>
+    </div>
+
+    <div class="home-hero__marquee">
+      <ShowcaseMarquee
+        items={ribbonItems}
+        ariaLabel="Scrolling showcase of projects, articles, and speaking highlights"
+      />
     </div>
   </section>
 
-  <section class="section home-section home-section--speaking" id="speaking">
-    <div class="container">
-      <div class="showcase-section">
-        <div class="showcase-section__header">
-          <div class="showcase-section__intro prose">
-            <span class="showcase-section__eyebrow">Speaking</span>
-            <h2>Recent rooms, roundtables, and stages.</h2>
-            <p>
-              Three recent events with the sharpest takeaways, plus a direct path into the full
-              archive.
-            </p>
-          </div>
-          <a class="section-link" href={`${baseUrl}speaking/`}>All events</a>
-        </div>
-
-        {featuredSpeaking.length > 0 ? (
-          <div class="showcase-grid showcase-grid--speaking">
-            {featuredSpeaking.map((event, index) => (
-              <SpeakingCard
-                title={event.title}
-                format={event.format}
-                year={speakingEventDateLabel(event.date)}
-                location={event.region}
-                audience={event.audience}
-                description={event.summary}
-                insights={event.insights?.slice(0, 2)}
-                image={event.image}
-                imageAlt={event.imageAlt ?? event.title}
-                links={event.sourceLinks?.slice(0, 1)}
-                summaryHref={`${baseUrl}speaking/#${speakingEventSlug(event.title)}`}
-                imageLoading={index === 0 ? 'eager' : 'lazy'}
-                featured={index === 0}
-              />
-            ))}
-          </div>
-        ) : (
-          <p class="showcase-empty">Speaking highlights will appear here soon.</p>
-        )}
+  <section class="section showcase-section" id="speaking">
+    <div class="container showcase-section__header">
+      <div>
+        <p class="showcase-section__eyebrow">Speaking</p>
+        <h2>Recent talks, panels, and rooms where the ideas landed live.</h2>
       </div>
+      <a class="section-link" href={`${baseUrl}speaking/`}>All speaking</a>
     </div>
+
+    {speakingItems.length > 0 ? (
+      <div class="container showcase-section__grid">
+        {speakingItems.map((item) => (
+          <ShowcasePreviewCard
+            label={item.label}
+            title={item.title}
+            href={item.href}
+            image={item.image}
+            imageAlt={item.imageAlt}
+            meta={item.meta}
+            description={item.description}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="container">
+        <p class="showcase-section__empty">Speaking highlights will appear here soon.</p>
+      </div>
+    )}
   </section>
 
-  <section class="section home-section home-section--articles" id="articles">
-    <div class="container">
-      <div class="showcase-section">
-        <div class="showcase-section__header">
-          <div class="showcase-section__intro prose">
-            <span class="showcase-section__eyebrow">Articles</span>
-            <h2>Latest writing from the field.</h2>
-            <p>
-              Recent posts on AI adoption, agentic engineering, software trust, and what teams
-              actually need to ship.
-            </p>
-          </div>
-          <a class="section-link" href={`${baseUrl}blog/`}>All articles</a>
-        </div>
-
-        {latestPosts.length > 0 ? (
-          <div class="showcase-grid showcase-grid--articles">
-            {latestPosts.map((post, index) => (
-              <BlogPostCard
-                title={post.data.title}
-                description={post.data.description}
-                pubDate={post.data.pubDate}
-                tags={post.data.tags.slice(0, 3)}
-                href={isExternalCanonical(post.data.canonical)
-                  ? post.data.canonical
-                  : `${baseUrl}blog/${blogSlug(post.id)}/`}
-                isExternal={isExternalCanonical(post.data.canonical)}
-                variant={index === 0 ? 'lead' : 'default'}
-              />
-            ))}
-          </div>
-        ) : (
-          <p class="showcase-empty">New writing is on the way.</p>
-        )}
+  <section class="section showcase-section showcase-section--soft" id="articles">
+    <div class="container showcase-section__header">
+      <div>
+        <p class="showcase-section__eyebrow">Articles</p>
+        <h2>Field notes on AI adoption, trust, and what teams actually need.</h2>
       </div>
+      <a class="section-link" href={`${baseUrl}blog/`}>All articles</a>
     </div>
+
+    {articleItems.length > 0 ? (
+      <div class="container showcase-section__grid">
+        {articleItems.map((item) => (
+          <ShowcasePreviewCard
+            label={item.label}
+            title={item.title}
+            href={item.href}
+            image={item.image}
+            imageAlt={item.imageAlt}
+            meta={item.meta}
+            description={item.description}
+            external={item.external}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="container">
+        <p class="showcase-section__empty">Articles will appear here soon.</p>
+      </div>
+    )}
   </section>
 
-  <section class="section home-section home-section--projects" id="projects">
-    <div class="container">
-      <div class="showcase-section">
-        <div class="showcase-section__header">
-          <div class="showcase-section__intro prose">
-            <span class="showcase-section__eyebrow">Projects</span>
-            <h2>Projects behind the arguments.</h2>
-            <p>
-              Tools, experiments, and product ideas that make the writing concrete and give the
-              talks something real to point at.
-            </p>
-          </div>
-          <a class="section-link" href={`${baseUrl}projects/`}>All projects</a>
-        </div>
-
-        {featuredProjects.length > 0 ? (
-          <div class="showcase-grid showcase-grid--projects">
-            {featuredProjects.map((project, index) => (
-              <ProjectCard
-                title={project.data.title}
-                description={project.data.description}
-                tags={project.data.tags.slice(0, 3)}
-                href={`${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`}
-                repoUrl={project.data.repo}
-                liveUrl={project.data.liveUrl}
-                featured={index === 0}
-              />
-            ))}
-          </div>
-        ) : (
-          <p class="showcase-empty">Featured projects will appear here soon.</p>
-        )}
+  <section class="section showcase-section" id="projects">
+    <div class="container showcase-section__header">
+      <div>
+        <p class="showcase-section__eyebrow">Projects</p>
+        <h2>Projects that turn the argument into something concrete and testable.</h2>
       </div>
+      <a class="section-link" href={`${baseUrl}projects/`}>All projects</a>
     </div>
+
+    {projectItems.length > 0 ? (
+      <div class="container showcase-section__grid">
+        {projectItems.map((item) => (
+          <ShowcasePreviewCard
+            label={item.label}
+            title={item.title}
+            href={item.href}
+            image={item.image}
+            imageAlt={item.imageAlt}
+            description={item.description}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="container">
+        <p class="showcase-section__empty">Projects will appear here soon.</p>
+      </div>
+    )}
   </section>
 </BaseLayout>
 
 <style>
   :global(main.home-page) {
-    background:
-      radial-gradient(circle at top left, rgba(49, 201, 192, 0.2), transparent 28%),
-      radial-gradient(circle at 82% 8%, rgba(49, 201, 192, 0.1), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 18%),
-      var(--color-bg);
-  }
-
-  :global(main.home-page .container) {
-    max-inline-size: 92rem;
+    background: var(--color-bg);
   }
 
   .home-hero {
     position: relative;
-    overflow: clip;
-    padding-block-start: clamp(6rem, 10vh, 8rem);
-    padding-block-end: clamp(4.5rem, 10vh, 7rem);
+    padding-block-end: clamp(2.5rem, 6vw, 4.5rem);
   }
 
-  .home-hero::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: max(-10rem, calc(50% - 48rem));
-    inset-block-start: clamp(2rem, 5vh, 4rem);
-    inline-size: clamp(18rem, 40vw, 34rem);
-    block-size: clamp(18rem, 36vw, 30rem);
-    background: radial-gradient(circle at center, rgba(49, 201, 192, 0.18), rgba(49, 201, 192, 0.04) 58%, transparent 74%);
-    pointer-events: none;
-  }
-
-  .home-hero::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    inset-block-end: 0;
-    block-size: 1px;
-    background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.1), transparent);
-  }
-
-  .home-hero__grid {
-    position: relative;
+  .home-hero__shell {
     display: grid;
-    gap: clamp(var(--space-8), 6vw, var(--space-16));
-    align-items: end;
-    min-block-size: clamp(32rem, 72svh, 46rem);
+    min-block-size: clamp(38rem, 88vh, 54rem);
+    border-block-end: 1px solid var(--color-border);
   }
 
-  .home-hero__headline {
-    display: grid;
-    gap: var(--space-6);
-    max-inline-size: min(50rem, 100%);
+  .home-hero__panel {
+    min-inline-size: 0;
+  }
+
+  .home-hero__panel--copy {
+    background: var(--color-hero-panel);
+  }
+
+  .home-hero__panel--blank {
+    background: var(--color-surface);
+  }
+
+  .home-hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-block-size: 100%;
+    padding-block: clamp(8rem, 18vh, 14rem) clamp(7rem, 12vh, 10rem);
   }
 
   .home-hero__eyebrow {
-    font-size: clamp(0.72rem, 0.65rem + 0.15vw, 0.82rem);
+    max-inline-size: none;
+    margin-block-end: var(--space-6);
+    color: var(--color-accent);
+    font-size: clamp(0.82rem, 0.78rem + 0.14vw, 0.92rem);
     font-weight: 600;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
-    letter-spacing: 0.28em;
-    color: var(--color-accent-hover);
   }
 
   .home-hero__title {
-    max-inline-size: 8.8ch;
-    font-size: clamp(4.4rem, 10vw, 9rem);
-    line-height: 0.88;
-    letter-spacing: -0.065em;
+    max-inline-size: 7ch;
+    font-size: clamp(4rem, 10vw, 7.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.06em;
   }
 
   .home-hero__title span {
     display: block;
-    color: var(--color-accent);
-  }
-
-  .home-hero__support {
-    display: grid;
-    gap: var(--space-5);
-    max-inline-size: 31rem;
-    padding: clamp(1.25rem, 3vw, 2rem);
-    border: 1px solid rgba(17, 17, 17, 0.08);
-    border-radius: 1.75rem;
-    background: rgba(255, 253, 248, 0.74);
-    box-shadow: 0 20px 48px rgba(17, 17, 17, 0.06);
-    backdrop-filter: blur(10px);
+    color: var(--color-accent-strong);
   }
 
   .home-hero__intro {
-    max-inline-size: none;
-    font-size: clamp(1.125rem, 1rem + 0.55vw, 1.45rem);
-    line-height: 1.65;
+    max-inline-size: 42rem;
+    margin-block-start: var(--space-6);
     color: var(--color-text-muted);
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.9rem);
+    line-height: 1.42;
   }
 
   .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-  }
-
-  .home-hero__note {
-    max-inline-size: none;
-    padding-block-start: var(--space-4);
-    border-block-start: 1px solid rgba(17, 17, 17, 0.08);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    margin-block-start: var(--space-8);
   }
 
   .hero-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: 3.75rem;
-    padding-inline: clamp(1.35rem, 3vw, 1.9rem);
-    border-radius: 999px;
-    border: 1px solid rgba(17, 17, 17, 0.1);
+    min-block-size: 3.6rem;
+    padding-inline: 1.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    background: var(--color-surface);
+    color: var(--color-text);
     font-size: var(--text-base);
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: none;
     transition:
       transform var(--duration-fast) var(--ease-out),
       border-color var(--duration-fast) var(--ease-out),
       background-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out),
       box-shadow var(--duration-fast) var(--ease-out);
   }
 
   .hero-button:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
+    border-color: var(--color-border-hover);
+    color: var(--color-text);
   }
 
   .hero-button--primary {
-    background: var(--color-accent);
-    color: var(--color-text);
     border-color: transparent;
-    box-shadow: 0 18px 30px rgba(49, 201, 192, 0.22);
+    background: var(--color-accent);
+    box-shadow: 0 16px 32px rgba(52, 184, 173, 0.22);
   }
 
   .hero-button--primary:hover {
     background: var(--color-accent-hover);
-    color: var(--color-text);
   }
 
-  .hero-button--secondary {
-    background: rgba(255, 253, 248, 0.86);
-    color: var(--color-text);
-  }
-
-  .hero-button--secondary:hover {
-    border-color: rgba(49, 201, 192, 0.45);
-    background: rgba(49, 201, 192, 0.08);
-    color: var(--color-text);
-  }
-
-  .home-section {
-    position: relative;
-    padding-block: clamp(4.5rem, 8vw, 7rem);
-  }
-
-  .home-section + .home-section {
-    border-block-start: 1px solid rgba(17, 17, 17, 0.08);
-  }
-
-  .home-section--articles {
-    background: linear-gradient(180deg, rgba(49, 201, 192, 0.07), rgba(255, 253, 248, 0) 24%);
+  .home-hero__marquee {
+    margin-block-start: clamp(-7rem, -9vw, -4.25rem);
+    padding-inline: var(--container-pad);
   }
 
   .showcase-section {
-    display: grid;
-    gap: clamp(var(--space-8), 4vw, var(--space-12));
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
+  .showcase-section + .showcase-section {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .showcase-section--soft {
+    background:
+      linear-gradient(180deg, var(--color-accent-light), transparent 28%),
+      var(--color-bg);
   }
 
   .showcase-section__header {
-    display: grid;
-    gap: var(--space-5);
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-block-end: var(--space-8);
   }
 
-  .showcase-section__intro {
-    max-inline-size: 46rem;
-  }
-
-  .showcase-section__intro :global(h2) {
-    font-size: clamp(2.5rem, 2rem + 1.8vw, 4rem);
+  .showcase-section__header h2 {
     max-inline-size: 12ch;
+    font-size: clamp(2.4rem, 2rem + 1.8vw, 4.2rem);
+    letter-spacing: -0.045em;
   }
 
   .showcase-section__eyebrow {
-    display: block;
-    font-size: clamp(0.72rem, 0.68rem + 0.1vw, 0.8rem);
+    max-inline-size: none;
+    margin-block-end: var(--space-3);
+    color: var(--color-accent);
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--color-accent-hover);
-    margin-block-end: var(--space-2);
   }
 
   .section-link {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
     min-block-size: 3rem;
     padding-inline: 1rem 1.15rem;
-    border: 1px solid rgba(17, 17, 17, 0.08);
+    border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: rgba(255, 253, 248, 0.72);
-    font-size: var(--text-sm);
-    font-weight: 700;
+    background: var(--color-surface);
     color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 600;
     text-decoration: none;
-    white-space: nowrap;
-    transition:
-      border-color var(--duration-fast) var(--ease-out),
-      background-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out),
-      transform var(--duration-fast) var(--ease-out);
   }
 
   .section-link::after {
     content: '→';
-    transition: transform 0.2s ease, color 0.2s ease;
+    margin-inline-start: 0.5rem;
   }
 
   .section-link:hover {
-    border-color: rgba(49, 201, 192, 0.4);
-    background: rgba(49, 201, 192, 0.08);
     color: var(--color-text);
-    transform: translateY(-1px);
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-strong);
   }
 
-  .section-link:hover::after {
-    transform: translateX(4px);
-  }
-
-  .showcase-grid {
+  .showcase-section__grid {
     display: grid;
-    gap: clamp(var(--space-4), 2vw, var(--space-6));
+    gap: var(--space-6);
   }
 
-  .showcase-grid > * {
-    min-block-size: 100%;
-  }
-
-  .showcase-grid :global(.card) {
-    block-size: 100%;
-    background: rgba(255, 253, 248, 0.9);
-  }
-
-  .showcase-grid--speaking :global(.speaking-card--featured),
-  .showcase-grid--articles :global(.blog-card--lead),
-  .showcase-grid--projects :global(.project-card--featured) {
-    background: linear-gradient(135deg, rgba(49, 201, 192, 0.1), rgba(255, 253, 248, 0.96) 60%);
-  }
-
-  .showcase-grid--articles :global(.blog-card--lead .blog-card__title) {
-    max-inline-size: 13ch;
-    font-size: clamp(2.25rem, 1.9rem + 1.5vw, 3.6rem);
-  }
-
-  .showcase-grid--projects :global(.project-card--featured .project-card__title) {
-    max-inline-size: 12ch;
-  }
-
-  .showcase-grid--speaking :global(.speaking-card--featured .speaking-card__title) {
-    max-inline-size: 12ch;
-  }
-
-  .showcase-empty {
+  .showcase-section__empty {
     color: var(--color-text-muted);
-    padding: var(--space-4) 0;
   }
 
-  @media (min-width: 64rem) {
-    .home-hero__grid {
-      grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.78fr);
+  @media (min-width: 48rem) {
+    .home-hero__shell {
+      grid-template-columns: minmax(0, 1.03fr) minmax(0, 0.97fr);
     }
 
-    .home-hero__support {
-      justify-self: end;
-    }
-
-    .showcase-section__header {
-      grid-template-columns: minmax(0, 1fr) auto;
-      justify-content: space-between;
-    }
-
-    .showcase-grid--speaking {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .showcase-grid--articles,
-    .showcase-grid--projects {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .showcase-grid--speaking > :first-child,
-    .showcase-grid--articles > :first-child,
-    .showcase-grid--projects > :first-child {
-      grid-column: 1 / -1;
+    .showcase-section__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 47.99rem) {
-    .home-hero {
-      padding-block-start: calc(5.25rem + var(--space-4));
+    .home-hero__panel--blank {
+      display: none;
     }
 
-    .home-hero__support {
-      padding: var(--space-5);
+    .home-hero__shell {
+      min-block-size: auto;
+    }
+
+    .home-hero__inner {
+      padding-block-start: 7rem;
+      padding-block-end: 8.5rem;
     }
 
     .home-hero__title {
-      max-inline-size: 9ch;
+      max-inline-size: 8ch;
+      font-size: clamp(3.3rem, 13vw, 4.8rem);
     }
 
-    .hero-button {
-      min-block-size: 3.25rem;
+    .home-hero__intro {
+      font-size: clamp(1.15rem, 1rem + 0.8vw, 1.4rem);
     }
 
-    .showcase-section__intro :global(h2) {
-      max-inline-size: 10ch;
+    .showcase-section__header h2 {
+      max-inline-size: 14ch;
     }
   }
 </style>

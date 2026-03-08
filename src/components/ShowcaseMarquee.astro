@@ -1,0 +1,101 @@
+---
+import ShowcasePreviewCard from '@/components/ShowcasePreviewCard.astro';
+
+interface ShowcaseMarqueeItem {
+  label: string;
+  title: string;
+  href: string;
+  image?: string;
+  imageAlt?: string;
+  meta?: string;
+  description?: string;
+  external?: boolean;
+}
+
+interface Props {
+  items?: ShowcaseMarqueeItem[];
+  ariaLabel?: string;
+}
+
+const {
+  items = [],
+  ariaLabel = 'Highlighted projects, articles, and speaking appearances',
+} = Astro.props;
+
+const marqueeItems = items.length > 0 ? [...items, ...items] : [];
+---
+
+{items.length > 0 ? (
+  <div class="showcase-marquee" aria-label={ariaLabel}>
+    <div class="showcase-marquee__viewport">
+      <div class="showcase-marquee__track">
+        {marqueeItems.map((item, index) => (
+          <div class="showcase-marquee__item">
+            <ShowcasePreviewCard
+              label={item.label}
+              title={item.title}
+              href={index < items.length ? item.href : undefined}
+              image={item.image}
+              imageAlt={item.imageAlt}
+              meta={item.meta}
+              description={item.description}
+              external={index < items.length ? item.external : false}
+              variant="compact"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+) : (
+  <p class="showcase-marquee__empty">Highlights will appear here soon.</p>
+)}
+
+<style>
+  .showcase-marquee {
+    position: relative;
+  }
+
+  .showcase-marquee__viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+  }
+
+  .showcase-marquee__track {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-4);
+    width: max-content;
+    animation: showcase-marquee 42s linear infinite;
+  }
+
+  .showcase-marquee__item {
+    flex: none;
+  }
+
+  .showcase-marquee__empty {
+    color: var(--color-text-muted);
+  }
+
+  @keyframes showcase-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(-50% - (var(--space-4) / 2)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .showcase-marquee__viewport {
+      overflow-x: auto;
+      mask-image: none;
+      padding-block-end: var(--space-2);
+    }
+
+    .showcase-marquee__track {
+      animation: none;
+    }
+  }
+</style>

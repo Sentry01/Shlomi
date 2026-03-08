@@ -1,19 +1,21 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ShowcaseMarquee from '@/components/ShowcaseMarquee.astro';
+import ShowcasePreviewCard from '@/components/ShowcasePreviewCard.astro';
 import SpeakingCard from '@/components/SpeakingCard.astro';
 import {
   speakingEvents,
   speakingEventDateLabel,
   speakingEventSlug,
   speakingEventSortValue,
-  speakingEventYear,
 } from '@/data/speaking';
+
+const baseUrl = import.meta.env.BASE_URL;
 
 const events = speakingEvents
   .map((event, index) => ({
     ...event,
-    year: speakingEventDateLabel(event.date),
-    yearKey: speakingEventYear(event.date),
+    dateLabel: speakingEventDateLabel(event.date),
     image: event.images?.[0],
     sortValue: speakingEventSortValue(event.date),
     originalIndex: index,
@@ -23,211 +25,310 @@ const events = speakingEvents
     return a.originalIndex - b.originalIndex;
   });
 
-const featuredEvents = events.filter((event) => event.image);
-const additionalEvents = events.filter((event) => !event.image);
-const years = new Set(events.map((event) => event.yearKey).filter(Boolean));
-const totalExternalLinks = events.reduce((count, event) => count + event.sourceLinks.length, 0);
+const featuredEvents = events.filter((event) => event.image).slice(0, 4);
+const archiveEvents = events;
+
+const ribbonItems = featuredEvents.map((event) => ({
+  label: 'Speaking',
+  title: event.title,
+  href: `${baseUrl}speaking/#${speakingEventSlug(event.title)}`,
+  image: event.image,
+  imageAlt: event.imageAlt ?? event.title,
+  meta: event.dateLabel ?? event.format,
+  description: event.summary,
+}));
 ---
 
 <BaseLayout
   title="Speaking"
   description="Selected talks, panels, roundtables, podcasts, and webinars by Shlomi Shaki."
+  mainClass="speaking-page"
 >
-  <section class="speaking-hero section">
-    <div class="container speaking-hero__inner">
-      <div class="speaking-hero__copy">
-        <p class="speaking-hero__eyebrow text-muted text-xs">Speaking & events</p>
-        <h1>Selected stages, roundtables, panels, and media appearances.</h1>
-        <p class="speaking-hero__intro body-serif">
-          A cross-section of executive roundtables, conference appearances, podcasts, and webinars
-          across APJ and global audiences—focused on AI engineering, developer productivity, and
-          application security.
-        </p>
+  <section class="speaking-hero">
+    <div class="speaking-hero__shell">
+      <div class="speaking-hero__panel speaking-hero__panel--copy">
+        <div class="container speaking-hero__inner">
+          <p class="speaking-hero__eyebrow">Speaking · panels · roundtables</p>
+          <h1 class="speaking-hero__title">
+            Bringing practical AI
+            <span>into the room.</span>
+          </h1>
+          <p class="speaking-hero__intro">
+            Talks, executive roundtables, and community sessions focused on AI engineering,
+            developer trust, application security, and what adoption looks like when teams need to
+            ship, govern, and learn at the same time.
+          </p>
+          <div class="speaking-hero__actions">
+            <a class="hero-button hero-button--primary" href="#featured">Featured events</a>
+            <a class="hero-button hero-button--secondary" href="#archive">All appearances</a>
+          </div>
+        </div>
       </div>
+      <div class="speaking-hero__panel speaking-hero__panel--blank" aria-hidden="true"></div>
+    </div>
 
-      <dl class="speaking-hero__stats" aria-label="Speaking overview">
-        <div class="speaking-hero__stat card">
-          <dt class="text-muted text-xs">Appearances</dt>
-          <dd>{events.length}</dd>
-        </div>
-        <div class="speaking-hero__stat card">
-          <dt class="text-muted text-xs">Years represented</dt>
-          <dd>{years.size}</dd>
-        </div>
-        <div class="speaking-hero__stat card">
-          <dt class="text-muted text-xs">External links</dt>
-          <dd>{totalExternalLinks}</dd>
-        </div>
-      </dl>
+    <div class="speaking-hero__marquee">
+      <ShowcaseMarquee items={ribbonItems} ariaLabel="Scrolling speaking highlights" />
     </div>
   </section>
 
-  <section class="section">
+  <section class="section speaking-section" id="featured">
     <div class="container speaking-section__header">
       <div>
-        <p class="text-muted text-xs">Portfolio</p>
-        <h2>Featured appearances</h2>
+        <p class="speaking-section__eyebrow">Featured appearances</p>
+        <h2>Selected talks with imagery, context, and direct paths to the summary.</h2>
       </div>
-      <p class="speaking-section__lede">
-        Image-led highlights from recent events, with direct links to event pages and media where
-        available.
-      </p>
+      <a class="section-link" href="#archive">Browse archive</a>
     </div>
 
     {featuredEvents.length > 0 ? (
-      <div class="container speaking-grid speaking-grid--featured">
-        {featuredEvents.map((event, index) => (
-          <SpeakingCard
-            id={speakingEventSlug(event.title)}
+      <div class="container speaking-feature-grid">
+        {featuredEvents.map((event) => (
+          <ShowcasePreviewCard
+            label="Speaking"
             title={event.title}
-            format={event.format}
-            location={event.region}
-            year={event.year}
-            audience={event.audience}
-            description={event.summary}
+            href={`${baseUrl}speaking/#${speakingEventSlug(event.title)}`}
             image={event.image}
-            imageAlt={event.imageAlt}
-            links={event.sourceLinks}
-            featured={true}
-            imageLoading={index === 0 ? 'eager' : 'lazy'}
+            imageAlt={event.imageAlt ?? event.title}
+            meta={event.dateLabel ?? event.format}
+            description={event.summary}
           />
         ))}
       </div>
     ) : (
       <div class="container">
-        <p class="speaking-empty card">Featured event imagery will appear here as assets are added.</p>
+        <p class="speaking-empty">Featured speaking imagery will appear here soon.</p>
       </div>
     )}
   </section>
 
-  <section class="section speaking-section speaking-section--bordered">
+  <section class="section speaking-section speaking-section--archive" id="archive">
     <div class="container speaking-section__header">
       <div>
-        <p class="text-muted text-xs">Archive</p>
-        <h2>Additional talks and media</h2>
+        <p class="speaking-section__eyebrow">Archive</p>
+        <h2>Every appearance, with image-first cards wherever media exists.</h2>
       </div>
-      <p class="speaking-section__lede">
-        A broader set of webinars, podcasts, and event appearances from the same data source.
-      </p>
     </div>
 
-    {additionalEvents.length > 0 ? (
-      <div class="container speaking-grid speaking-grid--archive">
-        {additionalEvents.map((event) => (
-          <SpeakingCard
-            id={speakingEventSlug(event.title)}
-            title={event.title}
-            format={event.format}
-            location={event.region}
-            year={event.year}
-            audience={event.audience}
-            description={event.summary}
-            links={event.sourceLinks}
-          />
-        ))}
-      </div>
-    ) : (
-      <div class="container">
-        <p class="speaking-empty card">Additional speaking appearances will appear here.</p>
-      </div>
-    )}
+    <div class="container speaking-archive-grid">
+      {archiveEvents.map((event) => (
+        <SpeakingCard
+          id={speakingEventSlug(event.title)}
+          title={event.title}
+          format={event.format}
+          location={event.region}
+          year={event.dateLabel}
+          audience={event.audience}
+          description={event.summary}
+          image={event.image}
+          imageAlt={event.imageAlt}
+          links={event.sourceLinks}
+          insights={event.insights?.slice(0, 2)}
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>
 
 <style>
+  :global(main.speaking-page) {
+    background: var(--color-bg);
+  }
+
   .speaking-hero {
-    padding-block-end: var(--space-10);
+    position: relative;
+    padding-block-end: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .speaking-hero__shell {
+    display: grid;
+    min-block-size: clamp(34rem, 80vh, 50rem);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .speaking-hero__panel--copy {
+    background: var(--color-hero-panel);
+  }
+
+  .speaking-hero__panel--blank {
+    background: var(--color-surface);
   }
 
   .speaking-hero__inner {
-    display: grid;
-    gap: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-block-size: 100%;
+    padding-block: clamp(8rem, 16vh, 12rem) clamp(6.5rem, 10vh, 8rem);
   }
 
-  .speaking-hero__copy {
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  .speaking-hero__eyebrow {
+  .speaking-hero__eyebrow,
+  .speaking-section__eyebrow {
+    max-inline-size: none;
+    margin-block-end: var(--space-3);
+    color: var(--color-accent);
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
+  }
+
+  .speaking-hero__title {
+    max-inline-size: 7.5ch;
+    font-size: clamp(3.6rem, 9vw, 6.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
+  .speaking-hero__title span {
+    display: block;
+    color: var(--color-accent-strong);
   }
 
   .speaking-hero__intro {
-    font-size: var(--text-lg);
-    color: var(--color-text-muted);
     max-inline-size: 42rem;
+    margin-block-start: var(--space-6);
+    color: var(--color-text-muted);
+    font-size: clamp(1.2rem, 1rem + 0.6vw, 1.6rem);
+    line-height: 1.5;
   }
 
-  .speaking-hero__stats {
-    display: grid;
-    gap: var(--space-4);
+  .speaking-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-8);
   }
 
-  .speaking-hero__stat {
-    padding: var(--space-5);
-  }
-
-  .speaking-hero__stat dt {
+  .hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 3.5rem;
+    padding-inline: 1.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-base);
     font-weight: 600;
-    letter-spacing: 0.08em;
-    margin-block-end: var(--space-2);
-    text-transform: uppercase;
+    text-decoration: none;
   }
 
-  .speaking-hero__stat dd {
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    line-height: var(--leading-tight);
+  .hero-button:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-strong);
   }
 
-  .speaking-section--bordered {
+  .hero-button--primary {
+    border-color: transparent;
+    background: var(--color-accent);
+  }
+
+  .hero-button--primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .speaking-hero__marquee {
+    margin-block-start: clamp(-7rem, -9vw, -4.25rem);
+    padding-inline: var(--container-pad);
+  }
+
+  .speaking-section {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
+  .speaking-section + .speaking-section {
     border-block-start: 1px solid var(--color-border);
   }
 
   .speaking-section__header {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
     gap: var(--space-4);
-    margin-block-end: var(--space-6);
+    margin-block-end: var(--space-8);
   }
 
-  .speaking-section__lede {
-    max-inline-size: 36rem;
-    color: var(--color-text-muted);
+  .speaking-section__header h2 {
+    max-inline-size: 13ch;
+    font-size: clamp(2.1rem, 1.8rem + 1.4vw, 3.6rem);
+    letter-spacing: -0.04em;
   }
 
-  .speaking-grid {
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 3rem;
+    padding-inline: 1rem 1.15rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .section-link::after {
+    content: '→';
+    margin-inline-start: 0.5rem;
+  }
+
+  .section-link:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-strong);
+  }
+
+  .speaking-feature-grid,
+  .speaking-archive-grid {
     display: grid;
     gap: var(--space-6);
   }
 
-  .speaking-grid--featured {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  }
-
-  .speaking-grid--archive {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  .speaking-section--archive {
+    background:
+      linear-gradient(180deg, var(--color-accent-light), transparent 28%),
+      var(--color-bg);
   }
 
   .speaking-empty {
     color: var(--color-text-muted);
   }
 
-  @media (min-width: 60rem) {
-    .speaking-hero__inner,
-    .speaking-section__header {
-      grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 0.9fr);
-      align-items: start;
+  @media (min-width: 48rem) {
+    .speaking-hero__shell {
+      grid-template-columns: minmax(0, 1.03fr) minmax(0, 0.97fr);
     }
 
-    .speaking-hero__stats {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .speaking-feature-grid,
+    .speaking-archive-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .speaking-feature-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .speaking-hero__panel--blank {
+      display: none;
     }
 
-    .speaking-grid--featured > :first-child {
-      grid-column: span 2;
+    .speaking-hero__inner {
+      padding-block-start: 7rem;
+      padding-block-end: 8.5rem;
+    }
+
+    .speaking-hero__title {
+      max-inline-size: 8ch;
+      font-size: clamp(3rem, 13vw, 4.8rem);
     }
   }
 </style>

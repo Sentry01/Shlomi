@@ -8,7 +8,7 @@ const { currentPath = '' } = Astro.props;
 const navLinks = [
   { label: 'About', href: `${import.meta.env.BASE_URL}about/` },
   { label: 'Projects', href: `${import.meta.env.BASE_URL}projects/` },
-  { label: 'Blog', href: `${import.meta.env.BASE_URL}blog/` },
+  { label: 'Articles', href: `${import.meta.env.BASE_URL}blog/` },
   { label: 'Speaking', href: `${import.meta.env.BASE_URL}speaking/` },
 ];
 
@@ -20,12 +20,12 @@ function isActive(href: string): boolean {
 
 <header class="site-header">
   <div class="site-header__inner container">
-    <div class="site-header__shell">
-      <a href={import.meta.env.BASE_URL} class="site-header__wordmark">
-        Shlomi Shaki
-      </a>
+    <a href={import.meta.env.BASE_URL} class="site-header__wordmark" aria-label="Shlomi home">
+      <span class="site-header__wordmark-name">shlomi</span>
+      <span class="site-header__wordmark-dot">.</span>
+    </a>
 
-      {/* Desktop nav — visible at wider viewports */}
+    <div class="site-header__controls">
       <nav class="site-header__nav" aria-label="Main navigation">
         <ul class="site-header__list" role="list">
           {navLinks.map(({ label, href }) => (
@@ -42,14 +42,54 @@ function isActive(href: string): boolean {
         </ul>
       </nav>
 
-      {/* Mobile nav — native disclosure for keyboard a11y */}
+      <button type="button" class="site-header__theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+        <svg
+          class="site-header__theme-icon site-header__theme-icon--moon"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3c0 4.97 4.03 9 9 9Z"></path>
+        </svg>
+        <svg
+          class="site-header__theme-icon site-header__theme-icon--sun"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M2 12h2.2M19.8 12H22M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"></path>
+        </svg>
+        <span class="sr-only">Toggle color theme</span>
+      </button>
+
       <details class="site-header__mobile-nav">
         <summary class="site-header__menu-btn" aria-label="Toggle navigation menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <line class="menu-line menu-line--top" x1="3" y1="6" x2="21" y2="6" />
-            <line class="menu-line menu-line--mid" x1="3" y1="12" x2="21" y2="12" />
-            <line class="menu-line menu-line--bot" x1="3" y1="18" x2="21" y2="18" />
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
           </svg>
         </summary>
 
@@ -73,14 +113,53 @@ function isActive(href: string): boolean {
   </div>
 </header>
 
+<script is:inline>
+  (() => {
+    const bindThemeControls = () => {
+      const buttons = document.querySelectorAll('[data-theme-toggle]');
+      const themeApi = window.__siteTheme;
+
+      if (!buttons.length || !themeApi) return;
+
+      const sync = () => {
+        const currentTheme = themeApi.get();
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        buttons.forEach((button) => {
+          button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+          button.setAttribute('title', `Switch to ${nextTheme} mode`);
+          button.setAttribute('aria-pressed', String(currentTheme === 'dark'));
+        });
+      };
+
+      buttons.forEach((button) => {
+        if (button.dataset.bound === 'true') return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', () => {
+          themeApi.toggle();
+          sync();
+        });
+      });
+
+      sync();
+      document.addEventListener('site-theme-change', sync);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bindThemeControls, { once: true });
+    } else {
+      bindThemeControls();
+    }
+  })();
+</script>
+
 <style>
-  /* ----- Header Shell ----- */
   .site-header {
     position: sticky;
     inset-block-start: 0;
     z-index: 100;
-    padding-block: var(--space-3);
-    background: linear-gradient(180deg, rgba(244, 240, 235, 0.94), rgba(244, 240, 235, 0.72));
+    background: var(--color-header);
+    border-block-end: 1px solid var(--color-border);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -88,45 +167,41 @@ function isActive(href: string): boolean {
   .site-header__inner {
     display: flex;
     align-items: center;
-  }
-
-  .site-header__shell {
-    position: relative;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    inline-size: 100%;
-    min-block-size: 4.25rem;
-    padding-inline: clamp(var(--space-4), 2vw, var(--space-6));
-    border: 1px solid rgba(17, 17, 17, 0.06);
-    border-radius: 1.25rem;
-    background: rgba(255, 253, 248, 0.78);
-    box-shadow: 0 16px 40px rgba(17, 17, 17, 0.06);
+    min-block-size: 4rem;
   }
 
-  /* ----- Wordmark ----- */
   .site-header__wordmark {
-    font-family: var(--font-sans);
-    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
-    font-weight: 700;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.05em;
     color: var(--color-text);
     text-decoration: none;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: lowercase;
   }
 
-  .site-header__wordmark:hover {
+  .site-header__wordmark-dot {
     color: var(--color-accent);
   }
 
-  /* ----- Desktop Nav ----- */
+  .site-header__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
   .site-header__nav {
     display: none;
   }
 
   .site-header__list {
     display: flex;
+    align-items: center;
     gap: var(--space-2);
     list-style: none;
   }
@@ -134,65 +209,70 @@ function isActive(href: string): boolean {
   .site-header__link {
     display: inline-flex;
     align-items: center;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    letter-spacing: 0.01em;
     min-block-size: 2.5rem;
-    padding-inline: var(--space-4);
-    position: relative;
+    padding-inline: var(--space-3);
     border-radius: 999px;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .site-header__link::after {
-    content: '';
-    position: absolute;
-    inset: auto var(--space-4) var(--space-2);
-    block-size: 1.5px;
-    background: var(--color-accent);
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform var(--duration-normal) var(--ease-out);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
   }
 
   .site-header__link:hover,
   .site-header__link.is-active {
     color: var(--color-text);
-    background: rgba(31, 199, 191, 0.1);
+    background: var(--color-accent-light);
   }
 
-  .site-header__link.is-active::after,
-  .site-header__link:hover::after {
-    transform: scaleX(1);
+  .site-header__theme-toggle,
+  .site-header__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.6rem;
+    block-size: 2.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
   }
 
-  /* ----- Mobile Nav (details/summary) ----- */
-  .site-header__mobile-nav {
+  .site-header__theme-toggle:hover,
+  .site-header__menu-btn:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-strong);
+    transform: translateY(-1px);
+  }
+
+  .site-header__theme-icon--sun {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .site-header__theme-icon--sun {
     display: block;
+  }
+
+  :global(:root[data-theme='dark']) .site-header__theme-icon--moon {
+    display: none;
+  }
+
+  .site-header__mobile-nav {
     position: relative;
   }
 
   .site-header__menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    inline-size: 2.75rem;
-    block-size: 2.75rem;
-    color: var(--color-text);
     list-style: none;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(17, 17, 17, 0.06);
   }
 
-  /* Remove default marker in Safari/Chrome */
-  .site-header__menu-btn::-webkit-details-marker {
-    display: none;
-  }
-
+  .site-header__menu-btn::-webkit-details-marker,
   .site-header__menu-btn::marker {
     display: none;
     content: '';
@@ -202,40 +282,39 @@ function isActive(href: string): boolean {
     position: absolute;
     inset-inline-end: 0;
     inset-block-start: calc(100% + var(--space-2));
-    min-inline-size: min(18rem, calc(100vw - (2 * var(--container-pad))));
-    background: rgba(255, 253, 248, 0.98);
-    border: 1px solid rgba(17, 17, 17, 0.06);
-    border-radius: 1.25rem;
-    box-shadow: 0 20px 50px rgba(17, 17, 17, 0.08);
+    min-inline-size: min(17rem, calc(100vw - (2 * var(--container-pad))));
     padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: 1.2rem;
+    background: var(--color-surface-strong);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .site-header__dropdown ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--space-1);
+    list-style: none;
   }
 
   .site-header__dropdown-link {
     display: block;
     padding: var(--space-3) var(--space-4);
-    font-size: var(--text-base);
-    font-weight: 600;
+    border-radius: 0.9rem;
     color: var(--color-text-muted);
+    font-size: var(--text-base);
+    font-weight: 500;
     text-decoration: none;
-    border-radius: 999px;
-    transition: background var(--duration-fast) var(--ease-out),
-                color var(--duration-fast) var(--ease-out);
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
   }
 
   .site-header__dropdown-link:hover,
   .site-header__dropdown-link.is-active {
-    background: rgba(31, 199, 191, 0.12);
+    background: var(--color-accent-light);
     color: var(--color-text);
   }
 
-  /* ----- Responsive Breakpoint ----- */
   @media (min-width: 48rem) {
     .site-header__nav {
       display: block;

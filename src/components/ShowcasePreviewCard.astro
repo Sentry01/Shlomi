@@ -1,0 +1,231 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  href?: string;
+  image?: string;
+  imageAlt?: string;
+  meta?: string;
+  description?: string;
+  external?: boolean;
+  variant?: 'default' | 'compact';
+}
+
+const {
+  label,
+  title,
+  href,
+  image,
+  imageAlt = title,
+  meta,
+  description,
+  external = false,
+  variant = 'default',
+} = Astro.props;
+
+const normalizedImage =
+  image && image.startsWith('/') && !image.startsWith('//')
+    ? `${import.meta.env.BASE_URL}${image.slice(1)}`
+    : image;
+
+const Tag = href ? 'a' : 'article';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    'showcase-preview',
+    `showcase-preview--${variant}`,
+    { 'showcase-preview--linked': Boolean(href) },
+  ]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <div class="showcase-preview__media">
+    {normalizedImage ? (
+      <img
+        src={normalizedImage}
+        alt={imageAlt}
+        width="1280"
+        height="720"
+        class="showcase-preview__image"
+        loading={variant === 'compact' ? 'lazy' : 'eager'}
+        decoding="async"
+      />
+    ) : (
+      <div class="showcase-preview__fallback" aria-hidden="true"></div>
+    )}
+
+    <span class="showcase-preview__label">{label}</span>
+  </div>
+
+  <div class="showcase-preview__body">
+    <div class="showcase-preview__copy">
+      {meta && <p class="showcase-preview__meta">{meta}</p>}
+      <h3 class="showcase-preview__title">{title}</h3>
+      {description && variant === 'default' && (
+        <p class="showcase-preview__description">{description}</p>
+      )}
+    </div>
+
+    {href && (
+      <span class="showcase-preview__icon" aria-hidden="true">
+        {external ? '↗' : '→'}
+      </span>
+    )}
+  </div>
+</Tag>
+
+<style>
+  .showcase-preview {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-block-size: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 1.4rem;
+    overflow: hidden;
+    background: var(--color-surface-strong);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      transform var(--duration-normal) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-normal) var(--ease-out),
+      background-color var(--duration-normal) var(--ease-out);
+  }
+
+  .showcase-preview--linked:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-card-hover);
+    color: var(--color-text);
+  }
+
+  .showcase-preview__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top left, var(--color-accent-light), transparent 44%),
+      var(--color-bg-subtle);
+  }
+
+  .showcase-preview__image,
+  .showcase-preview__fallback {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .showcase-preview__image {
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .showcase-preview--linked:hover .showcase-preview__image {
+    transform: scale(1.04);
+  }
+
+  .showcase-preview__label {
+    position: absolute;
+    inset-inline-start: var(--space-4);
+    inset-block-start: var(--space-4);
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2rem;
+    padding-inline: 0.75rem;
+    border-radius: 999px;
+    background: rgba(18, 20, 28, 0.72);
+    color: #f7fbff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  :global(:root[data-theme='dark']) .showcase-preview__label {
+    background: rgba(6, 10, 14, 0.78);
+  }
+
+  .showcase-preview__body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 1.1rem 1.15rem 1.2rem;
+  }
+
+  .showcase-preview__copy {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .showcase-preview__meta {
+    max-inline-size: none;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .showcase-preview__title {
+    font-size: clamp(1.05rem, 0.96rem + 0.35vw, 1.35rem);
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .showcase-preview__description {
+    max-inline-size: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .showcase-preview__icon {
+    flex: none;
+    color: var(--color-text-muted);
+    font-size: 1.15rem;
+    line-height: 1;
+    transform: translateY(0.15rem);
+  }
+
+  .showcase-preview--compact {
+    inline-size: clamp(17rem, 20vw, 21rem);
+  }
+
+  .showcase-preview--compact .showcase-preview__body {
+    padding: 1rem 1rem 1.1rem;
+  }
+
+  .showcase-preview--compact .showcase-preview__title {
+    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.2rem);
+    -webkit-line-clamp: 2;
+  }
+
+  .showcase-preview--compact .showcase-preview__media {
+    aspect-ratio: 16 / 8.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .showcase-preview__image,
+    .showcase-preview {
+      transition: none;
+    }
+
+    .showcase-preview--linked:hover {
+      transform: none;
+    }
+
+    .showcase-preview--linked:hover .showcase-preview__image {
+      transform: none;
+    }
+  }
+</style>
