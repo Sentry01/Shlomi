@@ -13,18 +13,26 @@ interface Props {
   repo?: string;
   repoUrl?: string;
   liveUrl?: string;
+  featured?: boolean;
 }
 
-const { title, description, tags, href, repo, repoUrl, liveUrl } = Astro.props;
+const { title, description, tags, href, repo, repoUrl, liveUrl, featured = false } = Astro.props;
 
 const hasResourceLinks = Boolean(repoUrl || liveUrl);
 const RootTag = href && !hasResourceLinks ? 'a' : 'article';
-const rootProps = href && !hasResourceLinks
-  ? { href, class: 'card card--linked project-card' }
-  : { class: 'card project-card' };
 ---
 
-<RootTag {...rootProps}>
+<RootTag
+  href={href && !hasResourceLinks ? href : undefined}
+  class:list={[
+    'card',
+    'project-card',
+    {
+      'card--linked': Boolean(href && !hasResourceLinks),
+      'project-card--featured': featured,
+    },
+  ]}
+>
   {title && (
     <h3 class="project-card__title">
       {href && hasResourceLinks ? (
@@ -87,10 +95,18 @@ const rootProps = href && !hasResourceLinks
     block-size: 100%;
   }
 
+  .project-card--featured {
+    gap: var(--space-5);
+  }
+
   .project-card__title {
     font-size: clamp(1.45rem, 1.18rem + 0.55vw, 1.9rem);
     font-weight: 600;
     line-height: var(--leading-snug);
+  }
+
+  .project-card--featured .project-card__title {
+    font-size: clamp(1.95rem, 1.6rem + 1vw, 2.7rem);
   }
 
   a.project-card__title,
@@ -111,6 +127,16 @@ const rootProps = href && !hasResourceLinks
     font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .project-card--featured .project-card__desc {
+    display: block;
+    font-size: var(--text-lg);
+    overflow: visible;
   }
 
   .project-card__meta {

@@ -257,8 +257,17 @@ ul, ol {
   padding-inline-start: var(--space-6);
 }
 
+ul[role='list'],
+ol[role='list'] {
+  padding-inline-start: 0;
+}
+
 li + li {
   margin-block-start: var(--space-2);
+}
+
+[role='list'] > li + li {
+  margin-block-start: 0;
 }
 
 

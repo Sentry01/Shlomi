@@ -150,11 +150,17 @@ const linkProps = href
     font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
   }
 
   .blog-card--lead .blog-card__desc {
+    display: block;
     font-size: var(--text-lg);
     max-inline-size: 38rem;
+    overflow: visible;
   }
 
   .blog-card--compact .blog-card__desc {

@@ -48,27 +48,36 @@ const featuredSpeaking = speakingEvents
 >
   <section class="home-hero">
     <div class="container">
-      <div class="home-hero__panel">
-        <span class="home-hero__eyebrow">Writing · speaking · building</span>
-        <h1 class="home-hero__title">
-          Turning AI ambition
-          <span>into software that ships.</span>
-        </h1>
-        <p class="home-hero__intro">
-          I lead GitHub Copilot across APJ and use this site to publish what I am seeing in the
-          field — enterprise AI adoption, agentic engineering, software trust, and the projects
-          behind the ideas.
-        </p>
-        <div class="home-hero__actions">
-          <a class="hero-button hero-button--primary" href="#articles">Latest articles</a>
-          <a class="hero-button hero-button--secondary" href="#projects">Projects</a>
-          <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
+      <div class="home-hero__grid">
+        <div class="home-hero__headline">
+          <span class="home-hero__eyebrow">Writing · speaking · building</span>
+          <h1 class="home-hero__title">
+            Turning AI ambition
+            <span>into software that ships.</span>
+          </h1>
+        </div>
+
+        <div class="home-hero__support">
+          <p class="home-hero__intro">
+            I lead GitHub Copilot across APJ and use this site to publish what I am seeing in the
+            field — enterprise AI adoption, agentic engineering, software trust, and the projects
+            behind the ideas.
+          </p>
+          <div class="home-hero__actions">
+            <a class="hero-button hero-button--primary" href="#articles">Latest articles</a>
+            <a class="hero-button hero-button--secondary" href="#projects">Projects</a>
+            <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
+          </div>
+          <p class="home-hero__note">
+            Start with the newest field notes, then move into recent talks and the projects that
+            make the arguments concrete.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="speaking">
+  <section class="section home-section home-section--speaking" id="speaking">
     <div class="container">
       <div class="showcase-section">
         <div class="showcase-section__header">
@@ -96,9 +105,10 @@ const featuredSpeaking = speakingEvents
                 insights={event.insights?.slice(0, 2)}
                 image={event.image}
                 imageAlt={event.imageAlt ?? event.title}
-                links={event.sourceLinks}
+                links={event.sourceLinks?.slice(0, 1)}
                 summaryHref={`${baseUrl}speaking/#${speakingEventSlug(event.title)}`}
                 imageLoading={index === 0 ? 'eager' : 'lazy'}
+                featured={index === 0}
               />
             ))}
           </div>
@@ -109,9 +119,9 @@ const featuredSpeaking = speakingEvents
     </div>
   </section>
 
-  <section class="section" id="articles">
+  <section class="section home-section home-section--articles" id="articles">
     <div class="container">
-      <div class="showcase-section showcase-section--soft">
+      <div class="showcase-section">
         <div class="showcase-section__header">
           <div class="showcase-section__intro prose">
             <span class="showcase-section__eyebrow">Articles</span>
@@ -126,16 +136,17 @@ const featuredSpeaking = speakingEvents
 
         {latestPosts.length > 0 ? (
           <div class="showcase-grid showcase-grid--articles">
-            {latestPosts.map((post) => (
+            {latestPosts.map((post, index) => (
               <BlogPostCard
                 title={post.data.title}
                 description={post.data.description}
                 pubDate={post.data.pubDate}
-                tags={post.data.tags}
+                tags={post.data.tags.slice(0, 3)}
                 href={isExternalCanonical(post.data.canonical)
                   ? post.data.canonical
                   : `${baseUrl}blog/${blogSlug(post.id)}/`}
                 isExternal={isExternalCanonical(post.data.canonical)}
+                variant={index === 0 ? 'lead' : 'default'}
               />
             ))}
           </div>
@@ -146,7 +157,7 @@ const featuredSpeaking = speakingEvents
     </div>
   </section>
 
-  <section class="section" id="projects">
+  <section class="section home-section home-section--projects" id="projects">
     <div class="container">
       <div class="showcase-section">
         <div class="showcase-section__header">
@@ -163,14 +174,15 @@ const featuredSpeaking = speakingEvents
 
         {featuredProjects.length > 0 ? (
           <div class="showcase-grid showcase-grid--projects">
-            {featuredProjects.map((project) => (
+            {featuredProjects.map((project, index) => (
               <ProjectCard
                 title={project.data.title}
                 description={project.data.description}
-                tags={project.data.tags}
+                tags={project.data.tags.slice(0, 3)}
                 href={`${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`}
                 repoUrl={project.data.repo}
                 liveUrl={project.data.liveUrl}
+                featured={index === 0}
               />
             ))}
           </div>
@@ -185,56 +197,91 @@ const featuredSpeaking = speakingEvents
 <style>
   :global(main.home-page) {
     background:
-      radial-gradient(circle at top left, rgba(49, 201, 192, 0.16), transparent 34%),
-      radial-gradient(circle at top right, rgba(49, 201, 192, 0.08), transparent 24%),
+      radial-gradient(circle at top left, rgba(49, 201, 192, 0.2), transparent 28%),
+      radial-gradient(circle at 82% 8%, rgba(49, 201, 192, 0.1), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 18%),
       var(--color-bg);
+  }
+
+  :global(main.home-page .container) {
+    max-inline-size: 92rem;
   }
 
   .home-hero {
     position: relative;
-    padding-block-start: clamp(6.5rem, 12vh, 9rem);
-    padding-block-end: var(--space-12);
+    overflow: clip;
+    padding-block-start: clamp(6rem, 10vh, 8rem);
+    padding-block-end: clamp(4.5rem, 10vh, 7rem);
   }
 
   .home-hero::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at top left, rgba(49, 201, 192, 0.14), transparent 38%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 72%);
+    inset-inline-start: max(-10rem, calc(50% - 48rem));
+    inset-block-start: clamp(2rem, 5vh, 4rem);
+    inline-size: clamp(18rem, 40vw, 34rem);
+    block-size: clamp(18rem, 36vw, 30rem);
+    background: radial-gradient(circle at center, rgba(49, 201, 192, 0.18), rgba(49, 201, 192, 0.04) 58%, transparent 74%);
     pointer-events: none;
   }
 
-  .home-hero__panel {
+  .home-hero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.1), transparent);
+  }
+
+  .home-hero__grid {
     position: relative;
     display: grid;
+    gap: clamp(var(--space-8), 6vw, var(--space-16));
+    align-items: end;
+    min-block-size: clamp(32rem, 72svh, 46rem);
+  }
+
+  .home-hero__headline {
+    display: grid;
     gap: var(--space-6);
-    max-inline-size: 72rem;
-    padding-block: clamp(var(--space-8), 5vw, var(--space-12));
+    max-inline-size: min(50rem, 100%);
   }
 
   .home-hero__eyebrow {
-    font-size: var(--text-sm);
+    font-size: clamp(0.72rem, 0.65rem + 0.15vw, 0.82rem);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.28em;
     color: var(--color-accent-hover);
   }
 
   .home-hero__title {
-    max-inline-size: 10ch;
-    font-size: clamp(4rem, 9vw, 8.5rem);
-    line-height: 0.9;
-    letter-spacing: -0.06em;
+    max-inline-size: 8.8ch;
+    font-size: clamp(4.4rem, 10vw, 9rem);
+    line-height: 0.88;
+    letter-spacing: -0.065em;
   }
 
   .home-hero__title span {
+    display: block;
     color: var(--color-accent);
   }
 
+  .home-hero__support {
+    display: grid;
+    gap: var(--space-5);
+    max-inline-size: 31rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 1.75rem;
+    background: rgba(255, 253, 248, 0.74);
+    box-shadow: 0 20px 48px rgba(17, 17, 17, 0.06);
+    backdrop-filter: blur(10px);
+  }
+
   .home-hero__intro {
-    max-inline-size: 48rem;
+    max-inline-size: none;
     font-size: clamp(1.125rem, 1rem + 0.55vw, 1.45rem);
     line-height: 1.65;
     color: var(--color-text-muted);
@@ -244,6 +291,14 @@ const featuredSpeaking = speakingEvents
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+  }
+
+  .home-hero__note {
+    max-inline-size: none;
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid rgba(17, 17, 17, 0.08);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
   .hero-button {
@@ -292,44 +347,44 @@ const featuredSpeaking = speakingEvents
     color: var(--color-text);
   }
 
-  .showcase-section {
-    display: grid;
-    gap: clamp(var(--space-6), 4vw, var(--space-10));
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    border: 1px solid rgba(17, 17, 17, 0.06);
-    border-radius: 1.75rem;
-    background: rgba(255, 253, 248, 0.78);
-    box-shadow: 0 20px 48px rgba(17, 17, 17, 0.06);
-    backdrop-filter: blur(10px);
+  .home-section {
+    position: relative;
+    padding-block: clamp(4.5rem, 8vw, 7rem);
   }
 
-  .showcase-section--soft {
-    background:
-      linear-gradient(180deg, rgba(49, 201, 192, 0.08), rgba(255, 253, 248, 0.82)),
-      rgba(255, 253, 248, 0.82);
+  .home-section + .home-section {
+    border-block-start: 1px solid rgba(17, 17, 17, 0.08);
+  }
+
+  .home-section--articles {
+    background: linear-gradient(180deg, rgba(49, 201, 192, 0.07), rgba(255, 253, 248, 0) 24%);
+  }
+
+  .showcase-section {
+    display: grid;
+    gap: clamp(var(--space-8), 4vw, var(--space-12));
   }
 
   .showcase-section__header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-4);
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
   }
 
   .showcase-section__intro {
-    max-inline-size: 42rem;
+    max-inline-size: 46rem;
   }
 
   .showcase-section__intro :global(h2) {
-    font-size: clamp(2rem, 1.6rem + 1vw, 2.8rem);
+    font-size: clamp(2.5rem, 2rem + 1.8vw, 4rem);
+    max-inline-size: 12ch;
   }
 
   .showcase-section__eyebrow {
     display: block;
-    font-size: var(--text-xs);
+    font-size: clamp(0.72rem, 0.68rem + 0.1vw, 0.8rem);
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-accent-hover);
     margin-block-end: var(--space-2);
@@ -339,16 +394,33 @@ const featuredSpeaking = speakingEvents
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    min-block-size: 3rem;
+    padding-inline: 1rem 1.15rem;
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 999px;
+    background: rgba(255, 253, 248, 0.72);
     font-size: var(--text-sm);
     font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
     white-space: nowrap;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
   }
 
   .section-link::after {
     content: '→';
     transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .section-link:hover {
+    border-color: rgba(49, 201, 192, 0.4);
+    background: rgba(49, 201, 192, 0.08);
+    color: var(--color-text);
+    transform: translateY(-1px);
   }
 
   .section-link:hover::after {
@@ -357,7 +429,7 @@ const featuredSpeaking = speakingEvents
 
   .showcase-grid {
     display: grid;
-    gap: var(--space-5);
+    gap: clamp(var(--space-4), 2vw, var(--space-6));
   }
 
   .showcase-grid > * {
@@ -366,16 +438,26 @@ const featuredSpeaking = speakingEvents
 
   .showcase-grid :global(.card) {
     block-size: 100%;
+    background: rgba(255, 253, 248, 0.9);
   }
 
-  .showcase-grid--articles :global(.blog-card__title) {
-    font-size: clamp(1.55rem, 1.26rem + 0.7vw, 2rem);
+  .showcase-grid--speaking :global(.speaking-card--featured),
+  .showcase-grid--articles :global(.blog-card--lead),
+  .showcase-grid--projects :global(.project-card--featured) {
+    background: linear-gradient(135deg, rgba(49, 201, 192, 0.1), rgba(255, 253, 248, 0.96) 60%);
   }
 
-  .showcase-grid--projects :global(.project-card),
-  .showcase-grid--articles :global(.blog-card),
-  .showcase-grid--speaking :global(.speaking-card) {
-    background: var(--color-surface);
+  .showcase-grid--articles :global(.blog-card--lead .blog-card__title) {
+    max-inline-size: 13ch;
+    font-size: clamp(2.25rem, 1.9rem + 1.5vw, 3.6rem);
+  }
+
+  .showcase-grid--projects :global(.project-card--featured .project-card__title) {
+    max-inline-size: 12ch;
+  }
+
+  .showcase-grid--speaking :global(.speaking-card--featured .speaking-card__title) {
+    max-inline-size: 12ch;
   }
 
   .showcase-empty {
@@ -383,22 +465,55 @@ const featuredSpeaking = speakingEvents
     padding: var(--space-4) 0;
   }
 
-  @media (min-width: 48rem) {
+  @media (min-width: 64rem) {
+    .home-hero__grid {
+      grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.78fr);
+    }
+
+    .home-hero__support {
+      justify-self: end;
+    }
+
+    .showcase-section__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      justify-content: space-between;
+    }
+
+    .showcase-grid--speaking {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .showcase-grid--articles,
     .showcase-grid--projects {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .showcase-grid--speaking {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .showcase-grid--speaking > :first-child,
+    .showcase-grid--articles > :first-child,
+    .showcase-grid--projects > :first-child {
+      grid-column: 1 / -1;
     }
   }
 
-  @media (min-width: 72rem) {
-    .showcase-grid--articles,
-    .showcase-grid--projects,
-    .showcase-grid--speaking {
-      grid-template-columns: repeat(3, 1fr);
+  @media (max-width: 47.99rem) {
+    .home-hero {
+      padding-block-start: calc(5.25rem + var(--space-4));
+    }
+
+    .home-hero__support {
+      padding: var(--space-5);
+    }
+
+    .home-hero__title {
+      max-inline-size: 9ch;
+    }
+
+    .hero-button {
+      min-block-size: 3.25rem;
+    }
+
+    .showcase-section__intro :global(h2) {
+      max-inline-size: 10ch;
     }
   }
 </style>

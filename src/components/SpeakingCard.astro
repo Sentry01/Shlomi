@@ -196,6 +196,15 @@ const normalizedImage =
     color: var(--color-text-muted);
     line-height: var(--leading-normal);
     max-inline-size: none;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .speaking-card--featured .speaking-card__desc {
+    display: block;
+    overflow: visible;
   }
 
   .speaking-card__links {
@@ -300,6 +309,20 @@ const normalizedImage =
   }
 
   @media (min-width: 64rem) {
+    .speaking-card--featured {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+
+    .speaking-card--featured .speaking-card__image-wrap {
+      block-size: 100%;
+      aspect-ratio: auto;
+    }
+
+    .speaking-card--featured .speaking-card__image {
+      min-block-size: 100%;
+    }
+
     .speaking-card--featured .speaking-card__body {
       padding: var(--space-6);
     }
