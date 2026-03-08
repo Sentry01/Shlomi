@@ -221,12 +221,9 @@ function isActive(href: string): boolean {
       color var(--duration-fast) var(--ease-out);
   }
 
+  .site-header__link:hover,
   .site-header__link.is-active {
     color: var(--color-text);
-    background: var(--color-accent-light);
-  }
-
-  .site-header__link:hover {
     background: var(--color-accent);
   }
 
@@ -312,17 +309,16 @@ function isActive(href: string): boolean {
       color var(--duration-fast) var(--ease-out);
   }
 
+  .site-header__dropdown-link:hover,
   .site-header__dropdown-link.is-active {
-    background: var(--color-accent-light);
+    background: var(--color-accent);
     color: var(--color-text);
   }
 
-  .site-header__dropdown-link:hover {
-    background: var(--color-accent);
-  }
-
   :global(:root[data-theme='dark']) .site-header__link:hover,
-  :global(:root[data-theme='dark']) .site-header__dropdown-link:hover {
+  :global(:root[data-theme='dark']) .site-header__link.is-active,
+  :global(:root[data-theme='dark']) .site-header__dropdown-link:hover,
+  :global(:root[data-theme='dark']) .site-header__dropdown-link.is-active {
     color: var(--color-bg);
   }
 
