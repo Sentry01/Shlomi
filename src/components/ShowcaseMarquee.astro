@@ -23,27 +23,39 @@ const {
 } = Astro.props;
 
 const marqueeItems = items.length > 0 ? [...items, ...items] : [];
+const durationSeconds = items.length > 0 ? Math.max(items.length * 12, 120) : 120;
 ---
 
 {items.length > 0 ? (
-  <div class="showcase-marquee" aria-label={ariaLabel}>
+  <div class="showcase-marquee" aria-label={ariaLabel} style={`--marquee-duration: ${durationSeconds}s;`}>
     <div class="showcase-marquee__viewport">
       <div class="showcase-marquee__track">
-        {marqueeItems.map((item, index) => (
-          <div class="showcase-marquee__item">
+        {marqueeItems.map((item, index) => {
+          const isDuplicate = index >= items.length;
+
+          return (
+          <div
+            class:list={[
+              'showcase-marquee__item',
+              { 'showcase-marquee__item--duplicate': isDuplicate },
+            ]}
+            aria-hidden={isDuplicate ? 'true' : undefined}
+          >
             <ShowcasePreviewCard
               label={item.label}
               title={item.title}
-              href={index < items.length ? item.href : undefined}
+              href={item.href}
               image={item.image}
               imageAlt={item.imageAlt}
               meta={item.meta}
               description={item.description}
-              external={index < items.length ? item.external : false}
+              external={item.external}
+              tabIndex={isDuplicate ? -1 : undefined}
               variant="compact"
             />
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   </div>
@@ -66,11 +78,15 @@ const marqueeItems = items.length > 0 ? [...items, ...items] : [];
     align-items: stretch;
     gap: var(--space-4);
     width: max-content;
-    animation: showcase-marquee 42s linear infinite;
+    animation: showcase-marquee var(--marquee-duration, 120s) linear infinite;
   }
 
   .showcase-marquee__item {
     flex: none;
+  }
+
+  .showcase-marquee:is(:hover, :focus-within) .showcase-marquee__track {
+    animation-play-state: paused;
   }
 
   .showcase-marquee__empty {
