@@ -15,7 +15,7 @@ const events = speakingEvents
   .map((event, index) => ({
     ...event,
     dateLabel: speakingEventDateLabel(event.date),
-    image: event.images?.[0],
+    image: event.images[0],
     sortValue: speakingEventSortValue(event.date),
     originalIndex: index,
   }))
@@ -72,7 +72,7 @@ const archiveEvents = events;
     <div class="container speaking-section__header">
       <div>
         <p class="speaking-section__eyebrow">Archive</p>
-        <h2>Every appearance, with image-first cards wherever media exists.</h2>
+        <h2>Every appearance, with the same structure and placeholders where details are pending.</h2>
       </div>
     </div>
 
@@ -89,7 +89,7 @@ const archiveEvents = events;
           image={event.image}
           imageAlt={event.imageAlt}
           links={event.sourceLinks}
-          insights={event.insights?.slice(0, 2)}
+          insights={event.insights.slice(0, 2)}
         />
       ))}
     </div>

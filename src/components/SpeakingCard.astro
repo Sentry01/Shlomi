@@ -42,11 +42,22 @@ const normalizedImage =
   image && image.startsWith('/') && !image.startsWith('//')
     ? `${import.meta.env.BASE_URL}${image.slice(1)}`
     : image;
+
+const fallbackInsights = [
+  'Temporary placeholder — add the strongest takeaway from this session.',
+  'Temporary placeholder — add the most useful audience or delivery insight here.',
+];
+const displayedInsights = insights.length > 0 ? insights : fallbackInsights;
 ---
 
 <article id={id} class:list={['card speaking-card', { 'speaking-card--featured': featured }]}>
-  {normalizedImage && (
-    <div class="speaking-card__image-wrap">
+  <div
+    class:list={[
+      'speaking-card__image-wrap',
+      { 'speaking-card__image-wrap--placeholder': !normalizedImage },
+    ]}
+  >
+    {normalizedImage ? (
       <img
         src={normalizedImage}
         alt={imageAlt ?? ''}
@@ -56,8 +67,12 @@ const normalizedImage =
         loading={imageLoading}
         decoding="async"
       />
-    </div>
-  )}
+    ) : (
+      <div class="speaking-card__image-placeholder" aria-hidden="true">
+        <span class="speaking-card__image-placeholder-copy">Photo placeholder</span>
+      </div>
+    )}
+  </div>
 
   <div class="speaking-card__body">
     {(format || year) && (
@@ -81,16 +96,14 @@ const normalizedImage =
       <p class="speaking-card__desc">{description}</p>
     )}
 
-    {insights && insights.length > 0 && (
-      <div class="speaking-card__insights">
-        <span class="speaking-card__insights-label">Key Insights</span>
-        <ul class="speaking-card__insights-list">
-          {insights.map((insight) => (
-            <li>{insight}</li>
-          ))}
-        </ul>
-      </div>
-    )}
+    <div class="speaking-card__insights">
+      <span class="speaking-card__insights-label">Key Insights</span>
+      <ul class="speaking-card__insights-list">
+        {displayedInsights.map((insight) => (
+          <li>{insight}</li>
+        ))}
+      </ul>
+    </div>
 
     {(summaryHref || links.length > 0) && (
       <div class="speaking-card__actions">
@@ -140,6 +153,15 @@ const normalizedImage =
     background: var(--color-bg-subtle);
   }
 
+  .speaking-card__image-wrap--placeholder {
+    display: grid;
+    place-items: center;
+    padding: var(--space-5);
+    background:
+      radial-gradient(circle at top left, var(--color-accent-light), transparent 44%),
+      var(--color-bg-subtle);
+  }
+
   .speaking-card__image {
     inline-size: 100%;
     block-size: 100%;
@@ -151,10 +173,31 @@ const normalizedImage =
     transform: scale(1.03);
   }
 
+  .speaking-card__image-placeholder-copy {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2rem;
+    padding-inline: 0.8rem;
+    border: 1px solid rgba(18, 20, 28, 0.08);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .speaking-card:hover .speaking-card__image {
       transform: none;
     }
+  }
+
+  :global(:root[data-theme='dark']) .speaking-card__image-placeholder-copy {
+    border-color: rgba(247, 251, 255, 0.12);
+    background: rgba(6, 10, 14, 0.72);
+    color: var(--color-text);
   }
 
   .speaking-card__body {

@@ -5,13 +5,17 @@ export interface SpeakingEvent {
   format: string;
   audience?: string;
   sourceLinks: { label: string; url: string }[];
-  images?: string[];
+  images: string[];
   imageAlt?: string;
   summary: string;
-  insights?: string[];
+  insights: string[];
 }
 
 const yearPattern = /\b(20\d{2})\b/;
+const temporaryInsightPlaceholders = [
+  'Temporary placeholder — add the strongest takeaway from this session.',
+  'Temporary placeholder — add the most useful audience or delivery insight here.',
+];
 
 export function speakingEventSlug(title: string): string {
   return title
@@ -117,6 +121,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Participated in a CIO roundtable in Singapore covering AI coding adoption patterns and the governance frameworks enterprises need before scaling.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Bangkok CIO Roundtable',
@@ -133,6 +138,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Co-led a CIO roundtable in Bangkok exploring how enterprise technology leaders in Southeast Asia are approaching AI-augmented development.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Auckland AI Coding Panel',
@@ -168,6 +174,7 @@ export const speakingEvents: SpeakingEvent[] = [
       'Main stage keynote at GitHub Sales Kickoff delivered to a large internal audience.',
     summary:
       'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 3,000 attendees.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'OctoNihon Tokyo User Group',
@@ -206,6 +213,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on the Absolute AppSec podcast (Episode 217) discussing application security topics with the GitHub Advanced Security team.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Absolute AppSec Podcast E203',
@@ -221,6 +229,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on Absolute AppSec (Episode 203) covering application security strategy and developer-first security tooling.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Supercharge the Power of your Security Team',
@@ -236,6 +245,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a webinar on how security teams can amplify their impact by integrating developer-first security tooling into existing workflows.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Building a Frictionless Application Security Program',
@@ -251,6 +261,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Spoke at GitHub InFocus on building application security programs that developers actually adopt, emphasizing frictionless integration and shift-left practices.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Identifying and Mitigating Insider Risk',
@@ -266,6 +277,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Delivered a webinar on insider risk identification and mitigation strategies, covering detection frameworks and response playbooks.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: '5 Steps to Building A People-Centric Insider Threat Program',
@@ -281,6 +293,7 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a framework for building people-centric insider threat programs across the APAC region, emphasizing behavioral indicators and organizational culture.',
+    insights: [...temporaryInsightPlaceholders],
   },
   {
     title: 'Application Security in the World of AI Engineering',
@@ -302,5 +315,6 @@ export const speakingEvents: SpeakingEvent[] = [
       'Security panel in Sydney on application security in the world of AI engineering.',
     summary:
       'Panelist at a Sydney security event discussing application security challenges in the context of AI-assisted engineering and the evolving threat landscape.',
+    insights: [...temporaryInsightPlaceholders],
   },
 ];
