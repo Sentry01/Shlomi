@@ -123,8 +123,8 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
             <img
               src={heroPhoto}
               alt={heroPhotoAlt}
-              width="794"
-              height="377"
+              width="602"
+              height="271"
               class="home-hero__image"
               loading="eager"
               decoding="async"
@@ -258,7 +258,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
 
   .home-hero__content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(16rem, 27rem);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 34rem);
     grid-template-areas:
       'headline headline'
       'support media';
@@ -344,10 +344,9 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   .home-hero__media {
     grid-area: media;
     position: relative;
-    inline-size: min(100%, 27rem);
+    inline-size: min(100%, 34rem);
     margin: 0;
     justify-self: end;
-    aspect-ratio: 16 / 11;
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: clamp(1.35rem, 2vw, 1.85rem);
@@ -360,9 +359,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   .home-hero__image {
     display: block;
     inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    object-position: center;
+    block-size: auto;
   }
 
   .hero-button {
@@ -530,7 +527,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     }
 
     .home-hero__media {
-      inline-size: min(100%, 31rem);
+      inline-size: min(100%, 34rem);
       justify-self: start;
     }
 
