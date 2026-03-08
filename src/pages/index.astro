@@ -115,8 +115,8 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
           <div class="home-hero__headline-block">
             <p class="home-hero__eyebrow">AI engineering · cyber security</p>
             <h1 class="home-hero__title">
-              Building the future
-              <span>with AI.</span>
+              <span class="home-hero__title-line">Building the future</span>
+              <span class="home-hero__title-accent">with AI.</span>
             </h1>
           </div>
           <div class="home-hero__support">
@@ -240,12 +240,12 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero {
     position: relative;
-    padding-block-end: clamp(3.5rem, 7.5vw, 6rem);
+    padding-block-end: clamp(4.5rem, 8vw, 7rem);
   }
 
   .home-hero__shell {
     display: grid;
-    min-block-size: clamp(20rem, 44vh, 28rem);
+    min-block-size: clamp(17.5rem, 35vh, 22.5rem);
     border-block-end: 1px solid var(--color-border);
     background: var(--color-hero-panel);
   }
@@ -254,16 +254,16 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     display: grid;
     align-items: start;
     min-block-size: 100%;
-    max-inline-size: min(100%, 78rem);
+    max-inline-size: min(100%, 80rem);
     margin-inline: auto;
-    padding-block: clamp(3rem, 5.5vh, 4.5rem) clamp(2.75rem, 4vh, 4rem);
+    padding-block: clamp(2.5rem, 4.4vh, 3.75rem) clamp(2.5rem, 4vh, 3.5rem);
   }
 
   .home-hero__content {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
+    grid-template-columns: minmax(0, 1.18fr) minmax(21rem, 0.82fr);
     align-items: center;
-    gap: clamp(1.5rem, 3.2vw, 3.75rem);
+    gap: clamp(2rem, 3vw, 4rem);
   }
 
   .home-hero__headline-block,
@@ -273,13 +273,13 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero__headline-block {
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
   .home-hero__support {
     display: grid;
-    gap: var(--space-5);
-    max-inline-size: 31rem;
+    gap: var(--space-4);
+    max-inline-size: 27rem;
     justify-self: end;
     padding-block-end: 0;
   }
@@ -288,31 +288,55 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     max-inline-size: none;
     margin-block-end: 0;
     color: var(--color-accent);
-    font-size: clamp(0.82rem, 0.78rem + 0.14vw, 0.92rem);
+    font-size: clamp(0.76rem, 0.72rem + 0.14vw, 0.86rem);
     font-weight: 600;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
   }
 
   .home-hero__title {
-    max-inline-size: 6.6ch;
+    display: grid;
+    gap: clamp(0.1rem, 0.5vw, 0.3rem);
+    max-inline-size: none;
     margin: 0;
-    font-size: clamp(3.7rem, 7.2vw, 6.2rem);
-    line-height: 0.92;
+    font-size: clamp(2.8rem, 4.8vw, 4.6rem);
+    line-height: 0.94;
     letter-spacing: -0.06em;
   }
 
-  .home-hero__title span {
+  .home-hero__title-line,
+  .home-hero__title-accent {
     display: block;
+    white-space: nowrap;
+  }
+
+  .home-hero__title-accent {
     color: var(--color-accent-strong);
+    font-size: 0.92em;
+    padding-block-start: clamp(0.05rem, 0.35vw, 0.2rem);
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .home-hero__title-accent {
+      background-image: linear-gradient(
+        92deg,
+        var(--color-accent) 0%,
+        var(--color-accent-strong) 64%,
+        var(--color-accent-warm) 100%
+      );
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
   }
 
   .home-hero__intro {
-    max-inline-size: 22ch;
+    max-inline-size: 18ch;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: clamp(1.1rem, 0.98rem + 0.48vw, 1.45rem);
-    line-height: 1.38;
+    font-size: clamp(1rem, 0.94rem + 0.34vw, 1.24rem);
+    line-height: 1.42;
   }
 
   .home-hero__actions {
@@ -320,20 +344,20 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     flex-wrap: nowrap;
     justify-content: flex-start;
     gap: 0.75rem;
-    margin-block-start: 0;
+    margin-block-start: var(--space-2);
   }
 
   .hero-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: 3.3rem;
-    padding-inline: 1.4rem;
+    min-block-size: 3.05rem;
+    padding-inline: 1.25rem;
     border: 1px solid var(--color-border);
     border-radius: 0.8rem;
     background: var(--color-surface);
     color: var(--color-text);
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     font-weight: 600;
     text-decoration: none;
     transition:
@@ -360,7 +384,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__marquee {
-    margin-block-start: clamp(-3rem, -3.5vw, -1.75rem);
+    margin-block-start: clamp(2rem, 4vw, 3.25rem);
     padding-inline: var(--container-pad);
   }
 
@@ -450,13 +474,13 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__inner {
-      padding-block-start: 5.25rem;
-      padding-block-end: 5rem;
+      padding-block-start: 4.5rem;
+      padding-block-end: 3.5rem;
     }
 
     .home-hero__content {
       grid-template-columns: 1fr;
-      gap: var(--space-6);
+      gap: var(--space-5);
       text-align: center;
     }
 
@@ -472,20 +496,28 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__title {
-      max-inline-size: 8ch;
-      font-size: clamp(3.3rem, 13vw, 4.8rem);
+      font-size: clamp(3rem, 12vw, 4.15rem);
       margin-inline: auto;
+    }
+
+    .home-hero__title-line,
+    .home-hero__title-accent {
+      white-space: normal;
     }
 
     .home-hero__intro {
       max-inline-size: 24rem;
-      font-size: clamp(1.15rem, 1rem + 0.8vw, 1.4rem);
+      font-size: clamp(1.05rem, 0.96rem + 0.7vw, 1.24rem);
       margin-inline: auto;
     }
 
     .home-hero__actions {
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    .home-hero__marquee {
+      margin-block-start: clamp(1.5rem, 6vw, 2.1rem);
     }
 
     .showcase-section__header h2 {

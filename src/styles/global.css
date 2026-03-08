@@ -22,6 +22,7 @@
   --color-accent:        #34b8ad;
   --color-accent-hover:  #2ba79d;
   --color-accent-strong: #3bc89c;
+  --color-accent-warm:   #9b8626;
   --color-accent-light:  rgba(52, 184, 173, 0.12);
   --color-focus-ring:    rgba(52, 184, 173, 0.42);
   --shadow-card:         0 18px 42px rgba(16, 20, 31, 0.06);
@@ -95,6 +96,7 @@
   --color-accent:        #45c7bb;
   --color-accent-hover:  #56d9cd;
   --color-accent-strong: #63e2b4;
+  --color-accent-warm:   #e9cf73;
   --color-accent-light:  rgba(69, 199, 187, 0.18);
   --color-focus-ring:    rgba(86, 217, 205, 0.5);
   --shadow-card:         0 20px 46px rgba(0, 0, 0, 0.32);
