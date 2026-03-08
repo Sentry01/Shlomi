@@ -7,6 +7,7 @@
  *
  * Renders content from the default slot even with minimal props.
  */
+import ContentPlaceholder from '@/components/ContentPlaceholder.astro';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -14,8 +15,6 @@ interface Props {
   description?: string;
   pubDate?: Date | string;
   updatedDate?: Date | string;
-  heroImage?: string;
-  heroImageAlt?: string;
   tags?: string[];
   readingTime?: string;
   canonicalUrl?: string;
@@ -28,8 +27,6 @@ const {
   description,
   pubDate,
   updatedDate,
-  heroImage,
-  heroImageAlt,
   tags,
   readingTime,
   canonicalUrl,
@@ -70,7 +67,6 @@ const structuredData = {
   url: canonicalHref,
   mainEntityOfPage: canonicalHref,
   keywords: tags?.join(', '),
-  image: heroImage ? [new URL(heroImage, Astro.url).href] : undefined,
   author: {
     '@type': 'Person',
     name: 'Shlomi Shaki',
@@ -82,7 +78,6 @@ const structuredData = {
 <BaseLayout
   title={title}
   description={description}
-  ogImage={heroImage}
   canonicalUrl={canonicalUrl}
   ogType="article"
   structuredData={structuredData}
@@ -128,17 +123,11 @@ const structuredData = {
         )}
       </header>
 
-      {heroImage && (
-        <figure class="blog-post__hero">
-          <img
-            src={heroImage}
-            alt={heroImageAlt || ''}
-            class="blog-post__hero-img"
-            loading="eager"
-            decoding="async"
-          />
-        </figure>
-      )}
+      <ContentPlaceholder
+        label="Article"
+        title="Article image placeholder"
+        className="blog-post__hero--placeholder"
+      />
 
       <div class="blog-post__content prose body-serif">
         <slot />
@@ -205,19 +194,6 @@ const structuredData = {
   .blog-post__mirror-note {
     color: var(--color-text-muted);
     font-style: italic;
-  }
-
-  .blog-post__hero {
-    margin-block-end: var(--space-8);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-  }
-
-  .blog-post__hero-img {
-    inline-size: 100%;
-    block-size: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
   }
 
   .blog-post__content {

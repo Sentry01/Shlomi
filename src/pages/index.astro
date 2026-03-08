@@ -24,18 +24,6 @@ interface ShowcaseItem {
   external?: boolean;
 }
 
-const articleImageMap: Record<string, string> = {
-  'ai-roundtable-insights-apj': '/images/hong-kong-roundtable-1.png',
-  'building-agent-council': '/images/secret-remediation-2.png',
-  'copilot-harness-autonomous-tdd': '/images/secret-remediation-3.png',
-};
-
-const projectImageMap: Record<string, string> = {
-  'agent-council': '/images/secret-remediation-1.png',
-  'copilot-cli-harness': '/images/secret-remediation-2.png',
-  'fleet-agent-swarm': '/images/secret-remediation-3.png',
-};
-
 function interleave(items: ShowcaseItem[][]): ShowcaseItem[] {
   const result: ShowcaseItem[] = [];
   const maxLength = Math.max(...items.map((group) => group.length));
@@ -84,8 +72,6 @@ const articleItems: ShowcaseItem[] = latestPosts.map((post) => {
     label: 'Article',
     title: post.data.title,
     href,
-    image: articleImageMap[slug],
-    imageAlt: post.data.title,
     meta: post.data.pubDate.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -101,8 +87,6 @@ const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
   label: 'Project',
   title: project.data.title,
   href: `${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`,
-  image: projectImageMap[project.id.replace(/\.md$/, '')],
-  imageAlt: project.data.title,
   description: project.data.description,
 }));
 
@@ -144,7 +128,6 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
           </div>
         </div>
       </div>
-      <div class="home-hero__panel home-hero__panel--blank" aria-hidden="true"></div>
     </div>
 
     <div class="home-hero__marquee">
@@ -260,6 +243,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     display: grid;
     min-block-size: clamp(38rem, 88vh, 54rem);
     border-block-end: 1px solid var(--color-border);
+    background: var(--color-hero-panel);
   }
 
   .home-hero__panel {
@@ -267,19 +251,19 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   .home-hero__panel--copy {
-    background: var(--color-hero-panel);
-  }
-
-  .home-hero__panel--blank {
-    background: var(--color-surface);
+    background: transparent;
   }
 
   .home-hero__inner {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
     min-block-size: 100%;
+    max-inline-size: min(100%, 64rem);
+    margin-inline: auto;
     padding-block: clamp(8rem, 18vh, 14rem) clamp(7rem, 12vh, 10rem);
+    text-align: center;
   }
 
   .home-hero__eyebrow {
@@ -294,6 +278,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero__title {
     max-inline-size: 7ch;
+    margin-inline: auto;
     font-size: clamp(4rem, 10vw, 7.4rem);
     line-height: 0.94;
     letter-spacing: -0.06em;
@@ -307,6 +292,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   .home-hero__intro {
     max-inline-size: 42rem;
     margin-block-start: var(--space-6);
+    margin-inline: auto;
     color: var(--color-text-muted);
     font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.9rem);
     line-height: 1.42;
@@ -315,6 +301,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: var(--space-3);
     margin-block-start: var(--space-8);
   }
@@ -435,20 +422,12 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
   }
 
   @media (min-width: 48rem) {
-    .home-hero__shell {
-      grid-template-columns: minmax(0, 1.03fr) minmax(0, 0.97fr);
-    }
-
     .showcase-section__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 47.99rem) {
-    .home-hero__panel--blank {
-      display: none;
-    }
-
     .home-hero__shell {
       min-block-size: auto;
     }

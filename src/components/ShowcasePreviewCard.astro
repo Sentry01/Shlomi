@@ -56,7 +56,9 @@ const Tag = href ? 'a' : 'article';
         decoding="async"
       />
     ) : (
-      <div class="showcase-preview__fallback" aria-hidden="true"></div>
+      <div class="showcase-preview__fallback" aria-hidden="true">
+        <span class="showcase-preview__fallback-copy">Placeholder</span>
+      </div>
     )}
 
     <span class="showcase-preview__label">{label}</span>
@@ -120,6 +122,27 @@ const Tag = href ? 'a' : 'article';
     block-size: 100%;
   }
 
+  .showcase-preview__fallback {
+    display: grid;
+    place-items: center;
+    padding: var(--space-5);
+  }
+
+  .showcase-preview__fallback-copy {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2rem;
+    padding-inline: 0.8rem;
+    border: 1px solid rgba(18, 20, 28, 0.08);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
   .showcase-preview__image {
     object-fit: cover;
     transition: transform var(--duration-slow) var(--ease-out);
@@ -148,6 +171,12 @@ const Tag = href ? 'a' : 'article';
 
   :global(:root[data-theme='dark']) .showcase-preview__label {
     background: rgba(6, 10, 14, 0.78);
+  }
+
+  :global(:root[data-theme='dark']) .showcase-preview__fallback-copy {
+    border-color: rgba(247, 251, 255, 0.12);
+    background: rgba(6, 10, 14, 0.72);
+    color: var(--color-text);
   }
 
   .showcase-preview__body {
