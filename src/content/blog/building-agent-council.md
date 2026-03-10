@@ -34,7 +34,7 @@ debate: WebSockets + Redis pub/sub vs SSE + message queue
 
 Mode detection is automatic. Words like "brainstorm," "explore," and "ideas" trigger collaborative mode. Words like "debate," "stress-test," and "versus" trigger adversarial. You can override explicitly with `collaborative council:` or `adversarial council:`.
 
-## The architecture is embarrassingly simple
+## The architecture is simple
 
 Agent Council is zero-dependency. No build step. No runtime. No API keys beyond what Copilot CLI already provides. The entire system is a pair of markdown files — a skill definition and an agent definition — that Copilot CLI reads natively.
 

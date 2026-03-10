@@ -3,6 +3,7 @@ title: 'Copilot CLI Harness'
 description: 'A persistent test-driven harness that wraps Copilot CLI in a memory-preserving loop — enabling autonomous multi-session builds with 350+ failing tests over 9+ hours.'
 repo: 'https://github.com/Sentry01/Copilot-CLI-Harness'
 liveUrl: 'https://harness-marketing-site.vercel.app/#hero'
+heroImage: '/images/projects/copilot-cli-harness-diagram.png'
 tags: ['ai', 'copilot', 'tdd', 'autonomous', 'cli', 'testing']
 sortOrder: 2
 ---
