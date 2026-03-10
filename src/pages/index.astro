@@ -148,7 +148,9 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Speaking</p>
-        <h2>Recent talks, panels, and Events.</h2>
+        <h2 class="showcase-section__heading showcase-section__heading--wide">
+          Recent talks, panels, and Events.
+        </h2>
       </div>
       <a class="section-link" href={`${baseUrl}speaking/`}>All speaking</a>
     </div>
@@ -355,6 +357,9 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     position: relative;
     inline-size: min(100%, 22rem);
     margin: 0;
+    overflow: hidden;
+    border-end-start-radius: clamp(1.2rem, 3vw, 1.8rem);
+    border-end-end-radius: clamp(1.2rem, 3vw, 1.8rem);
     justify-self: end;
   }
 
@@ -478,6 +483,10 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     letter-spacing: -0.045em;
   }
 
+  .showcase-section__heading--wide {
+    max-inline-size: none;
+  }
+
   .showcase-section__eyebrow {
     max-inline-size: none;
     margin-block-end: var(--space-3);
@@ -586,6 +595,10 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     }
 
     .showcase-section__header h2 {
+      max-inline-size: 14ch;
+    }
+
+    .showcase-section__heading--wide {
       max-inline-size: 14ch;
     }
   }
