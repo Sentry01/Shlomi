@@ -25,6 +25,9 @@ interface ShowcaseItem {
   meta?: string;
   description?: string;
   external?: boolean;
+  tags?: string[];
+  repoUrl?: string;
+  liveUrl?: string;
 }
 
 const featuredProjects = (await getCollection('projects'))
@@ -62,6 +65,7 @@ const articleItems: ShowcaseItem[] = latestPosts.map((post) => {
     label: 'Article',
     title: post.data.title,
     href,
+    tags: post.data.tags,
     meta: post.data.pubDate.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -79,6 +83,8 @@ const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
   href: `${baseUrl}projects/${project.id.replace(/\.md$/, '')}/`,
   meta: project.data.tags?.slice(0, 2).join(' · '),
   description: project.data.description,
+  repoUrl: project.data.repo,
+  liveUrl: project.data.liveUrl,
 }));
 
 const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
@@ -197,6 +203,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
             meta={item.meta}
             description={item.description}
             external={item.external}
+            tags={item.tags}
           />
         ))}
       </div>
@@ -225,7 +232,10 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
             href={item.href}
             image={item.image}
             imageAlt={item.imageAlt}
+            meta={item.meta}
             description={item.description}
+            repoUrl={item.repoUrl}
+            liveUrl={item.liveUrl}
           />
         ))}
       </div>
