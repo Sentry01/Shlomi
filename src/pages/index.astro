@@ -47,12 +47,32 @@ const featuredSpeaking = speakingEvents
     sortValue: speakingEventSortValue(event.date),
     originalIndex: index,
   }))
-  .filter((event) => event.image)
+  .filter((event) => event.image);
+
+const curatedFeaturedSpeaking = featuredSpeaking
+  .filter((event) => event.featuredPriority !== undefined)
   .sort((a, b) => {
+    if ((a.featuredPriority ?? Number.MAX_SAFE_INTEGER) !== (b.featuredPriority ?? Number.MAX_SAFE_INTEGER)) {
+      return (a.featuredPriority ?? Number.MAX_SAFE_INTEGER) - (b.featuredPriority ?? Number.MAX_SAFE_INTEGER);
+    }
+
     if (b.sortValue !== a.sortValue) return b.sortValue - a.sortValue;
     return a.originalIndex - b.originalIndex;
-  })
-  .slice(0, 3);
+  });
+
+const fallbackFeaturedSpeaking = featuredSpeaking.filter((event) => event.featuredPriority === undefined);
+
+const speakingItems: ShowcaseItem[] = [...curatedFeaturedSpeaking, ...fallbackFeaturedSpeaking]
+  .slice(0, 3)
+  .map((event) => ({
+    label: 'Speaking',
+    title: event.title,
+    href: `${baseUrl}speaking/#${speakingEventSlug(event.title)}`,
+    image: event.image,
+    imageAlt: event.imageAlt ?? event.title,
+    meta: event.dateLabel ?? event.format,
+    description: event.summary,
+  }));
 
 const articleItems: ShowcaseItem[] = latestPosts.map((post) => {
   const slug = blogSlug(post.id);
@@ -87,15 +107,6 @@ const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
   liveUrl: project.data.liveUrl,
 }));
 
-const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
-  label: 'Speaking',
-  title: event.title,
-  href: `${baseUrl}speaking/#${speakingEventSlug(event.title)}`,
-  image: event.image,
-  imageAlt: event.imageAlt ?? event.title,
-  meta: event.dateLabel ?? event.format,
-  description: event.summary,
-}));
 ---
 
 <BaseLayout
@@ -368,8 +379,8 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     inline-size: min(100%, 22rem);
     margin: 0;
     overflow: hidden;
-    border-end-start-radius: 48% 40%;
-    border-end-end-radius: 48% 40%;
+    border-end-start-radius: 34% 18%;
+    border-end-end-radius: 34% 18%;
     justify-self: end;
   }
 

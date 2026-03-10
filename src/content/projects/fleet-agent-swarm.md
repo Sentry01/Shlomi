@@ -1,8 +1,9 @@
 ---
 title: 'Fleet Mode — Agent Swarm'
 description: 'A landing page and concept for Fleet Mode — deploying a swarm of parallel AI coding agents from a single CLI command to tackle complex projects simultaneously.'
-repo: 'https://github.com/Sentry01/fleet-landing-page'
 liveUrl: 'https://sentry01.github.io/fleet-landing-page/#getting-started'
+liveLabel: 'Fleet Showcase'
+heroImage: '/images/projects/fleet-showcase.png'
 tags: ['ai', 'agents', 'swarm', 'fleet', 'react', 'landing-page']
 sortOrder: 3
 ---

@@ -14,6 +14,8 @@ interface Props {
   tags?: string[];
   repo?: string;
   liveUrl?: string;
+  liveLabel?: string;
+  heroImage?: string;
 }
 
 const {
@@ -22,7 +24,14 @@ const {
   tags,
   repo,
   liveUrl,
+  liveLabel = 'Live demo',
+  heroImage,
 } = Astro.props;
+
+const normalizedHeroImage =
+  heroImage && heroImage.startsWith('/') && !heroImage.startsWith('//')
+    ? `${import.meta.env.BASE_URL}${heroImage.slice(1)}`
+    : heroImage;
 ---
 
 <BaseLayout
@@ -60,18 +69,24 @@ const {
             )}
             {liveUrl && (
               <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="project-page__ext-link">
-                Live demo ↗
+                {liveLabel} ↗
               </a>
             )}
           </div>
         )}
       </header>
 
-      <ContentPlaceholder
-        label="Project"
-        title="Project image placeholder"
-        className="project-page__hero--placeholder"
-      />
+      {normalizedHeroImage ? (
+        <figure class="project-page__hero">
+          <img src={normalizedHeroImage} alt={`${title} showcase screenshot`} class="project-page__hero-image" loading="eager" decoding="async" />
+        </figure>
+      ) : (
+        <ContentPlaceholder
+          label="Project"
+          title="Project image placeholder"
+          className="project-page__hero--placeholder"
+        />
+      )}
 
       <div class="project-page__content prose">
         <slot />
@@ -153,5 +168,22 @@ const {
 
   .project-page__content {
     margin-block-end: var(--space-12);
+  }
+
+  .project-page__hero {
+    margin: 0 0 var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-bg-subtle);
+    box-shadow: var(--shadow-card);
+  }
+
+  .project-page__hero-image {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top center;
   }
 </style>

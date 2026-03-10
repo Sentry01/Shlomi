@@ -1,7 +1,7 @@
 ---
 title: 'Giving Copilot a Database: Building an MCP Server for Supabase'
 description: 'Model Context Protocol lets AI assistants talk to external tools. I built an MCP server that connects Copilot to Supabase — giving it real schema awareness instead of guesswork. Here is how the plumbing works.'
-pubDate: 2026-03-07
+pubDate: 2025-04-01
 tags: ['mcp', 'copilot', 'supabase', 'ai', 'database', 'agent']
 draft: false
 ---

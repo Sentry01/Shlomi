@@ -1,7 +1,7 @@
 ---
 title: 'What Enterprise Leaders Actually Ask About AI Coding: Patterns from APJ Roundtables'
 description: 'After running CIO roundtables across Hong Kong, Sydney, Singapore, and Bangkok, clear patterns emerged in how enterprise leaders think about AI-assisted development. Here is what they ask — and what it reveals.'
-pubDate: 2026-03-07
+pubDate: 2025-08-01
 tags: ['ai', 'enterprise', 'copilot', 'leadership', 'apj']
 draft: false
 ---

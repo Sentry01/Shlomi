@@ -95,22 +95,24 @@ export const speakingEvents: SpeakingEvent[] = [
     sourceLinks: [
       {
         label: 'LinkedIn',
-        url: 'https://www.linkedin.com/posts/palo-it_paloit-gene2-microsoft-activity-7334061125036101632-MpsN/',
+        url: 'https://www.linkedin.com/posts/palo-it_paloit-gene2-github-activity-7341298696837337090-5O8T',
       },
     ],
-    images: [],
+    images: ['/images/sydney-cio-roundtable.jpg'],
+    imageAlt:
+      'Sydney CIO roundtable session with a live presentation on AI-driven software delivery, developer productivity, and GitHub x PALO IT collaboration.',
     summary:
-      'Facilitated an executive roundtable in Sydney focused on AI-assisted software development and enterprise readiness for agentic coding workflows.',
+      'Joined PALO IT’s APAC AI Delivery private roundtable in Sydney to discuss AI-driven software delivery, from AI-native product design methods to secure agentic workflows across the SDLC.',
     insights: [
-      'Data sovereignty concerns are driving local model adoption faster in APJ than in US/EU markets.',
-      'Security teams are asking for "vulnerability forecasting" based on AI-generated code patterns.',
-      'Senior developers use AI as a force multiplier; juniors risk using it as a crutch without mentorship.',
+      'AI delivery resonates most when it spans the full lifecycle — product design, engineering, infrastructure, and compliance — instead of being framed as a code-generation story only.',
+      'Teams are more ready to trust agentic workflows when the emphasis is on verified iteration rather than blind automation.',
+      'The strongest transformation story is collaborative, with AI agents acting as peers inside delivery teams rather than as isolated productivity tools for individuals.',
     ],
   },
   {
     title: 'Singapore CIO Roundtable',
     region: 'Singapore',
-    date: '2025',
+    date: '2025-05-01',
     format: 'Executive roundtable',
     audience: 'CIOs and senior technology leaders',
     sourceLinks: [
@@ -130,7 +132,7 @@ export const speakingEvents: SpeakingEvent[] = [
   {
     title: 'Bangkok CIO Roundtable',
     region: 'Bangkok, Thailand',
-    date: '2025',
+    date: '2025-05-01',
     format: 'Executive roundtable',
     audience: 'CIOs and senior technology leaders',
     sourceLinks: [
