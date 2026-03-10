@@ -98,7 +98,7 @@ export const speakingEvents: SpeakingEvent[] = [
         url: 'https://www.linkedin.com/posts/palo-it_paloit-gene2-github-activity-7341298696837337090-5O8T',
       },
     ],
-    images: ['/images/sydney-cio-roundtable.jpg'],
+    images: ['/images/sydney-cio-roundtable-2.jpeg'],
     imageAlt:
       'Sydney CIO roundtable session with a live presentation on AI-driven software delivery, developer productivity, and GitHub x PALO IT collaboration.',
     summary:
@@ -272,7 +272,9 @@ export const speakingEvents: SpeakingEvent[] = [
         url: 'https://www.youtube.com/watch?v=5phnJ3WdTb8',
       },
     ],
-    images: [],
+    images: ['/images/infocus-2022-frictionless-appsec.png'],
+    imageAlt:
+      'Building a Frictionless Application Security Program — GitHub InFocus 2022 conference talk.',
     summary:
       'Spoke at GitHub InFocus on building application security programs that developers actually adopt, emphasizing frictionless integration and shift-left practices.',
     insights: [...temporaryInsightPlaceholders],
