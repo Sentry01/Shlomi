@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ShowcaseMarquee from '@/components/ShowcaseMarquee.astro';
 import ShowcasePreviewCard from '@/components/ShowcasePreviewCard.astro';
 import {
   speakingEvents,
@@ -12,6 +11,10 @@ import {
 import { blogSlug, isExternalCanonical } from '@/lib/blog';
 
 const baseUrl = import.meta.env.BASE_URL;
+const heroPhoto = `${baseUrl}images/hero-shlomi-portrait.png`;
+const heroPhotoAlt = 'Portrait of Shlomi Shaki.';
+const heroPhotoWidth = 2256;
+const heroPhotoHeight = 2623;
 
 interface ShowcaseItem {
   label: string;
@@ -22,19 +25,6 @@ interface ShowcaseItem {
   meta?: string;
   description?: string;
   external?: boolean;
-}
-
-function interleave(items: ShowcaseItem[][]): ShowcaseItem[] {
-  const result: ShowcaseItem[] = [];
-  const maxLength = Math.max(...items.map((group) => group.length));
-
-  for (let index = 0; index < maxLength; index += 1) {
-    items.forEach((group) => {
-      if (group[index]) result.push(group[index]);
-    });
-  }
-
-  return result;
 }
 
 const featuredProjects = (await getCollection('projects'))
@@ -100,8 +90,6 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   meta: event.dateLabel ?? event.format,
   description: event.summary,
 }));
-
-const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 ---
 
 <BaseLayout
@@ -114,16 +102,19 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
       <div class="container home-hero__inner">
         <div class="home-hero__content">
           <div class="home-hero__headline-block">
-            <p class="home-hero__eyebrow">AI engineering · cyber security</p>
+            <p class="home-hero__eyebrow">GTM Strategy · AI engineering · cyber security</p>
             <h1 class="home-hero__title">
-              <span class="home-hero__title-line">Building the future</span>
-              <span class="home-hero__title-accent">with AI.</span>
+              <span class="home-hero__title-line">Deep Enterprise Architecture</span>
+              <span class="home-hero__title-accent">GTM Execution</span>
             </h1>
           </div>
+
           <div class="home-hero__support">
             <p class="home-hero__intro">
-              Software leader, builder, and speaker focused on practical AI engineering, developer
-              trust, and the systems teams need to ship real work with confidence.
+              Hi, I am Shlomi, I combine deep technology expertise in Software Engineering,
+              Enterprise Architecture, Cyber Security and Agentic AI with Executive
+              Communication, Sales, Marketing and Delivery experience to scale technology GTM in
+              global markets.
             </p>
             <div class="home-hero__actions">
               <a class="hero-button hero-button--primary" href="#projects">View Projects</a>
@@ -131,15 +122,25 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
               <a class="hero-button hero-button--secondary" href="#speaking">Speaking</a>
             </div>
           </div>
+
+          <figure class="home-hero__media">
+            <img
+              src={heroPhoto}
+              alt={heroPhotoAlt}
+              width={heroPhotoWidth}
+              height={heroPhotoHeight}
+              class="home-hero__image"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </figure>
         </div>
       </div>
-    </div>
 
-    <div class="home-hero__marquee">
-      <ShowcaseMarquee
-        items={ribbonItems}
-        ariaLabel="Scrolling showcase of projects, articles, and speaking highlights"
-      />
+      <a class="home-hero__scroll-cue" href="#speaking" aria-label="Jump to the speaking section">
+        <span class="home-hero__scroll-cue-arrow" aria-hidden="true">↓</span>
+      </a>
     </div>
   </section>
 
@@ -147,7 +148,9 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Speaking</p>
-        <h2>Recent talks, panels, and rooms where the ideas landed live.</h2>
+        <h2 class="showcase-section__heading showcase-section__heading--wide">
+          Recent talks, panels, and Events.
+        </h2>
       </div>
       <a class="section-link" href={`${baseUrl}speaking/`}>All speaking</a>
     </div>
@@ -177,7 +180,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Articles</p>
-        <h2>Field notes on AI adoption, trust, and what teams actually need.</h2>
+        <h2>Blog articles from the field.</h2>
       </div>
       <a class="section-link" href={`${baseUrl}blog/`}>All articles</a>
     </div>
@@ -208,7 +211,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Projects</p>
-        <h2>Projects that turn the argument into something concrete and testable.</h2>
+        <h2>Agentic AI Projects.</h2>
       </div>
       <a class="section-link" href={`${baseUrl}projects/`}>All projects</a>
     </div>
@@ -241,57 +244,69 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero {
     position: relative;
-    padding-block-end: clamp(4.75rem, 8.5vw, 7.5rem);
+    padding-block-end: 0;
   }
 
   .home-hero__shell {
+    position: relative;
     display: grid;
-    min-block-size: auto;
+    min-block-size: 100%;
     border-block-end: 1px solid var(--color-border);
-    background: var(--color-hero-panel);
+    background:
+      radial-gradient(circle at top right, rgba(52, 184, 173, 0.16), transparent 32%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 44%),
+      var(--color-hero-panel);
   }
 
   .home-hero__inner {
     display: grid;
-    align-items: start;
-    min-block-size: 100%;
-    max-inline-size: min(100%, 80rem);
+    align-items: center;
+    min-block-size: clamp(44rem, calc(100svh - 4.5rem), 60rem);
+    max-inline-size: min(100%, var(--container-max));
     margin-inline: auto;
-    padding-block: clamp(2.9rem, 4.8vh, 4.15rem) clamp(2.5rem, 4.2vw, 3.6rem);
+    padding-block: clamp(4.75rem, 8vh, 7rem) clamp(5rem, 8vh, 6.5rem);
   }
 
   .home-hero__content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    grid-template-areas:
+      'headline headline'
+      'support media';
     align-items: start;
     justify-items: start;
-    justify-self: center;
-    gap: clamp(1.25rem, 1.8vw, 1.75rem);
-    max-inline-size: min(100%, 57rem);
+    justify-self: stretch;
+    column-gap: clamp(2rem, 4vw, 4rem);
+    row-gap: clamp(1.75rem, 3vw, 2.8rem);
+    inline-size: 100%;
+    max-inline-size: none;
   }
 
   .home-hero__headline-block,
-  .home-hero__support {
+  .home-hero__support,
+  .home-hero__media {
     min-inline-size: 0;
   }
 
   .home-hero__headline-block {
+    grid-area: headline;
     display: grid;
-    gap: 0.9rem;
+    gap: clamp(1rem, 1.6vw, 1.3rem);
     max-inline-size: 100%;
   }
 
   .home-hero__support {
+    grid-area: support;
     display: grid;
-    gap: var(--space-4);
-    max-inline-size: 33rem;
+    gap: var(--space-5);
+    max-inline-size: 37rem;
     justify-self: start;
     padding-block-end: 0;
   }
 
   .home-hero__eyebrow {
     max-inline-size: none;
-    margin-block-end: 0;
+    margin: 0;
     color: var(--color-accent);
     font-size: clamp(0.76rem, 0.72rem + 0.14vw, 0.86rem);
     font-weight: 600;
@@ -301,11 +316,11 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
   .home-hero__title {
     display: grid;
-    gap: clamp(0.16rem, 0.65vw, 0.42rem);
+    gap: clamp(0.28rem, 0.75vw, 0.5rem);
     max-inline-size: 100%;
     margin: 0;
-    font-size: clamp(2.75rem, 5.9vw, 4.8rem);
-    line-height: 0.92;
+    font-size: clamp(3.2rem, 5.8vw, 5.1rem);
+    line-height: 0.88;
     letter-spacing: -0.07em;
   }
 
@@ -321,27 +336,12 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     padding-block-start: clamp(0.12rem, 0.45vw, 0.28rem);
   }
 
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .home-hero__title-accent {
-      background-image: linear-gradient(
-        92deg,
-        var(--color-accent) 0%,
-        var(--color-accent-strong) 64%,
-        var(--color-accent-warm) 100%
-      );
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      -webkit-background-clip: text;
-      background-clip: text;
-    }
-  }
-
   .home-hero__intro {
-    max-inline-size: 31rem;
+    max-inline-size: 35rem;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: clamp(1rem, 0.96rem + 0.28vw, 1.18rem);
-    line-height: 1.5;
+    font-size: clamp(1.08rem, 1rem + 0.4vw, 1.34rem);
+    line-height: 1.56;
   }
 
   .home-hero__actions {
@@ -349,7 +349,72 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 0.75rem;
-    margin-block-start: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  .home-hero__media {
+    grid-area: media;
+    position: relative;
+    inline-size: min(100%, 22rem);
+    margin: 0;
+    overflow: hidden;
+    border-end-start-radius: clamp(1.2rem, 3vw, 1.8rem);
+    border-end-end-radius: clamp(1.2rem, 3vw, 1.8rem);
+    justify-self: end;
+  }
+
+  .home-hero__image {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .home-hero__scroll-cue {
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-end: clamp(1.2rem, 2.5vw, 1.8rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.85rem;
+    block-size: 2.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    box-shadow: var(--shadow-card);
+    transform: translateX(-50%);
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .home-hero__scroll-cue:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-text);
+    background: var(--color-surface-strong);
+    transform: translate(-50%, -2px);
+  }
+
+  .home-hero__scroll-cue-arrow {
+    display: inline-block;
+    font-size: 1.15rem;
+    line-height: 1;
+    animation: home-hero-scroll-cue 1.8s var(--ease-out) infinite;
+  }
+
+  @keyframes home-hero-scroll-cue {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(0.35rem);
+    }
   }
 
   .hero-button {
@@ -388,11 +453,6 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     background: var(--color-accent-hover);
   }
 
-  .home-hero__marquee {
-    margin-block-start: clamp(3.3rem, 6.3vw, 5.1rem);
-    padding-inline: var(--container-pad);
-  }
-
   .showcase-section {
     position: relative;
     padding-block: clamp(4rem, 8vw, 6rem);
@@ -421,6 +481,10 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     max-inline-size: 12ch;
     font-size: clamp(2.4rem, 2rem + 1.8vw, 4.2rem);
     letter-spacing: -0.045em;
+  }
+
+  .showcase-section__heading--wide {
+    max-inline-size: none;
   }
 
   .showcase-section__eyebrow {
@@ -479,19 +543,19 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__inner {
-      padding-block-start: 4.5rem;
-      padding-block-end: 3.5rem;
+      min-block-size: clamp(38rem, calc(100svh - 3.5rem), 46rem);
+      padding-block-start: 4.75rem;
+      padding-block-end: 5.5rem;
     }
 
     .home-hero__content {
       grid-template-columns: 1fr;
-      gap: var(--space-5);
-      text-align: center;
-    }
-
-    .home-hero__headline-block,
-    .home-hero__support {
-      justify-items: center;
+      grid-template-areas:
+        'headline'
+        'support'
+        'media';
+      gap: var(--space-6);
+      text-align: left;
     }
 
     .home-hero__support {
@@ -502,7 +566,7 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
 
     .home-hero__title {
       font-size: clamp(3rem, 12vw, 4.15rem);
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .home-hero__title-line,
@@ -511,22 +575,41 @@ const ribbonItems = interleave([projectItems, speakingItems, articleItems]);
     }
 
     .home-hero__intro {
-      max-inline-size: 24rem;
+      max-inline-size: 28rem;
       font-size: clamp(1.05rem, 0.96rem + 0.7vw, 1.24rem);
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .home-hero__actions {
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
-    .home-hero__marquee {
-      margin-block-start: clamp(1.5rem, 6vw, 2.1rem);
+    .home-hero__media {
+      inline-size: min(100%, 22rem);
+      justify-self: start;
+    }
+
+    .home-hero__scroll-cue {
+      inset-block-end: 1rem;
     }
 
     .showcase-section__header h2 {
       max-inline-size: 14ch;
+    }
+
+    .showcase-section__heading--wide {
+      max-inline-size: 14ch;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-hero__scroll-cue-arrow {
+      animation: none;
+    }
+
+    .home-hero__scroll-cue:hover {
+      transform: translateX(-50%);
     }
   }
 </style>
