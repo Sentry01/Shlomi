@@ -37,12 +37,14 @@ const normalizedImage =
     : image;
 
 const hasResourceLinks = Boolean(repoUrl || liveUrl);
+const isResourceCard = hasResourceLinks;
 const Tag = href && !hasResourceLinks ? 'a' : 'article';
 ---
 
 <Tag
   href={href && !hasResourceLinks ? href : undefined}
   tabindex={href && !hasResourceLinks ? tabIndex : undefined}
+  style="position: relative;"
   class:list={[
     'showcase-preview',
     `showcase-preview--${variant}`,
@@ -51,90 +53,115 @@ const Tag = href && !hasResourceLinks ? 'a' : 'article';
   target={external && !hasResourceLinks ? '_blank' : undefined}
   rel={external && !hasResourceLinks ? 'noopener noreferrer' : undefined}
 >
-  <div class="showcase-preview__media">
-    {normalizedImage ? (
-      <img
-        src={normalizedImage}
-        alt={imageAlt}
-        width="1280"
-        height="720"
-        class="showcase-preview__image"
-        loading={variant === 'compact' ? 'lazy' : 'eager'}
-        decoding="async"
-      />
-    ) : hasResourceLinks ? (
-      <div class="showcase-preview__links">
-        {href && (
-          <a href={href} class="showcase-preview__action showcase-preview__action--primary">
-            <span>Overview</span>
-            <span class="showcase-preview__action-icon" aria-hidden="true">→</span>
-          </a>
-        )}
-        {repoUrl && (
-          <a
-            href={repoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="showcase-preview__action"
-          >
-            <span>Source</span>
-            <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
-          </a>
-        )}
-        {liveUrl && (
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="showcase-preview__action"
-          >
-            <span>Live</span>
-            <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
-          </a>
-        )}
-      </div>
-    ) : tags && tags.length > 0 ? (
-      <div class="showcase-preview__tags-area">
-        <ul class="showcase-preview__tags" role="list" aria-label={`${label} tags`}>
-          {tags.map((tag) => (
-            <li><span class="tag">{tag}</span></li>
-          ))}
-        </ul>
-      </div>
-    ) : (
-      <div class="showcase-preview__fallback" aria-hidden="true">
-        <span class="showcase-preview__fallback-copy">Placeholder</span>
-      </div>
-    )}
+  <span class="showcase-preview__label">{label}</span>
 
-    <span class="showcase-preview__label">{label}</span>
-  </div>
+  {isResourceCard ? (
+    <>
+      <div class="showcase-preview__body showcase-preview__body--resources">
+        <div class="showcase-preview__copy">
+          {meta && <p class="showcase-preview__meta">{meta}</p>}
+          <h3 class="showcase-preview__title">
+            {href ? (
+              <a href={href} class="showcase-preview__title-link">{title}</a>
+            ) : (
+              title
+            )}
+          </h3>
+          {description && (
+            <p class="showcase-preview__description">{description}</p>
+          )}
+        </div>
+      </div>
 
-  <div class="showcase-preview__body">
-    <div class="showcase-preview__copy">
-      {meta && <p class="showcase-preview__meta">{meta}</p>}
-      <h3 class="showcase-preview__title">
-        {href && hasResourceLinks ? (
-          <a href={href} class="showcase-preview__title-link">{title}</a>
+      <div class="showcase-preview__media showcase-preview__media--resources">
+        <div class="showcase-preview__links showcase-preview__links--footer">
+          {href && (
+            <a href={href} class="showcase-preview__action showcase-preview__action--primary">
+              <span>Overview</span>
+              <span class="showcase-preview__action-icon" aria-hidden="true">→</span>
+            </a>
+          )}
+          {repoUrl && (
+            <a
+              href={repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="showcase-preview__action"
+            >
+              <span>Source</span>
+              <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
+            </a>
+          )}
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="showcase-preview__action"
+            >
+              <span>Live</span>
+              <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <div class="showcase-preview__media">
+        {normalizedImage ? (
+          <img
+            src={normalizedImage}
+            alt={imageAlt}
+            width="1280"
+            height="720"
+            class="showcase-preview__image"
+            loading={variant === 'compact' ? 'lazy' : 'eager'}
+            decoding="async"
+          />
+        ) : tags && tags.length > 0 ? (
+          <div class="showcase-preview__tags-area">
+            <ul class="showcase-preview__tags" role="list" aria-label={`${label} tags`}>
+              {tags.map((tag) => (
+                <li><span class="tag">{tag}</span></li>
+              ))}
+            </ul>
+          </div>
         ) : (
-          title
+          <div class="showcase-preview__fallback" aria-hidden="true">
+            <span class="showcase-preview__fallback-copy">Placeholder</span>
+          </div>
         )}
-      </h3>
-      {description && (
-        <p class="showcase-preview__description">{description}</p>
-      )}
-    </div>
+      </div>
 
-    {href && !hasResourceLinks && (
-      <span class="showcase-preview__icon" aria-hidden="true">
-        {external ? '↗' : '→'}
-      </span>
-    )}
-  </div>
+      <div class="showcase-preview__body">
+        <div class="showcase-preview__copy">
+          {meta && <p class="showcase-preview__meta">{meta}</p>}
+          <h3 class="showcase-preview__title">
+            {href && hasResourceLinks ? (
+              <a href={href} class="showcase-preview__title-link">{title}</a>
+            ) : (
+              title
+            )}
+          </h3>
+          {description && (
+            <p class="showcase-preview__description">{description}</p>
+          )}
+        </div>
+
+        {href && !hasResourceLinks && (
+          <span class="showcase-preview__icon" aria-hidden="true">
+            {external ? '↗' : '→'}
+          </span>
+        )}
+      </div>
+    </>
+  )}
 </Tag>
 
 <style>
   .showcase-preview {
+    position: relative;
     display: grid;
     grid-template-rows: auto 1fr;
     min-block-size: 100%;
@@ -194,6 +221,14 @@ const Tag = href && !hasResourceLinks ? 'a' : 'article';
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
+  }
+
+  .showcase-preview__links--footer {
+    align-content: flex-end;
+    align-items: flex-end;
+    justify-content: flex-start;
+    min-block-size: 6.8rem;
+    padding: 0.9rem 1.15rem 1rem;
   }
 
   .showcase-preview__action {
@@ -277,6 +312,7 @@ const Tag = href && !hasResourceLinks ? 'a' : 'article';
     position: absolute;
     inset-inline-start: var(--space-4);
     inset-block-start: var(--space-4);
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     min-block-size: 2rem;
@@ -316,6 +352,15 @@ const Tag = href && !hasResourceLinks ? 'a' : 'article';
     justify-content: space-between;
     gap: var(--space-4);
     padding: 1.1rem 1.15rem 1.2rem;
+  }
+
+  .showcase-preview__body--resources {
+    min-block-size: 14rem;
+    padding-block-start: calc(1.1rem + 3.1rem);
+    padding-block-end: 1.45rem;
+    background:
+      radial-gradient(circle at top left, var(--color-accent-light), transparent 48%),
+      var(--color-bg-subtle);
   }
 
   .showcase-preview__copy {
@@ -367,6 +412,13 @@ const Tag = href && !hasResourceLinks ? 'a' : 'article';
     font-size: 1.15rem;
     line-height: 1;
     transform: translateY(0.15rem);
+  }
+
+  .showcase-preview__media--resources {
+    aspect-ratio: auto;
+    min-block-size: 7.2rem;
+    border-block-start: 1px solid var(--color-border);
+    background: var(--color-surface-strong);
   }
 
   .showcase-preview--compact {

@@ -60,7 +60,6 @@ const serializedStructuredData = structuredData ? JSON.stringify(structuredData)
       (() => {
         const storageKey = 'site-theme';
         const root = document.documentElement;
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
         const applyTheme = (theme) => {
           root.dataset.theme = theme;
@@ -70,19 +69,9 @@ const serializedStructuredData = structuredData ? JSON.stringify(structuredData)
         const storedTheme = localStorage.getItem(storageKey);
         const initialTheme = storedTheme === 'light' || storedTheme === 'dark'
           ? storedTheme
-          : mediaQuery.matches
-            ? 'dark'
-            : 'light';
+          : 'dark';
 
         applyTheme(initialTheme);
-
-        const handleSystemThemeChange = (event) => {
-          if (!localStorage.getItem(storageKey)) {
-            applyTheme(event.matches ? 'dark' : 'light');
-          }
-        };
-
-        mediaQuery.addEventListener('change', handleSystemThemeChange);
 
         window.__siteTheme = {
           get() {
@@ -95,7 +84,7 @@ const serializedStructuredData = structuredData ? JSON.stringify(structuredData)
           },
           clear() {
             localStorage.removeItem(storageKey);
-            applyTheme(mediaQuery.matches ? 'dark' : 'light');
+            applyTheme('dark');
           },
           toggle() {
             this.set(this.get() === 'dark' ? 'light' : 'dark');
