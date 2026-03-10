@@ -126,7 +126,10 @@ export const speakingEvents: SpeakingEvent[] = [
       'Executive roundtable in Singapore focused on AI coding adoption, enterprise governance, and Copilot strategy.',
     summary:
       'Participated in a CIO roundtable in Singapore covering AI coding adoption patterns and the governance frameworks enterprises need before scaling.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'AI delivery lands best when it is anchored in methodology and context — not just raw generation — with a workflow that can carry teams from design artifacts to validated frontend output inside one loop.',
+      'Enterprise adoption becomes more credible when AI is framed as a way to unblock developers through verified, collaborative workflows across design, code, infrastructure, and compliance rather than as a replacement for engineering judgement.',
+    ],
     featuredPriority: 3,
   },
   {
@@ -174,15 +177,15 @@ export const speakingEvents: SpeakingEvent[] = [
   {
     title: 'GitHub SKO Main Stage Keynote',
     region: 'Global (internal)',
-    date: '2023',
+    date: 'July 2023',
     format: 'Keynote',
-    audience: 'Approximately 3,000 attendees',
+    audience: 'Approximately 1,600 attendees',
     sourceLinks: [],
     images: ['/images/hero-rko-stage.png'],
     imageAlt:
       'Main stage keynote at GitHub Sales Kickoff delivered to a large internal audience.',
     summary:
-      'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 3,000 attendees.',
+      'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 1,600 attendees.',
     insights: [...temporaryInsightPlaceholders],
     featuredPriority: 2,
   },

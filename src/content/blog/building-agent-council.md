@@ -1,7 +1,7 @@
 ---
 title: 'Why One Model Isn''t Enough: Building Agent Council'
 description: 'Single-model answers sound confident even when wrong. Agent Council throws three models at every hard question — collaboratively or adversarially — then synthesizes the result. Here is how and why I built it.'
-pubDate: 2026-03-07
+pubDate: 2026-01-01
 tags: ['ai', 'copilot', 'agents', 'multi-model', 'architecture']
 draft: false
 ---
