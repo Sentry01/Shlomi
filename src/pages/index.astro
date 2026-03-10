@@ -348,21 +348,9 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   .home-hero__media {
     grid-area: media;
     position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
     inline-size: min(100%, 22rem);
     margin: 0;
-    padding: clamp(0.85rem, 2vw, 1.35rem) clamp(0.85rem, 2vw, 1.35rem) 0;
     justify-self: end;
-    overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: clamp(1.35rem, 2vw, 1.85rem);
-    background:
-      radial-gradient(circle at 50% 14%, var(--color-accent-light), transparent 48%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 64%),
-      var(--color-bg-subtle);
-    box-shadow: var(--shadow-card);
   }
 
   .home-hero__image {
