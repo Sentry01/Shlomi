@@ -9,6 +9,7 @@ export interface SpeakingEvent {
   imageAlt?: string;
   summary: string;
   insights: string[];
+  featuredPriority?: number;
 }
 
 const yearPattern = /\b(20\d{2})\b/;
@@ -118,10 +119,13 @@ export const speakingEvents: SpeakingEvent[] = [
         url: 'https://www.linkedin.com/posts/ai-gene2-githubcopilot-ugcPost-7333737668935069696-laWV/',
       },
     ],
-    images: [],
+    images: ['/images/singapore-cio-roundtable.png'],
+    imageAlt:
+      'Executive roundtable in Singapore focused on AI coding adoption, enterprise governance, and Copilot strategy.',
     summary:
       'Participated in a CIO roundtable in Singapore covering AI coding adoption patterns and the governance frameworks enterprises need before scaling.',
     insights: [...temporaryInsightPlaceholders],
+    featuredPriority: 3,
   },
   {
     title: 'Bangkok CIO Roundtable',
@@ -135,10 +139,13 @@ export const speakingEvents: SpeakingEvent[] = [
         url: 'https://www.linkedin.com/posts/ai-gene2-githubcopilot-ugcPost-7335181424829845504-5NwI/',
       },
     ],
-    images: [],
+    images: ['/images/bangkok-roundtable.jpeg'],
+    imageAlt:
+      'Presentation in Bangkok on agentic SDLC, GitHub Copilot, and AI-assisted software delivery for technology leaders.',
     summary:
       'Co-led a CIO roundtable in Bangkok exploring how enterprise technology leaders in Southeast Asia are approaching AI-augmented development.',
     insights: [...temporaryInsightPlaceholders],
+    featuredPriority: 4,
   },
   {
     title: 'Auckland AI Coding Panel',
@@ -175,6 +182,7 @@ export const speakingEvents: SpeakingEvent[] = [
     summary:
       'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 3,000 attendees.',
     insights: [...temporaryInsightPlaceholders],
+    featuredPriority: 2,
   },
   {
     title: 'OctoNihon Tokyo User Group',
@@ -198,6 +206,7 @@ export const speakingEvents: SpeakingEvent[] = [
       'The strongest live examples combined AI speed with clearer testing, review, and quality guardrails.',
       'Trust rises when AI is shown as part of disciplined engineering practice instead of a shortcut around it.',
     ],
+    featuredPriority: 1,
   },
   {
     title: 'Absolute AppSec Podcast E217',
@@ -310,7 +319,7 @@ export const speakingEvents: SpeakingEvent[] = [
         url: 'https://www.themissinglink.com.au/news/the-insider-threat',
       },
     ],
-    images: ['/images/appsec-speaking-1.png', '/images/appsec-speaking-2.png'],
+    images: ['/images/appsec-speaking-2.png'],
     imageAlt:
       'Security panel in Sydney on application security in the world of AI engineering.',
     summary:
