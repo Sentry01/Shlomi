@@ -11,8 +11,10 @@ import {
 import { blogSlug, isExternalCanonical } from '@/lib/blog';
 
 const baseUrl = import.meta.env.BASE_URL;
-const heroPhoto = `${baseUrl}images/hero-rko-stage.png`;
-const heroPhotoAlt = 'Shlomi Shaki speaking on stage at a GitHub event.';
+const heroPhoto = `${baseUrl}images/hero-shlomi-portrait.png`;
+const heroPhotoAlt = 'Portrait of Shlomi Shaki.';
+const heroPhotoWidth = 2256;
+const heroPhotoHeight = 2623;
 
 interface ShowcaseItem {
   label: string;
@@ -125,8 +127,8 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
             <img
               src={heroPhoto}
               alt={heroPhotoAlt}
-              width="602"
-              height="271"
+              width={heroPhotoWidth}
+              height={heroPhotoHeight}
               class="home-hero__image"
               loading="eager"
               decoding="async"
@@ -142,7 +144,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Speaking</p>
-        <h2>Recent talks, panels, and rooms where the ideas landed live.</h2>
+        <h2>Recent talks, panels, and Events.</h2>
       </div>
       <a class="section-link" href={`${baseUrl}speaking/`}>All speaking</a>
     </div>
@@ -172,7 +174,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Articles</p>
-        <h2>Field notes on AI adoption, trust, and what teams actually need.</h2>
+        <h2>Blog articles from the field.</h2>
       </div>
       <a class="section-link" href={`${baseUrl}blog/`}>All articles</a>
     </div>
@@ -203,7 +205,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     <div class="container showcase-section__header">
       <div>
         <p class="showcase-section__eyebrow">Projects</p>
-        <h2>Projects that turn the argument into something concrete and testable.</h2>
+        <h2>Agentic AI Projects.</h2>
       </div>
       <a class="section-link" href={`${baseUrl}projects/`}>All projects</a>
     </div>
@@ -260,7 +262,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
 
   .home-hero__content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 34rem);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
     grid-template-areas:
       'headline headline'
       'support media';
@@ -346,15 +348,20 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
   .home-hero__media {
     grid-area: media;
     position: relative;
-    inline-size: min(100%, 34rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    inline-size: min(100%, 22rem);
     margin: 0;
+    padding: clamp(0.85rem, 2vw, 1.35rem) clamp(0.85rem, 2vw, 1.35rem) 0;
     justify-self: end;
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: clamp(1.35rem, 2vw, 1.85rem);
     background:
-      linear-gradient(180deg, rgba(17, 19, 26, 0.06), rgba(17, 19, 26, 0.12)),
-      var(--color-surface-strong);
+      radial-gradient(circle at 50% 14%, var(--color-accent-light), transparent 48%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 64%),
+      var(--color-bg-subtle);
     box-shadow: var(--shadow-card);
   }
 
@@ -362,6 +369,13 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     display: block;
     inline-size: 100%;
     block-size: auto;
+  }
+
+  :global(:root[data-theme='dark']) .home-hero__media {
+    background:
+      radial-gradient(circle at 50% 14%, var(--color-accent-light), transparent 48%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 64%),
+      var(--color-bg-subtle);
   }
 
   .hero-button {
@@ -529,7 +543,7 @@ const speakingItems: ShowcaseItem[] = featuredSpeaking.map((event) => ({
     }
 
     .home-hero__media {
-      inline-size: min(100%, 34rem);
+      inline-size: min(100%, 22rem);
       justify-self: start;
     }
 
