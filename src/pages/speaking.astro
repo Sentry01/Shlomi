@@ -24,7 +24,19 @@ const events = speakingEvents
     return a.originalIndex - b.originalIndex;
   });
 
-const featuredEvents = events.filter((event) => event.image).slice(0, 4);
+const imageBackedEvents = events.filter((event) => event.image);
+const curatedFeaturedEvents = imageBackedEvents
+  .filter((event) => event.featuredPriority !== undefined)
+  .sort((a, b) => {
+    if ((a.featuredPriority ?? Number.MAX_SAFE_INTEGER) !== (b.featuredPriority ?? Number.MAX_SAFE_INTEGER)) {
+      return (a.featuredPriority ?? Number.MAX_SAFE_INTEGER) - (b.featuredPriority ?? Number.MAX_SAFE_INTEGER);
+    }
+
+    if (b.sortValue !== a.sortValue) return b.sortValue - a.sortValue;
+    return a.originalIndex - b.originalIndex;
+  });
+const fallbackFeaturedEvents = imageBackedEvents.filter((event) => event.featuredPriority === undefined);
+const featuredEvents = [...curatedFeaturedEvents, ...fallbackFeaturedEvents].slice(0, 4);
 const archiveEvents = events;
 ---
 
@@ -72,7 +84,6 @@ const archiveEvents = events;
     <div class="container speaking-section__header">
       <div>
         <p class="speaking-section__eyebrow">Archive</p>
-        <h2>Every appearance, with the same structure and placeholders where details are pending.</h2>
       </div>
     </div>
 

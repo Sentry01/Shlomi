@@ -8,6 +8,9 @@ interface Props {
   meta?: string;
   description?: string;
   external?: boolean;
+  tags?: string[];
+  repoUrl?: string;
+  liveUrl?: string;
   variant?: 'default' | 'compact';
   tabIndex?: number;
 }
@@ -21,6 +24,9 @@ const {
   meta,
   description,
   external = false,
+  tags,
+  repoUrl,
+  liveUrl,
   variant = 'default',
   tabIndex,
 } = Astro.props;
@@ -30,19 +36,20 @@ const normalizedImage =
     ? `${import.meta.env.BASE_URL}${image.slice(1)}`
     : image;
 
-const Tag = href ? 'a' : 'article';
+const hasResourceLinks = Boolean(repoUrl || liveUrl);
+const Tag = href && !hasResourceLinks ? 'a' : 'article';
 ---
 
 <Tag
-  href={href}
-  tabindex={href ? tabIndex : undefined}
+  href={href && !hasResourceLinks ? href : undefined}
+  tabindex={href && !hasResourceLinks ? tabIndex : undefined}
   class:list={[
     'showcase-preview',
     `showcase-preview--${variant}`,
-    { 'showcase-preview--linked': Boolean(href) },
+    { 'showcase-preview--linked': Boolean(href && !hasResourceLinks) },
   ]}
-  target={external ? '_blank' : undefined}
-  rel={external ? 'noopener noreferrer' : undefined}
+  target={external && !hasResourceLinks ? '_blank' : undefined}
+  rel={external && !hasResourceLinks ? 'noopener noreferrer' : undefined}
 >
   <div class="showcase-preview__media">
     {normalizedImage ? (
@@ -55,6 +62,45 @@ const Tag = href ? 'a' : 'article';
         loading={variant === 'compact' ? 'lazy' : 'eager'}
         decoding="async"
       />
+    ) : hasResourceLinks ? (
+      <div class="showcase-preview__links">
+        {href && (
+          <a href={href} class="showcase-preview__action showcase-preview__action--primary">
+            <span>Overview</span>
+            <span class="showcase-preview__action-icon" aria-hidden="true">→</span>
+          </a>
+        )}
+        {repoUrl && (
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="showcase-preview__action"
+          >
+            <span>Source</span>
+            <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
+          </a>
+        )}
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="showcase-preview__action"
+          >
+            <span>Live</span>
+            <span class="showcase-preview__action-icon" aria-hidden="true">↗</span>
+          </a>
+        )}
+      </div>
+    ) : tags && tags.length > 0 ? (
+      <div class="showcase-preview__tags-area">
+        <ul class="showcase-preview__tags" role="list" aria-label={`${label} tags`}>
+          {tags.map((tag) => (
+            <li><span class="tag">{tag}</span></li>
+          ))}
+        </ul>
+      </div>
     ) : (
       <div class="showcase-preview__fallback" aria-hidden="true">
         <span class="showcase-preview__fallback-copy">Placeholder</span>
@@ -67,13 +113,19 @@ const Tag = href ? 'a' : 'article';
   <div class="showcase-preview__body">
     <div class="showcase-preview__copy">
       {meta && <p class="showcase-preview__meta">{meta}</p>}
-      <h3 class="showcase-preview__title">{title}</h3>
+      <h3 class="showcase-preview__title">
+        {href && hasResourceLinks ? (
+          <a href={href} class="showcase-preview__title-link">{title}</a>
+        ) : (
+          title
+        )}
+      </h3>
       {description && (
         <p class="showcase-preview__description">{description}</p>
       )}
     </div>
 
-    {href && (
+    {href && !hasResourceLinks && (
       <span class="showcase-preview__icon" aria-hidden="true">
         {external ? '↗' : '→'}
       </span>
@@ -128,6 +180,75 @@ const Tag = href ? 'a' : 'article';
     padding: var(--space-5);
   }
 
+  .showcase-preview__links,
+  .showcase-preview__tags-area {
+    inline-size: 100%;
+    block-size: 100%;
+    padding: var(--space-4);
+    padding-block-start: calc(var(--space-4) + 2.5rem);
+  }
+
+  .showcase-preview__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .showcase-preview__action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-block-size: 2.25rem;
+    padding-inline: var(--space-3);
+    border: 1px solid rgba(18, 20, 28, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.76);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .showcase-preview__action--primary {
+    border-color: transparent;
+    background: var(--color-accent);
+  }
+
+  .showcase-preview__action-icon {
+    line-height: 1;
+  }
+
+  .showcase-preview__action:hover {
+    border-color: rgba(18, 20, 28, 0.2);
+    background: rgba(255, 255, 255, 0.92);
+    transform: translateY(-1px);
+  }
+
+  .showcase-preview__action--primary:hover {
+    border-color: transparent;
+    background: var(--color-accent-hover);
+    box-shadow: 0 12px 22px rgba(31, 199, 191, 0.22);
+  }
+
+  .showcase-preview__tags-area {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .showcase-preview__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+
   .showcase-preview__fallback-copy {
     display: inline-flex;
     align-items: center;
@@ -179,6 +300,16 @@ const Tag = href ? 'a' : 'article';
     color: var(--color-text);
   }
 
+  :global(:root[data-theme='dark']) .showcase-preview__action {
+    border-color: rgba(247, 251, 255, 0.12);
+    background: rgba(6, 10, 14, 0.72);
+  }
+
+  :global(:root[data-theme='dark']) .showcase-preview__action--primary {
+    border-color: transparent;
+    background: var(--color-accent);
+  }
+
   .showcase-preview__body {
     display: flex;
     align-items: flex-start;
@@ -208,6 +339,15 @@ const Tag = href ? 'a' : 'article';
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  .showcase-preview__title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .showcase-preview__title-link:hover {
+    text-decoration: underline;
   }
 
   .showcase-preview__description {
