@@ -13,10 +13,6 @@ export interface SpeakingEvent {
 }
 
 const yearPattern = /\b(20\d{2})\b/;
-const temporaryInsightPlaceholders = [
-  'Temporary placeholder — add the strongest takeaway from this session.',
-  'Temporary placeholder — add the most useful audience or delivery insight here.',
-];
 
 export function speakingEventSlug(title: string): string {
   return title
@@ -189,7 +185,10 @@ export const speakingEvents: SpeakingEvent[] = [
       'Main stage keynote at GitHub Sales Kickoff delivered to a large internal audience.',
     summary:
       'Delivered an application security keynote on the main stage at GitHub Sales Kickoff to approximately 1,600 attendees.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Security leaders respond best when AppSec is framed as a force multiplier for engineering throughput, not a separate control function that arrives after the build.',
+      'The commercial story gets sharper when you can show how developer-native security tooling reduces remediation lag instead of simply increasing alert volume.',
+    ],
     featuredPriority: 2,
   },
   {
@@ -230,7 +229,10 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on the Absolute AppSec podcast (Episode 217) discussing application security topics with the GitHub Advanced Security team.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Developer adoption improves when security findings are delivered inside the pull request, where context is fresh and the fix is still cheap.',
+      'Mature AppSec programmes are moving from periodic scanning to continuous feedback loops that make secure engineering feel like part of normal delivery work.',
+    ],
   },
   {
     title: 'Absolute AppSec Podcast E203',
@@ -246,7 +248,10 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Guest appearance on Absolute AppSec (Episode 203) covering application security strategy and developer-first security tooling.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Security strategy becomes credible when it prioritises the top few engineering choke points rather than attempting to solve every class of risk at once.',
+      'Developer-first tooling works because it respects flow state: the best controls shorten the path to a fix instead of adding another queue to manage.',
+    ],
   },
   {
     title: 'Supercharge the Power of your Security Team',
@@ -262,7 +267,10 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a webinar on how security teams can amplify their impact by integrating developer-first security tooling into existing workflows.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'The highest-leverage security teams build paved roads for developers, then use automation to scale guidance without scaling headcount at the same rate.',
+      'Security earns influence when it removes toil from engineering teams and turns review time into reusable guardrails, templates, and policy-as-code.',
+    ],
   },
   {
     title: 'Building a Frictionless Application Security Program',
@@ -280,7 +288,10 @@ export const speakingEvents: SpeakingEvent[] = [
       'Building a Frictionless Application Security Program — GitHub InFocus 2022 conference talk.',
     summary:
       'Spoke at GitHub InFocus on building application security programs that developers actually adopt, emphasizing frictionless integration and shift-left practices.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Frictionless AppSec is less about adding more scanners and more about fitting security signals into the tools, rituals, and metrics developers already trust.',
+      'Shift-left only works when teams also shift clarity left, giving developers actionable fixes, ownership, and enough context to remediate quickly.',
+    ],
   },
   {
     title: 'Identifying and Mitigating Insider Risk',
@@ -296,7 +307,10 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Delivered a webinar on insider risk identification and mitigation strategies, covering detection frameworks and response playbooks.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Insider risk programmes become more accurate when they look for changes in behaviour over time rather than treating every access anomaly as malicious intent.',
+      'The strongest response playbooks balance investigation speed with employee trust, because heavy-handed controls can create the very disengagement they are meant to prevent.',
+    ],
   },
   {
     title: '5 Steps to Building A People-Centric Insider Threat Program',
@@ -312,7 +326,10 @@ export const speakingEvents: SpeakingEvent[] = [
     images: [],
     summary:
       'Presented a framework for building people-centric insider threat programs across the APAC region, emphasizing behavioral indicators and organizational culture.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'People-centric programmes work when they combine technical telemetry with manager awareness, wellbeing signals, and clear escalation pathways.',
+      'Culture is a genuine security control: teams with psychological safety surface risk earlier, long before it appears in logs or exfiltration alerts.',
+    ],
   },
   {
     title: 'Application Security in the World of AI Engineering',
@@ -334,6 +351,9 @@ export const speakingEvents: SpeakingEvent[] = [
       'Security panel in Sydney on application security in the world of AI engineering.',
     summary:
       'Panelist at a Sydney security event discussing application security challenges in the context of AI-assisted engineering and the evolving threat landscape.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'AI engineering changes AppSec by increasing the volume of code and infrastructure decisions, which means review systems need more verification, provenance, and policy automation.',
+      'The winning pattern is not to ban AI from engineering, but to pair it with stronger test discipline, secure defaults, and visible accountability for generated changes.',
+    ],
   },
 ];
