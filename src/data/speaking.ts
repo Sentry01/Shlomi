@@ -63,7 +63,7 @@ export const speakingEvents: SpeakingEvent[] = [
   {
     title: 'Hong Kong CIO Roundtable',
     region: 'Hong Kong',
-    date: '2025',
+    date: 'June 2025',
     format: 'Executive roundtable',
     audience: 'CIOs and senior technology leaders',
     sourceLinks: [
@@ -81,15 +81,15 @@ export const speakingEvents: SpeakingEvent[] = [
     summary:
       'Led a CIO roundtable in Hong Kong discussing enterprise AI adoption, Copilot deployment strategies, and the intersection of developer productivity with security governance.',
     insights: [
-      'Velocity metrics (lines of code, PR throughput) are a trap; sophisticated leaders measure defect density and security posture instead.',
+      'Velocity metrics (lines of code, PR throughput) are a trap; sophisticated leaders measure things like defect density and % resources spent on KTLO activities vs value creation.',
       'Governance is shifting from "blocking AI" to "tagging AI provenance" in commit history.',
-      'The pilot-to-scale gap is usually caused by lack of internal platform engineering, not model capability.',
+      'The pilot-to-scale gap is usually caused by lack of internal platform engineering and AI-first mindset.',
     ],
   },
   {
     title: 'Sydney CIO Roundtable',
     region: 'Sydney, Australia',
-    date: '2025',
+    date: 'June 2025',
     format: 'Executive roundtable',
     audience: 'CIOs and senior technology leaders',
     sourceLinks: [
