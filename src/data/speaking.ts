@@ -149,7 +149,10 @@ export const speakingEvents: SpeakingEvent[] = [
       'Presentation in Bangkok on agentic SDLC, GitHub Copilot, and AI-assisted software delivery for technology leaders.',
     summary:
       'Co-led a CIO roundtable in Bangkok exploring how enterprise technology leaders in Southeast Asia are approaching AI-augmented development.',
-    insights: [...temporaryInsightPlaceholders],
+    insights: [
+      'Agentic AI works best when every handoff leaves a visible trail across planning, code, tests, and review.',
+      'The real shift is not faster generation alone; it is engineering teams learning to orchestrate specialized agents inside disciplined delivery loops.',
+    ],
     featuredPriority: 4,
   },
   {
