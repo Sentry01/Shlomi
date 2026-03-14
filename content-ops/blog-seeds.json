@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "updatedAt": "2026-03-14T00:00:00.000Z",
+  "statuses": [
+    "idea-review",
+    "approved-for-research",
+    "draft-review",
+    "approved-for-publish",
+    "published"
+  ],
+  "items": [
+    {
+      "id": "the-better-trap",
+      "title": "The Better Trap",
+      "status": "approved-for-research",
+      "angle": "Stronger models make local work feel magical, but enterprise software delivery still fails when process, testing, and ownership stay weak.",
+      "researchPath": "content-ops/research/the-better-trap.md",
+      "draftPath": "src/content/blog/the-better-trap.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "coding-agents-turned-my-adhd-into-a-superpower",
+      "title": "How Coding Agents Turned My ADHD Into a Superpower",
+      "status": "approved-for-research",
+      "angle": "ADHD felt like a curse when every new idea outpaced my ability to focus, finish, and ship. Coding agents flipped that weakness into leverage: I can now steer multiple projects at once while Copilot CLI handles seed ideas, research, planning, execution, and testing across each phase.",
+      "researchPath": "content-ops/research/coding-agents-turned-my-adhd-into-a-superpower.md",
+      "draftPath": "src/content/blog/coding-agents-turned-my-adhd-into-a-superpower.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "the-v-model-is-back",
+      "title": "The V-Model Is Back",
+      "status": "approved-for-research",
+      "angle": "As coding gets cheaper, the enterprise bottleneck swings back to intent, validation, and cross-functional test discipline.",
+      "researchPath": "content-ops/research/the-v-model-is-back.md",
+      "draftPath": "src/content/blog/the-v-model-is-back.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "the-trust-pendulum",
+      "title": "The Trust Pendulum",
+      "status": "approved-for-research",
+      "angle": "Customers chase AI speed until a security or quality scare snaps priorities back toward trust, governance, and control.",
+      "researchPath": "content-ops/research/the-trust-pendulum.md",
+      "draftPath": "src/content/blog/the-trust-pendulum.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "commando-teams-dont-scale",
+      "title": "Commando Teams Don’t Scale",
+      "status": "approved-for-research",
+      "angle": "Small expert teams can prove agentic engineering works, but platform and governance are what make it repeatable across an enterprise.",
+      "researchPath": "content-ops/research/commando-teams-dont-scale.md",
+      "draftPath": "src/content/blog/commando-teams-dont-scale.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "build-coding-muscle-with-copilot-cli",
+      "title": "How Non-Coders Can Build Coding Muscle With Copilot CLI",
+      "status": "approved-for-research",
+      "angle": "Non-coders do not need to become full-time developers to build real coding muscle. Spending just an hour a day with Copilot CLI to brainstorm, research, prototype, and create things that are not necessarily code can build confidence, pattern recognition, and an AI-first mindset that compounds over time.",
+      "researchPath": "content-ops/research/build-coding-muscle-with-copilot-cli.md",
+      "draftPath": "src/content/blog/build-coding-muscle-with-copilot-cli.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    },
+    {
+      "id": "atomic-habits-for-agentic-engineering",
+      "title": "Atomic Habits for Agentic Engineering",
+      "status": "approved-for-research",
+      "angle": "Atomic Habits shaped how I think about agentic engineering: the biggest leaps rarely come from one breakthrough, but from improving systems and skills 1% at a time. The real lesson is to build systems, not just chase goals. Start building an agent skill today, and the compounding effect of small daily improvements will eventually feel unbelievable.",
+      "researchPath": "content-ops/research/atomic-habits-for-agentic-engineering.md",
+      "draftPath": "src/content/blog/atomic-habits-for-agentic-engineering.md",
+      "notes": "Seed review pending before any research or drafting.",
+      "approvedForResearchAt": null,
+      "draftReadyAt": null,
+      "approvedForPublishAt": null,
+      "publishedAt": null
+    }
+  ]
+}
